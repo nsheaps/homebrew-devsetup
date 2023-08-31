@@ -27,6 +27,8 @@ fi
 echo "Brew version: $(brew --version)"
 brew tap nsheaps/devsetup
 brew install nsheaps/devsetup/devsetup
+devsetup set-tap nsheaps/devsetup
+devsetup install devsetup-base
 ```
 
 ## Getting Started With Your Own Tap
@@ -35,7 +37,7 @@ This tap is to serve as an example and template for new taps for your own person
 
 Fork or copy this repo and add your own formula to set up new devices how you want. You can add your own formulas to the `Formula` directory, and they will be available to install with `devsetup install <formula>`.
 
-**Don't forget to change the name of the repo in all of the documentation to match your repo. for `nsheaps/devsetup` and `nsheaps/homebrew-devsetup`**
+**Don't forget to change the name of the repo in all of the documentation to match your repo. for `nsheaps/devsetup`, `nsheaps/homebrew-devsetup` and `nsheaps/devsetup-bin` (the repo that contains the `devsetup` command if you want to make changes)**
 
 **Note:** Don't forget, your repo name must start with `homebrew-`! See [this doc](https://docs.brew.sh/Taps#repository-naming-conventions-and-assumptions).
 
@@ -46,18 +48,23 @@ Fork or copy this repo and add your own formula to set up new devices how you wa
 
 ## The `devsetup` command
 
+Uses `$HOME/.config/devsetup/` for any needed configuration files.
+
 | command | description |
 | --------- | ------------------- |
-| `devsetup install`<br>`devsetup i` | installs the basic layer of software. Additional software can be available and upgraded from the tap, but the `install` command only installs the basic set. |
-| `devsetup install <formula>`<br>`devsetup i <formula>` | installs a formula from this tap, an alias for `brew install nsheaps/devsetup/<formula>`. This is to avoid trying to pin this tap ([deprecated](https://github.com/Homebrew/brew/pull/5925)) when installing your locked versions of software |
-| `devsetup update`<br>`devsetup u` | updates the local clone of this tap, then updates all software installed from it |
+| `devsetup set-tap <tap>` | sets the tap to use for installing software. This is the tap that will be used when running `devsetup install <formula>`. |
+| `devsetup get-tap` | prints the current tap. eg `nsheaps/devsetup` |
+| `devsetup install <formula>`<br>`devsetup i <formula>` | installs a formula from this tap, an alias for `brew install $(devsetup get-tap)/<formula>`. This is to avoid trying to pin this tap ([deprecated](https://github.com/Homebrew/brew/pull/5925)) when installing your locked versions of software |
+| `devsetup upgrade-all` | updates the local clone of this tap (`devsetup update`), then upgrades all software installed from it (list, filter by `$(devsetup get-tap)/.*, run `brew upgrade <formula..>`)|
+| `devsetup upgrade <formula>`<br>`devsetup u <formula>` | alias for `brew upgrade $(devsetup get-tap)/<formula>` |
+| `devsetup update` | Alias for `$(cd $(brew --repository $(devsetup get-tap)) && git pull)`. This is to avoid updating other taps. |
 | `devsetup add <formula>`<br>`devsetup add <owner>/<tap>/<formula>` | makes a clone of the upstream formula in this tap to lock it's definition |
 | `devsetup alias <formula> <alias>`<br>`devsetup remove <owner>/<tap>/<formula> <alias>` | creates a new formula that has the upstream formula as a direct dependency<br>**Note:**versioning ls less controllable here and updates **only** propagate when the created formula changes. |
 | `devsetup doctor` | checks for common issues with the machine and produces a diagnostic report for the owner to help diagnose<br><b>Note:</b> The functionality of this command is provided by you |
 | `devsetup help` | prints the help message |
 | `devsetup version` | prints the version of the devsetup command |
-| `devsetup tap-info [--prefix]` | alias for `brew tap-info nsheaps/devsetup`. `--prefix` just returns the location of the tap (alias for `$(brew --repository nsheaps/devsetup`) |
-| `devsetup configure <topic> [--reconfigure]` | Alias for `brew update && brew install nsheaps/devsetup/devsetup-configure-<topic>`. If `--reconfigure` is passed, then the formula is removed first, which removes any configuration it set up prior. |
+| `devsetup tap-info [--prefix]` | alias for `brew tap-info $(devsetup get-tap)`. `--prefix` just returns the location of the tap (alias for `$(brew --repository $(devsetup get-tap)`) |
+| `devsetup configure <topic> [--reconfigure]` | Alias for `brew update && brew install $(devsetup get-tap)/devsetup-configure-<topic>`. If `--reconfigure` is passed, then the formula is removed first, which removes any configuration it set up prior. |
 
 ### `devsetup doctor`
 
@@ -81,7 +88,7 @@ If you want any of these configurations to happen automatically on `devsetup ins
 | --------- | ------------------- |
 | `git` | sets up git with a global user and email. |
 | `github-token` | sets up a GITHUB_TOKEN and adds it to your profile |
-| `github-ssh` | sets up github to prefer ssh via `git config --global url.ssh://git@github.com/.insteadOf https://github.com/`, and then runs `gh ssh-key add $(devsetup-configure-ssh --keyfile)`.<br><b>Note:</b> depends on `nsheaps/devsetup/gh` and `nsheaps/devsetup/devsetup-configure-ssh` |
+| `github-ssh` | sets up github to prefer ssh via `git config --global url.ssh://git@github.com/.insteadOf https://github.com/`, and then runs `gh ssh-key add $(devsetup-configure-ssh --keyfile)`.<br><b>Note:</b> depends on `gh` and `nsheaps/devsetup/devsetup-configure-ssh` |
 | `ssh` | sets up ssh with a key and config. Also provides a `--keyfile [keytype]` to return the location of the requested keyfile |
 | `gpg` | sets up gpg with a key and config |
 | `aws` | sets up aws with a profile and config |

@@ -2,6 +2,11 @@
 A template for your own homebrew tap. Fork this repo (or copy it) and add your own formula to set up new devices how you want.
 
 Works for WSL, Linux, and macOS.
+
+## Why not just use `brew` directly?
+
+This creates a more focused interface for end users to set up their devices in a consistent manner, with short and concise documentation for referece rather than dealing with the brew docs each time. It also allows an abstract way to reference packages regardless of OS.
+
 ## Install
 
 You can copy and paste this whole thing into your terminal to install.
@@ -22,7 +27,7 @@ if ! command -v brew >/dev/null; then
     # add for most common shells
     test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
     test -r ~/.zprofile     && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.zprofile
-    test -r ~/.profile      && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
+    echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
 fi
 echo "Brew version: $(brew --version)"
 brew tap nsheaps/devsetup
@@ -45,6 +50,7 @@ Fork or copy this repo and add your own formula to set up new devices how you wa
 * [Distributing software from private repos with `GitHubPrivateRepositoryReleaseDownloadStrategy`](https://github.com/goreleaser/goreleaser/issues/507)([article](https://medium.com/prodopsio/creating-homebrew-taps-for-private-internal-tools-c41363d58ab0))
 * [Formula Cookbook](https://docs.brew.sh/Formula-Cookbook)
 * [`brew` manpage](https://docs.brew.sh/Manpage)
+* [`brew` sourcecode](https://github.com/Homebrew/brew/)
 
 ## The `devsetup` command
 
@@ -58,6 +64,9 @@ Uses `$HOME/.config/devsetup/` for any needed configuration files.
 | `devsetup upgrade-all` | updates the local clone of this tap (`devsetup update`), then upgrades all software installed from it (list, filter by `$(devsetup get-tap)/.*, run `brew upgrade <formula..>`)|
 | `devsetup upgrade <formula>`<br>`devsetup u <formula>` | alias for `brew upgrade $(devsetup get-tap)/<formula>` |
 | `devsetup update` | Alias for `$(cd $(brew --repository $(devsetup get-tap)) && git pull)`. This is to avoid updating other taps. |
+| `devsetup list` | Lists all kegs/packages installed from the tapped homebrew tap |
+| `devsetup info <formula>` | Gets the info for a formula |
+| `devsetup search <str>` | Searches for a formula |
 | `devsetup add <formula>`<br>`devsetup add <owner>/<tap>/<formula>` | makes a clone of the upstream formula in this tap to lock it's definition |
 | `devsetup alias <formula> <alias>`<br>`devsetup remove <owner>/<tap>/<formula> <alias>` | creates a new formula that has the upstream formula as a direct dependency<br>**Note:**versioning ls less controllable here and updates **only** propagate when the created formula changes. |
 | `devsetup doctor` | checks for common issues with the machine and produces a diagnostic report for the owner to help diagnose<br><b>Note:</b> The functionality of this command is provided by you |
@@ -87,8 +96,16 @@ If you want any of these configurations to happen automatically on `devsetup ins
 | topic | description |
 | --------- | ------------------- |
 | `git` | sets up git with a global user and email. |
-| `github-token` | sets up a GITHUB_TOKEN and adds it to your profile |
+| `github-token` | sets up a GITHUB_TOKEN and adds it to your `~/.profile` |
 | `github-ssh` | sets up github to prefer ssh via `git config --global url.ssh://git@github.com/.insteadOf https://github.com/`, and then runs `gh ssh-key add $(devsetup-configure-ssh --keyfile)`.<br><b>Note:</b> depends on `gh` and `nsheaps/devsetup/devsetup-configure-ssh` |
 | `ssh` | sets up ssh with a key and config. Also provides a `--keyfile [keytype]` to return the location of the requested keyfile |
 | `gpg` | sets up gpg with a key and config |
 | `aws` | sets up aws with a profile and config |
+
+## TODO
+
+* [ ] Test `brew list` and see if it dumps list prefixed with installed tap (no tap is `homebrew/core`)
+* [ ] Test creating an alias via [`livecheck`](https://docs.brew.sh/Brew-Livecheck#referenced-formulacask) and see if it works
+    * It should, since normally it's looking at the local tap, `livecheck` should check upstream if there are updates.
+* [ ] Figure out a way to pass flags for devsetup-configure scripts
+* [ ] Figure out a way to reference dependencies via env var for referencing the tap rather than fully qualified

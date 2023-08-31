@@ -41,6 +41,8 @@ Fork or copy this repo and add your own formula to set up new devices how you wa
 
 * [Maintaining your own homebrew tap](https://docs.brew.sh/Taps)
 * [Distributing software from private repos with `GitHubPrivateRepositoryReleaseDownloadStrategy`](https://github.com/goreleaser/goreleaser/issues/507)([article](https://medium.com/prodopsio/creating-homebrew-taps-for-private-internal-tools-c41363d58ab0))
+* [Formula Cookbook](https://docs.brew.sh/Formula-Cookbook)
+* [`brew` manpage](https://docs.brew.sh/Manpage)
 
 ## The `devsetup` command
 
@@ -50,7 +52,7 @@ Fork or copy this repo and add your own formula to set up new devices how you wa
 | `devsetup install <formula>`<br>`devsetup i <formula>` | installs a formula from this tap, an alias for `brew install nsheaps/devsetup/<formula>`. This is to avoid trying to pin this tap ([deprecated](https://github.com/Homebrew/brew/pull/5925)) when installing your locked versions of software |
 | `devsetup update`<br>`devsetup u` | updates the local clone of this tap, then updates all software installed from it |
 | `devsetup add <formula>`<br>`devsetup add <owner>/<tap>/<formula>` | makes a clone of the upstream formula in this tap to lock it's definition |
-| `devsetup alias <formula> <alias>`<br>`devsetup remove <owner>/<tap>/<formula> <alias>` | creates a new formula that has the upstream formula as a direct dependency<br>**Note:**versioning ls less controllable here and updates only propagate when the created formula changes. |
+| `devsetup alias <formula> <alias>`<br>`devsetup remove <owner>/<tap>/<formula> <alias>` | creates a new formula that has the upstream formula as a direct dependency<br>**Note:**versioning ls less controllable here and updates **only** propagate when the created formula changes. |
 | `devsetup doctor` | checks for common issues with the machine and produces a diagnostic report for the owner to help diagnose<br><b>Note:</b> The functionality of this command is provided by you |
 | `devsetup help` | prints the help message |
 | `devsetup version` | prints the version of the devsetup command |
@@ -79,7 +81,7 @@ If you want any of these configurations to happen automatically on `devsetup ins
 | --------- | ------------------- |
 | `git` | sets up git with a global user and email. |
 | `github-token` | sets up a GITHUB_TOKEN and adds it to your profile |
-| `github-ssh` | sets up github to prefer ssh via `git config --global url.ssh://git@github.com/.insteadOf https://github.com/` |
-| `ssh` | sets up ssh with a key and config |
+| `github-ssh` | sets up github to prefer ssh via `git config --global url.ssh://git@github.com/.insteadOf https://github.com/`, and then runs `gh ssh-key add $(devsetup-configure-ssh --keyfile)`.<br><b>Note:</b> depends on `nsheaps/devsetup/gh` and `nsheaps/devsetup/devsetup-configure-ssh` |
+| `ssh` | sets up ssh with a key and config. Also provides a `--keyfile [keytype]` to return the location of the requested keyfile |
 | `gpg` | sets up gpg with a key and config |
 | `aws` | sets up aws with a profile and config |

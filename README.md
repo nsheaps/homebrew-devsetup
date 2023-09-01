@@ -63,8 +63,9 @@ Uses `$HOME/.config/devsetup/` for any needed configuration files.
 | `devsetup get-tap` | prints the current tap. eg `nsheaps/devsetup` |
 | `devsetup install <formula>`<br>`devsetup i <formula>` | installs a formula from this tap, an alias for `brew install $(devsetup get-tap)/<formula>`. This is to avoid trying to pin this tap ([deprecated](https://github.com/Homebrew/brew/pull/5925)) when installing your locked versions of software |
 | `devsetup upgrade-all` | updates the local clone of this tap (`devsetup update`), then upgrades all software installed from it (list, filter by `$(devsetup get-tap)/.*, run `brew upgrade <formula..>`)|
-| `devsetup upgrade <formula>`<br>`devsetup u <formula>` | alias for `brew upgrade $(devsetup get-tap)/<formula>` |
+| `devsetup upgrade <formula>`<br>`devsetup u <formula>` | alias for `brew upgrade $(devsetup get-tap)/<formula>`, always upgrades `devsetup` even if from another tap. |
 | `devsetup update` | Alias for `$(cd $(brew --repository $(devsetup get-tap)) && git pull)`. This is to avoid updating other taps. |
+| `devsetup outdated` | Alias for `brew outdated $(devsetup get-tap)/.*` |
 | `devsetup list` | Lists all kegs/packages installed from the tapped homebrew tap |
 | `devsetup info <formula>` | Gets the info for a formula |
 | `devsetup search <str>` | Searches for a formula |

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # homebrew-devsetup
 A template for your own homebrew tap. Fork this repo (or copy it) and add your own formula to set up new devices how you want.
 
@@ -109,3 +110,16 @@ If you want any of these configurations to happen automatically on `devsetup ins
     * It should, since normally it's looking at the local tap, `livecheck` should check upstream if there are updates.
 * [ ] Figure out a way to pass flags for devsetup-configure scripts
 * [ ] Figure out a way to reference dependencies via env var for referencing the tap rather than fully qualified
+=======
+# Nsheaps Devsetup
+
+## How do I install these formulae?
+
+`brew install nsheaps/devsetup/<formula>`
+
+Or `brew tap nsheaps/devsetup` and then `brew install <formula>`.
+
+## Documentation
+
+`brew help`, `man brew` or check [Homebrew's documentation](https://docs.brew.sh).
+>>>>>>> 96f8bab (Create nsheaps/devsetup tap)

@@ -12,7 +12,7 @@ class DevsetupBase < Formula
   # if these are installed from this tap, then devsetup upgrade-all will upgrade them
   # if you want to reference another formula in another tap here so that it _will_ get upgraded, use
   #   devsetup alias <formula>
-  # depends_on "git"
+  depends_on "git"
   # depends_on "python3"
   # depends_on "ansible"
 
@@ -20,6 +20,7 @@ class DevsetupBase < Formula
 
   def install
     puts 'install'
+
   end
 
   def uninstall

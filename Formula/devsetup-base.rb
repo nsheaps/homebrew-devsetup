@@ -19,8 +19,7 @@ class DevsetupBase < Formula
   # depends_on "nsheaps/devsetup/devsetup-bin"
 
   def install
-    run 'echo', 'installllllio'
-    system 'echo', 'install'
+    puts 'install'
   end
 
   def uninstall

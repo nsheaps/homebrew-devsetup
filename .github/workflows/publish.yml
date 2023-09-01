@@ -1,8 +1,7 @@
 name: brew pr-pull
+
 on:
-  pull_request_target:
-    types:
-      - labeled
+  workflow_dispatch: # triggered manually
 jobs:
   pr-pull:
     if: contains(github.event.pull_request.labels.*.name, 'pr-pull')

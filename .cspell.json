@@ -4,6 +4,7 @@
     "**/vscode-extension/**",
     "**/.git/**",
     "**/.pnpm-lock.json",
+    ".github/workflows/**",
     ".vscode",
     "megalinter",
     "package-lock.json",

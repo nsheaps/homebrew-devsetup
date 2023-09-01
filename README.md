@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # homebrew-devsetup
 A template for your own homebrew tap. Fork this repo (or copy it) and add your own formula to set up new devices how you want.
 
@@ -37,6 +36,11 @@ devsetup set-tap nsheaps/devsetup
 devsetup install devsetup-base
 ```
 
+## Maintenance
+
+### Linting
+
+`npx mega-linter-runner --flavor cupcake`
 ## Getting Started With Your Own Tap
 
 This tap is to serve as an example and template for new taps for your own personalized setup. The only thing it comes with a basic structure of a homebrew tap, some example formulas to demonstrate OS-agnostic installs of specific software, and a tool for keeping your own devsetup up to date for use in an organization. The real power of this comes in when you customize it.
@@ -57,12 +61,12 @@ Fork or copy this repo and add your own formula to set up new devices how you wa
 
 Uses `$HOME/.config/devsetup/` for any needed configuration files.
 
-| command | description |
-| --------- | ------------------- |
-| `devsetup set-tap <tap>` | sets the tap to use for installing software. This is the tap that will be used when running `devsetup install <formula>`. |
-| `devsetup get-tap` | prints the current tap. eg `nsheaps/devsetup` |
+| command                                                | description                                                                                                                                                                                                                                      |
+|--------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `devsetup set-tap <tap>`                               | sets the tap to use for installing software. This is the tap that will be used when running `devsetup install <formula>`.                                                                                                                        |
+| `devsetup get-tap`                                     | prints the current tap. eg `nsheaps/devsetup`                                                                                                                                                                                                    |
 | `devsetup install <formula>`<br>`devsetup i <formula>` | installs a formula from this tap, an alias for `brew install $(devsetup get-tap)/<formula>`. This is to avoid trying to pin this tap ([deprecated](https://github.com/Homebrew/brew/pull/5925)) when installing your locked versions of software |
-| `devsetup upgrade-all` | updates the local clone of this tap (`devsetup update`), then upgrades all software installed from it (list, filter by `$(devsetup get-tap)/.*, run `brew upgrade <formula..>`)|
+| `devsetup upgrade-all` | updates the local clone of this tap (`devsetup update`), then upgrades all software installed from it (list, filter by `$(devsetup get-tap)/.*, run`brew upgrade <formula..>`)|
 | `devsetup upgrade <formula>`<br>`devsetup u <formula>` | alias for `brew upgrade $(devsetup get-tap)/<formula>`, always upgrades `devsetup` even if from another tap. |
 | `devsetup update` | Alias for `$(cd $(brew --repository $(devsetup get-tap)) && git pull)`. This is to avoid updating other taps. |
 | `devsetup outdated` | Alias for `brew outdated $(devsetup get-tap)/.*` |
@@ -95,32 +99,19 @@ Passing `--force` will remove the configuration without warning.
 
 If you want any of these configurations to happen automatically on `devsetup install`, add the formula as a depdendency to the `devsetup` formula.
 
-| topic | description |
-| --------- | ------------------- |
-| `git` | sets up git with a global user and email. |
-| `github-token` | sets up a GITHUB_TOKEN and adds it to your `~/.profile` |
-| `github-ssh` | sets up github to prefer ssh via `git config --global url.ssh://git@github.com/.insteadOf https://github.com/`, and then runs `gh ssh-key add $(devsetup-configure-ssh --keyfile)`.<br><b>Note:</b> depends on `gh` and `nsheaps/devsetup/devsetup-configure-ssh` |
-| `ssh` | sets up ssh with a key and config. Also provides a `--keyfile [keytype]` to return the location of the requested keyfile |
-| `gpg` | sets up gpg with a key and config |
-| `aws` | sets up aws with a profile and config |
+| topic          | description                                                                                                                                                                                                                                                       |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `git`          | sets up git with a global user and email.                                                                                                                                                                                                                         |
+| `github-token` | sets up a GITHUB_TOKEN and adds it to your `~/.profile`                                                                                                                                                                                                           |
+| `github-ssh`   | sets up github to prefer ssh via `git config --global url.ssh://git@github.com/.insteadOf https://github.com/`, and then runs `gh ssh-key add $(devsetup-configure-ssh --keyfile)`.<br><b>Note:</b> depends on `gh` and `nsheaps/devsetup/devsetup-configure-ssh` |
+| `ssh`          | sets up ssh with a key and config. Also provides a `--keyfile [keytype]` to return the location of the requested keyfile                                                                                                                                          |
+| `gpg`          | sets up gpg with a key and config                                                                                                                                                                                                                                 |
+| `aws`          | sets up aws with a profile and config                                                                                                                                                                                                                             |
 
 ## TODO
 
 * [ ] Test `brew list` and see if it dumps list prefixed with installed tap (no tap is `homebrew/core`)
 * [ ] Test creating an alias via [`livecheck`](https://docs.brew.sh/Brew-Livecheck#referenced-formulacask) and see if it works
-    * It should, since normally it's looking at the local tap, `livecheck` should check upstream if there are updates.
+  * It should, since normally it's looking at the local tap, `livecheck` should check upstream if there are updates.
 * [ ] Figure out a way to pass flags for devsetup-configure scripts
 * [ ] Figure out a way to reference dependencies via env var for referencing the tap rather than fully qualified
-=======
-# Nsheaps Devsetup
-
-## How do I install these formulae?
-
-`brew install nsheaps/devsetup/<formula>`
-
-Or `brew tap nsheaps/devsetup` and then `brew install <formula>`.
-
-## Documentation
-
-`brew help`, `man brew` or check [Homebrew's documentation](https://docs.brew.sh).
->>>>>>> 96f8bab (Create nsheaps/devsetup tap)

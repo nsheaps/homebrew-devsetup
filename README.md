@@ -21,7 +21,7 @@ if ! command -v brew >/dev/null; then
 
     # If you're on linux, add the necessary parts
     ## sets up brew on the CLI for getting `brew --prefix` later
-    test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)" 
+    test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
     test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
     # add for most common shells
@@ -101,7 +101,7 @@ If you want any of these configurations to happen automatically on `devsetup ins
 
 | topic          | description                                                                                                                                                                                                                                                       |
 |----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `git`          | sets up git with a global user and email.                                                                                                                                                                                                                         |
+| `git`          | sets up git with a global user and email. Also globally sets `pull.rebase` to false (merge when diverge)                                                                                                                                                          |
 | `github-token` | sets up a GITHUB_TOKEN and adds it to your `~/.profile`                                                                                                                                                                                                           |
 | `github-ssh`   | sets up github to prefer ssh via `git config --global url.ssh://git@github.com/.insteadOf https://github.com/`, and then runs `gh ssh-key add $(devsetup-configure-ssh --keyfile)`.<br><b>Note:</b> depends on `gh` and `nsheaps/devsetup/devsetup-configure-ssh` |
 | `ssh`          | sets up ssh with a key and config. Also provides a `--keyfile [keytype]` to return the location of the requested keyfile                                                                                                                                          |

@@ -21,7 +21,7 @@ jobs:
       - id: list-formulae
         run: |
           # list all homebrew formula in ./Formula/, delimited by comma
-          echo "formulae=$( ls ./Formula/ | tr '\n' ',' )" >> "$GITHUB_OUTPUT
+          echo "formulae=$( ls ./Formula/ | tr '\n' ',' )" >> "$GITHUB_OUTPUT"
       - name: Update Homebrew formula
         uses: dawidd6/action-homebrew-bump-formula@v3
         with:

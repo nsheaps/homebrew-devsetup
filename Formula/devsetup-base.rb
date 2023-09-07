@@ -3,7 +3,7 @@ class DevsetupBase < Formula
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
   sha256 "b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db"
-  version '0.0.2' # bump me if you want people to re-install these things, like if the list changed.
+  version '0.0.3' # bump me if you want people to re-install these things, like if the list changed.
 
   # if these are installed from this tap, then devsetup upgrade-all will upgrade them
   # if you want to reference another formula in another tap here so that it _will_ get upgraded, use
@@ -17,6 +17,7 @@ class DevsetupBase < Formula
   def install
     puts 'before install'
     super
+    touch prefix/".keepme"
     puts 'install'
 
   end

@@ -1,0 +1,37 @@
+name: "Update homebrew formula"
+on:
+  schedule:
+    # every 1st and 3rd Monday of the month at 9am UTC
+    - cron:  '0 9 1-7,15-21 * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  update-brew-tap:
+    permissions:
+      contents: read
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - id: list-formulae
+        run: |
+          # list all homebrew formula in ./Formula/, delimited by comma
+          echo "formulae=$( ls ./Formula/ | tr '\n' ',' )" >> "$GITHUB_OUTPUT
+      - name: Update Homebrew formula
+        uses: dawidd6/action-homebrew-bump-formula@v3
+        with:
+          # Required, custom personal GitHub access token with only the 'public_repo' scope enabled
+          token: ${{ github.token }}
+          # Bump all outdated formulae in this tap
+          tap: nsheaps/homebrew-devsetup
+          # Bump only these formulae if outdated
+          formula: ${{ steps.list-formulae.outputs.formulae }}
+          # Optional, if don't want to check for already open PRs
+          force: false # true
+          # Need to set this input if want to use `brew livecheck`
+          livecheck: true

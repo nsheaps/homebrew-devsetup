@@ -18,17 +18,17 @@ if ! command -v brew >/dev/null; then
     # brew is not installed
     # Install brew - Keep up to date with homepage script here: https://brew.sh/
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-    # If you're on linux, add the necessary parts
-    ## sets up brew on the CLI for getting `brew --prefix` later
-    test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
-    test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-    # add for most common shells
-    test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
-    test -r ~/.zprofile     && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.zprofile
-    echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
 fi
+# If you're on linux, add the necessary parts
+## sets up brew on the CLI for getting `brew --prefix` later
+test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# add for most common shells
+test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
+test -r ~/.zprofile     && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.zprofile
+echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
+
 echo "Brew version: $(brew --version)"
 brew tap nsheaps/devsetup
 brew install nsheaps/devsetup/devsetup

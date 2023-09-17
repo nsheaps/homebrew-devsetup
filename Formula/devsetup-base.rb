@@ -17,8 +17,8 @@ class DevsetupBase < Formula
   def install
     puts 'before install'
     super
-    prefix.install Dir["*"]
-    touch prefix/".keepme"
+    system "touch", "test-empty"
+    prefix.install "test-empty"
     puts 'install'
 
   end

@@ -31,6 +31,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: '[Debug] print github context with proper escaping'
+        run: |
+          echo "${{ toJson(github) }}"
       - uses: actions/checkout@v4
       - id: list-formulae
         run: |

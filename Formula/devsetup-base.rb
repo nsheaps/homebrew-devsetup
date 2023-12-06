@@ -5,9 +5,11 @@ class DevsetupBase < Formula
   sha256 "b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db"
   version '0.0.8' # bump me if you want people to re-install these things, like if the list changed.
 
-  # if these are installed from this tap, then devsetup upgrade-all will upgrade them
-  # if you want to reference another formula in another tap here so that it _will_ get upgraded, use
-  #   devsetup alias <formula>
+  # if these are installed from this tap, then devsetup upgrade-all will upgrade
+  # them, otherwise the dependencies will only get upgraded if this formula changes.
+
+  # if you want to reference another formula in another tap here so that it _will_ get
+  # upgraded, use `devsetup alias <formula>`, then reference it with nsheaps/devsetup/<original>
   depends_on "git"
   # depends_on "python3"
   # depends_on "ansible"

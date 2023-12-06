@@ -6,13 +6,21 @@ on:
   workflow_dispatch: {}
   push:
     branches:
-    - main
+      - main
     paths:
       - './.github/workflows/update-formulae.yml'
 
+concurrency:
+  ## pr gets single group, otherwise one per sha (unique groups means they can run in parallel)
+  # group: ${{ github.workflow }}-${{ github.event_name.pull_request && github.event.pull_request.number || github.sha }}
+  # one at a time on a branch
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  # only cancel-in-progress on non-default branches
+  cancel-in-progress: ${{ github.ref_name != github.event.repository.default_branch }}
+
 permissions:
   contents: read
-  pull_request: write
+  pull-requests: write
 
 jobs:
   update-brew-tap:

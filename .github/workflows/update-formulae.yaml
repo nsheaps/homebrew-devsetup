@@ -42,6 +42,9 @@ jobs:
         run: |
           # list all homebrew formula in ./Formula/, delimited by comma
           echo "formulae=$(find ./Formula/ -name "*.rb" -exec basename -s .rb {} \; | paste -sd, -)" >> "$GITHUB_OUTPUT"
+      - name: Set origin with token
+        run: |
+          git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
       - name: Update Homebrew formula
         uses: nsheaps/action-homebrew-bump-formula@master
         with:

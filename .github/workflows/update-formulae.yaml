@@ -38,9 +38,10 @@ jobs:
           echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@v4
       - id: list-formulae
+        name: List all formulae in this tap
         run: |
           # list all homebrew formula in ./Formula/, delimited by comma
-          echo "formulae=$( ls ./Formula/ | tr '\n' ',' )" >> "$GITHUB_OUTPUT"
+          echo "formulae=$(find ./Formula/ -name "*.rb" -exec basename -s .rb {} \; | paste -sd, -)" >> "$GITHUB_OUTPUT"
       - name: Update Homebrew formula
         uses: nsheaps/action-homebrew-bump-formula@master
         with:

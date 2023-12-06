@@ -8,7 +8,7 @@ on:
     branches:
       - main
     paths:
-      - './.github/workflows/update-formulae.yml'
+      - '.github/workflows/update-formulae.yml'
 
 concurrency:
   ## pr gets single group, otherwise one per sha (unique groups means they can run in parallel)

@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  pull_request: write
 
 jobs:
   update-brew-tap:
@@ -35,3 +36,5 @@ jobs:
           force: false # true
           # Need to set this input if want to use `brew livecheck`
           livecheck: true
+          # use origin repository
+          no_fork: true

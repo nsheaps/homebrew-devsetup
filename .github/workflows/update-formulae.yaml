@@ -32,15 +32,17 @@ jobs:
 
     steps:
       - name: '[Debug] print github context with proper escaping'
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
-          echo "${{ toJson(github) }}"
+          echo "$GITHUB_CONTEXT"
       - uses: actions/checkout@v4
       - id: list-formulae
         run: |
           # list all homebrew formula in ./Formula/, delimited by comma
           echo "formulae=$( ls ./Formula/ | tr '\n' ',' )" >> "$GITHUB_OUTPUT"
       - name: Update Homebrew formula
-        uses: dawidd6/action-homebrew-bump-formula@v3
+        uses: nsheaps/action-homebrew-bump-formula@master
         with:
           # Required, custom personal GitHub access token with only the 'public_repo' scope enabled
           token: ${{ github.token }}

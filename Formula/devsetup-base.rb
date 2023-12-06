@@ -15,6 +15,7 @@ class DevsetupBase < Formula
   # if you want to reference another formula in another tap here so that it _will_ get
   # upgraded, use `devsetup alias <formula>`, then reference it with nsheaps/devsetup/<original>
   depends_on "git"
+  # depends_on "nsheaps/devsetup/python@3.11"
   # depends_on "python3"
   # depends_on "ansible"
 

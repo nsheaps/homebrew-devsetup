@@ -1,4 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"]
+  "extends": ["config:base"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [".*"],
+      "matchStrings": [
+        "^#\\s?renovate:\\s*(datasource=(?<datasource>.*?) )?registryUrl=(?<registryUrl>.*)\\s?depName=(?<depName>.*)\\s?currentDigest=(?<currentDigest>.*)\\n(?<currentValue.*)$"
+      ],
+      "versioningTemplate": "loose",
+      "datasourceTemplate": "custom.gh-file"
+    }
+  ],
+  "customDatasources": {
+    "gh-file": {
+      "defaultRegistryUrlTemplate": "https://api.github.com/repos/{{{registryUrl}}}/contents/{{{depName}}}?ref={{{currentDigest}}}",
+      "transformTemplates": [
+        "{\"releases\":[{\"version\": $base64decode( $$.(content) )]}"
+      ]
+    }
+  }
 }

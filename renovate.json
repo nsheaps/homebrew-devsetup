@@ -8,7 +8,7 @@
       "matchStrings": [
         "#\\s?renovate:\\s*(datasource=(?<datasource>.*?)\\s+)?registryUrl=(?<registryUrl>.*)\\s+depName=(?<depName>.*)\\s+currentDigest=(?<currentDigest>.*)\\n(?<currentValue>.*)\\n# end renovate"
       ],
-      "versioningTemplate": "loose",
+      "versioningTemplate": "loose"
     }
   ],
   "customDatasources": {

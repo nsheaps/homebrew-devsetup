@@ -6,16 +6,17 @@
       "customType": "regex",
       "fileMatch": ["Formula(/\\S+)?/\\S+\\.rb"],
       "matchStrings": [
-        "#\\s?renovate:\\s*(datasource=(?<datasource>.*?)\\s+)?registryUrl=(?<registryUrl>.*)\\s+depName=(?<depName>.*)\\s+currentDigest=(?<currentDigest>.*)\\n(?<currentValue>.*)\\n# end renovate"
+        "#\\s?renovate:?\\s*\\n\\s*depends_on \"https:\/\/raw.githubusercontent.com\/(?<registryUrl>\\S+\/\\S+)\/(?<currentValue>\\S+)\/(?<depName>.+).rb\""
       ],
-      "versioningTemplate": "loose"
+      "versioningTemplate": "{{# if versioning}}{{{versioning}}}{{else}}git{{/if}}",
+      "datasourceTemplate": "custom.github-file"
     }
   ],
   "customDatasources": {
-    "ghfile": {
-      "defaultRegistryUrlTemplate": "https://api.github.com/repos/{{registryUrl}}/contents/{{depName}}?ref={{currentDigest}}",
+    "github-file": {
+      "defaultRegistryUrlTemplate": "https://api.github.com/repos/{{registryUrl}}/commits?path={{depName}}.rb",
       "transformTemplates": [
-        "{\"releases\":[{\"version\": $base64decode( $$.(content) )]}"
+        "{\"releases\":[{\"version\": $$.[0].sha, \"releaseTimestamp\": $$.[0].commit.author.date}]}"
       ]
     }
   }

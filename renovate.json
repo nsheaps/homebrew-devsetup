@@ -14,7 +14,6 @@
   ],
   "customDatasources": {
     "gh-file": {
-      "defaultRegistryUrlTemplate": "https://api.github.com/repos/{{registryUrl}}/contents/{{depName}}?ref={{currentDigest}}",
       "transformTemplates": [
         "{\"releases\":[{\"version\": $base64decode( $$.(content) )]}"
       ]

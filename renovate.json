@@ -6,7 +6,7 @@
       "customType": "regex",
       "fileMatch": [".*"],
       "matchStrings": [
-        "^#\\s?renovate:\\s*(datasource=(?<datasource>.*?) )?registryUrl=(?<registryUrl>.*)\\s?depName=(?<depName>.*)\\s?currentDigest=(?<currentDigest>.*)\\n(?<currentValue.*)$"
+        "^#\\s?renovate:\\s*(datasource=(?<datasource>.*?) )?registryUrl=(?<registryUrl>.*)\\s?depName=(?<depName>.*)\\s?currentDigest=(?<currentDigest>.*)\\n(?<currentValue>.*)$"
       ],
       "versioningTemplate": "loose",
       "datasourceTemplate": "custom.gh-file"

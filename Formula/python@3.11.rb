@@ -10,7 +10,7 @@ class PythonAT311 < formula
     skip "Meta formulas cannot be updated"
   end
 
-  # renovate:
+  # renovate: registryUrl=https://api.github.com/repos/Homebrew/homebrew-core/commits?path=Formula/p/python@3.11.rb
   depends_on "https://raw.githubusercontent.com/Homebrew/homebrew-core/cca86c9c20f43a6e6f98b41e8988088188907c41/Formula/p/python@3.11.rb"
 
   def install

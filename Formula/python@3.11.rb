@@ -1,4 +1,4 @@
-# renovate: datasource=gh-file registryUrl=Homebrew/homebrew-core depName=Formula/p/python@3.11.rb currentDigest=master
+# renovate: registryUrl=Homebrew/homebrew-core depName=Formula/p/python@3.11.rb currentDigest=master
 class PythonAT311 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"

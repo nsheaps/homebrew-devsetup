@@ -6,14 +6,13 @@
       "customType": "regex",
       "fileMatch": ["Formula(/\\S+)?/\\S+\\.rb"],
       "matchStrings": [
-        "#\\s?renovate:\\s*datasource=gh-file\\s+registryUrl=(?<registryUrl>.*)\\s+depName=(?<depName>.*)\\s+currentDigest=(?<currentDigest>.*)\\n(?<currentValue>.*)\\n# end renovate"
+        "#\\s?renovate:\\s*(datasource=(?<datasource>.*?)\\s+)?registryUrl=(?<registryUrl>.*)\\s+depName=(?<depName>.*)\\s+currentDigest=(?<currentDigest>.*)\\n(?<currentValue>.*)\\n# end renovate"
       ],
       "versioningTemplate": "loose",
-      "datasourceTemplate": "custom.gh-file"
     }
   ],
   "customDatasources": {
-    "gh-file": {
+    "ghfile": {
       "defaultRegistryUrlTemplate": "https://api.github.com/repos/{{registryUrl}}/contents/{{depName}}?ref={{currentDigest}}",
       "transformTemplates": [
         "{\"releases\":[{\"version\": $base64decode( $$.(content) )]}"

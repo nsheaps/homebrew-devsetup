@@ -6,7 +6,7 @@
       "customType": "regex",
       "fileMatch": ["Formula(/\\S+)?/\\S+\\.rb"],
       "matchStrings": [
-        "#\\s?renovate:?\\s*\\n\\s*depends_on \"https://raw.githubusercontent.com/(?<packageName>[A-Za-z0-9-_]+/[A-Za-z0-9-_]+)/(?<currentValue>[A-Za-z0-9]+)/(?<depName>.+).rb\""
+        "#\\s?renovate:?\\s*\\n\\s*depends_on \"https://raw.githubusercontent.com/(?<currentDigest>[A-Za-z0-9-_]+/[A-Za-z0-9-_]+)/(?<currentValue>[A-Za-z0-9]+)/(?<depName>.+).rb\""
       ],
       "versioningTemplate": "{{# if versioning}}{{{versioning}}}{{else}}git{{/if}}",
       "datasourceTemplate": "custom.github-file"
@@ -14,7 +14,7 @@
   ],
   "customDatasources": {
     "github-file": {
-      "defaultRegistryUrlTemplate": "https://api.github.com/repos/{{packageName}}/commits?path={{depName}}.rb",
+      "defaultRegistryUrlTemplate": "https://api.github.com/repos/{{currentDigest}}/commits?path={{depName}}.rb",
       "transformTemplates": [
         "{\"releases\":[{\"version\": $$.[0].sha, \"releaseTimestamp\": $$.[0].commit.author.date}]}"
       ]

@@ -14,20 +14,49 @@ You can copy and paste this whole thing into your terminal to install.
 <!-- TODO: what about tapping private repos? -->
 
 ```bash
+# or
+# wget -O - https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/main/install_brew.sh | bash
+
 if ! command -v brew >/dev/null; then
-    # brew is not installed
-    # Install brew - Keep up to date with homepage script here: https://brew.sh/
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  # brew is not installed
+  # Install brew - Keep up to date with homepage script here: https://brew.sh/
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 # If you're on linux, add the necessary parts
 ## sets up brew on the CLI for getting `brew --prefix` later
 test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
 test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# add for most common shells
-test -r ~/.bashrc && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bashrc && echo "added to .bashrc" || echo "not added to .bashrc"
-test -r ~/.zshrc  && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.zshrc && echo "added to .zshrc" || echo "not added to .zshrc"
-echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
+function line-exists-in-file() {
+  # $1 = file
+  # $2 = line
+  # todo: make this platform independent, macos and linux have different grep
+  if [ ! -f "$1" ]; then
+    # file doesn't exist, so line can't exist
+    return false
+  fi
+  grep -qxF "$2" "$1"
+  return $? == 0
+}
+
+function enforce-line-in-file() {
+  # $1 = file
+  # $2 = line
+  if [ -f "$1" ]; then
+    if line-exists-in-file "$1" "$2"; then
+      echo "already in to $1"
+    else
+      echo "$2" >> "$1"
+      echo "added to $1"
+    fi
+  else
+    echo "$2 does not exist"
+  fi
+}
+
+enforce-line-in-file ~/.bashrc 'eval "$($(brew --prefix)/bin/brew shellenv)"'
+enforce-line-in-file ~/.zshrc 'eval "$($(brew --prefix)/bin/brew shellenv)"'
+enforce-line-in-file ~/.profile 'eval "$($(brew --prefix)/bin/brew shellenv)"'
 
 echo "Brew version: $(brew --version)"
 echo "Brew prefix: $(brew --prefix)"

@@ -25,11 +25,15 @@ test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
 test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # add for most common shells
-test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
-test -r ~/.zprofile     && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.zprofile
+test -r ~/.bashrc && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bashrc && echo "added to .bashrc" || echo "not added to .bashrc"
+test -r ~/.zshrc  && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.zshrc && echo "added to .zshrc" || echo "not added to .zshrc"
 echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
 
 echo "Brew version: $(brew --version)"
+echo "Brew prefix: $(brew --prefix)"
+echo "Brew setup complete."
+
+# set up your environment
 brew tap nsheaps/devsetup
 brew install nsheaps/devsetup/devsetup
 devsetup set-tap nsheaps/devsetup

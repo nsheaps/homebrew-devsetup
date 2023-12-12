@@ -1,14 +1,22 @@
 #! /usr/bin/env bash
+
 if ! command -v brew >/dev/null; then
   # brew is not installed
   # Install brew - Keep up to date with homepage script here: https://brew.sh/
   echo "🍺 Installing brew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+  # If you're on linux, add the necessary parts
+  ## sets up brew on the CLI for getting `brew --prefix` later
+  test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+  test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  echo "✅ Brew installed."
+else
+  echo "✅ Brew already installed."
 fi
-# If you're on linux, add the necessary parts
-## sets up brew on the CLI for getting `brew --prefix` later
-test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
-test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+echo "ℹ️  Brew version: $(brew --version)"
+echo "ℹ️  Brew prefix: $(brew --prefix)"
 
 function line-exists-in-file() {
   # $1 = file
@@ -51,12 +59,11 @@ function enforce-line-in-file() {
   fi
 }
 
+echo "🍺 Adding brew shellenvs..."
 BREW_PREFIX=$(brew --prefix)
 enforce-line-in-file ~/.bashrc "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
 enforce-line-in-file ~/.zshrc "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
 enforce-line-in-file ~/.profile "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
 enforce-line-in-file /etc/profile "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
 
-echo "ℹ️ Brew version: $(brew --version)"
-echo "ℹ️ Brew prefix: $(brew --prefix)"
 echo "🍺 Brew setup complete."

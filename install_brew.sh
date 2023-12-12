@@ -72,7 +72,7 @@ sudo -v -p "🔒 requesting sudo access for protected file /etc/sudoers, please 
 if sudo grep -qF "secure_path" /etc/sudoers; then
   echo "🍺 Ensuring sudo can use brew-installed packages"
   # secure_path exists
-  if sudo grep -qF "secure_path=.*$HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin" /etc/sudoers; then
+  if sudo cat /etc/sudoers | grep -q "secure_path=.*$HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin"; then
     # brew path already in secure_path
     echo "✅ brew path already in secure_path"
   else

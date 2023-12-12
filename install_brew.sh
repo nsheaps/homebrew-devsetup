@@ -40,7 +40,7 @@ function enforce-line-in-file() {
   # $2 = line
   if [ -f "$1" ]; then
     if line-exists-in-file "$1" "$2"; then
-      echo "✅ already in to $1"
+      echo "✅ already in $1"
     else
       # if the file is write protected, use sudo
       if [ ! -w "$1" ]; then

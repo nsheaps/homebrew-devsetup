@@ -2,6 +2,7 @@
 if ! command -v brew >/dev/null; then
   # brew is not installed
   # Install brew - Keep up to date with homepage script here: https://brew.sh/
+  echo "🍺 Installing brew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 # If you're on linux, add the necessary parts
@@ -31,20 +32,22 @@ function enforce-line-in-file() {
   # $2 = line
   if [ -f "$1" ]; then
     if line-exists-in-file "$1" "$2"; then
-      echo "already in to $1"
+      echo "✅ already in to $1"
     else
       # if the file is write protected, use sudo
       if [ ! -w "$1" ]; then
-        echo "adding to $1 with sudo"
+        # ensure sudo access
+        sudo -v -p "🔒 requesting sudo access for protected file $1"
+        echo "🔒 adding to $1 with sudo"
         echo "$2" | sudo tee -a "$1" >/dev/null
       else 
         # echo "adding to $1"
         echo "$2" >> "$1"
       fi
-      echo "added to $1"
+      echo "✅ added to $1"
     fi
   else
-    echo "$1 does not exist"
+    echo "❓ $1 does not exist"
   fi
 }
 
@@ -54,6 +57,6 @@ enforce-line-in-file ~/.zshrc "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
 enforce-line-in-file ~/.profile "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
 enforce-line-in-file /etc/profile "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
 
-echo "Brew version: $(brew --version)"
-echo "Brew prefix: $(brew --prefix)"
-echo "Brew setup complete."
+echo "ℹ️ Brew version: $(brew --version)"
+echo "ℹ️ Brew prefix: $(brew --prefix)"
+echo "🍺 Brew setup complete."

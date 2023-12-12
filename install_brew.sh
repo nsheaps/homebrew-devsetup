@@ -68,7 +68,7 @@ enforce-line-in-file /etc/profile "eval \"\\$($HOMEBREW_PREFIX/bin/brew shellenv
 
 # if secure_path is set, add the brew path to it, $HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin
 sudo -v -p "🔒 requesting sudo access for protected file /etc/sudoers"
-if sudo grep -qF "secure_path" /etc/sudoers; then\
+if sudo grep -qF "secure_path" /etc/sudoers; then
   echo "🍺 Ensuring sudo can use brew-installed packages"
   # secure_path exists
   if sudo grep -qF "secure_path.*$HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin" /etc/sudoers; then

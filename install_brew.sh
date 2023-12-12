@@ -1,4 +1,4 @@
-
+#! /usr/bin/env bash
 if ! command -v brew >/dev/null; then
   # brew is not installed
   # Install brew - Keep up to date with homepage script here: https://brew.sh/

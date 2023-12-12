@@ -33,17 +33,26 @@ function enforce-line-in-file() {
     if line-exists-in-file "$1" "$2"; then
       echo "already in to $1"
     else
-      echo "$2" >> "$1"
+      # if the file is write protected, use sudo
+      if [ ! -w "$1" ]; then
+        echo "adding to $1 with sudo"
+        echo "$2" | sudo tee -a "$1" >/dev/null
+      else 
+        # echo "adding to $1"
+        echo "$2" >> "$1"
+      fi
       echo "added to $1"
     fi
   else
-    echo "$2 does not exist"
+    echo "$1 does not exist"
   fi
 }
 
-enforce-line-in-file ~/.bashrc 'eval "$($(brew --prefix)/bin/brew shellenv)"'
-enforce-line-in-file ~/.zshrc 'eval "$($(brew --prefix)/bin/brew shellenv)"'
-enforce-line-in-file ~/.profile 'eval "$($(brew --prefix)/bin/brew shellenv)"'
+BREW_PREFIX=$(brew --prefix)
+enforce-line-in-file ~/.bashrc "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
+enforce-line-in-file ~/.zshrc "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
+enforce-line-in-file ~/.profile "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
+enforce-line-in-file /etc/profile "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
 
 echo "Brew version: $(brew --version)"
 echo "Brew prefix: $(brew --prefix)"

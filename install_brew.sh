@@ -60,10 +60,31 @@ function enforce-line-in-file() {
 }
 
 echo "🍺 Adding brew shellenvs..."
-BREW_PREFIX=$(brew --prefix)
-enforce-line-in-file ~/.bashrc "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
-enforce-line-in-file ~/.zshrc "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
-enforce-line-in-file ~/.profile "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
-enforce-line-in-file /etc/profile "eval \"\\$($BREW_PREFIX/bin/brew shellenv)\""
+HOMEBREW_PREFIX=$(brew --prefix)
+enforce-line-in-file ~/.bashrc "eval \"\\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
+enforce-line-in-file ~/.zshrc "eval \"\\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
+enforce-line-in-file ~/.profile "eval \"\\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
+enforce-line-in-file /etc/profile "eval \"\\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
+
+# if secure_path is set, add the brew path to it, $HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin
+if grep -qF "secure_path" /etc/sudoers; then\
+  echo "🍺 Ensuring sudo can use brew-installed packages"
+  # secure_path exists
+  if grep -qF "secure_path.*$HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin" /etc/sudoers; then
+    # brew path already in secure_path
+    echo "✅ brew path already in secure_path"
+  else
+    # brew path not in secure_path
+    echo "🔒 adding brew path to secure_path"
+    sudo -v -p "🔒 requesting sudo access for protected file $1"
+    sudo sed -i "s/secure_path=\"/secure_path=\"$HOMEBREW_PREFIX\/sbin:$HOMEBREW_PREFIX\/bin:/g" /etc/sudoers
+    echo "✅ brew path added to secure_path"
+  fi
+# else
+#   # secure_path doesn't exist
+#   echo "🔒 adding secure_path to sudoers"
+#   sudo sed -i "s/Defaults    env_reset/Defaults    env_reset,secure_path=\"$BREW_PREFIX\/sbin:$BREW_PREFIX\/bin\"/g" /etc/sudoers
+#   echo "✅ secure_path added to sudoers"
+fi 
 
 echo "🍺 Brew setup complete."

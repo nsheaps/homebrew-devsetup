@@ -45,7 +45,7 @@ function enforce-line-in-file() {
       # if the file is write protected, use sudo
       if [ ! -w "$1" ]; then
         # ensure sudo access
-        sudo -v -p "🔒 requesting sudo access for protected file $1"
+        sudo -v -p "🔒 requesting sudo access for protected file $1, please enter password: "
         echo "🔒 adding to $1 with sudo"
         echo "$2" | sudo tee -a "$1" >/dev/null
       else 
@@ -61,23 +61,25 @@ function enforce-line-in-file() {
 
 echo "🍺 Adding brew shellenvs..."
 HOMEBREW_PREFIX=$(brew --prefix)
-enforce-line-in-file ~/.bashrc "eval \"\\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
-enforce-line-in-file ~/.zshrc "eval \"\\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
-enforce-line-in-file ~/.profile "eval \"\\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
-enforce-line-in-file /etc/profile "eval \"\\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
+LINE="eval \"\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
+enforce-line-in-file ~/.bashrc "$LINE"
+enforce-line-in-file ~/.zshrc "$LINE"
+enforce-line-in-file ~/.profile "$LINE"
+enforce-line-in-file /etc/profile "$LINE"
 
 # if secure_path is set, add the brew path to it, $HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin
-sudo -v -p "🔒 requesting sudo access for protected file /etc/sudoers"
+sudo -v -p "🔒 requesting sudo access for protected file /etc/sudoers, please enter password: "
 if sudo grep -qF "secure_path" /etc/sudoers; then
   echo "🍺 Ensuring sudo can use brew-installed packages"
   # secure_path exists
-  if sudo grep -qF "secure_path.*$HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin" /etc/sudoers; then
+  if sudo grep -qF "secure_path=.*$HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin" /etc/sudoers; then
     # brew path already in secure_path
     echo "✅ brew path already in secure_path"
   else
     # brew path not in secure_path
     echo "🔒 adding brew path to secure_path"
-    sudo sed -i "s/secure_path=\"/secure_path=\"$HOMEBREW_PREFIX\/sbin:$HOMEBREW_PREFIX\/bin:/g" /etc/sudoers
+    # todo sed is not the same on macos and linux
+    sudo sed -i "s#secure_path=\"#secure_path=\"$HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin:#g" /etc/sudoers
     echo "✅ brew path added to secure_path"
   fi
 # else

@@ -15,7 +15,16 @@ class InfraTools < Formula
   # if you want to reference another formula in another tap here so that it _will_ get
   # upgraded, use `devsetup alias <formula>`, then reference it with nsheaps/devsetup/<original>
   depends_on "tfenv"
+  depends_on "terragrunt"
   depends_on "kubectl"
+  depends_on "k2tf"
+  depends_on "awscli"
+  depends_on "openssl@3"
+  depends_on "ca-certificates"
+  
+  depends_on "gh"
+  depends_on "doppler"
+
 
   def install
     # even though there's stuff in the brew-meta-formula, brew needs something to install or it will

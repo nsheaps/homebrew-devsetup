@@ -18,6 +18,7 @@ class InfraTools < Formula
   depends_on "terragrunt"
   depends_on "kubectl"
   depends_on "k2tf"
+  depends_on "helm"
   depends_on "awscli"
   depends_on "openssl@3"
   depends_on "ca-certificates"

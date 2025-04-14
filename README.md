@@ -96,6 +96,60 @@ If you want any of these configurations to happen automatically on `devsetup ins
 | `gpg`          | sets up gpg with a key and config                                                                                                                                                                                                                                 |
 | `aws`          | sets up aws with a profile and config                                                                                                                                                                                                                             |
 
+## Tracking Upstream Formulas with Renovate
+
+This repository uses Renovate to automatically track and update formulas against their upstream versions. This is particularly useful for Python formulas that need to stay in sync with the official Homebrew versions.
+
+### How to Create a Formula that Tracks Upstream
+
+To create a formula that tracks an upstream formula (like Python), follow this template:
+
+```ruby
+# renovate: datasource=custom.ghfile registryUrl=Homebrew/homebrew-core depName=Formula/p/python@3.12.rb currentDigest=master
+class PythonAT312 < formula
+  desc 'Installs Python 3.12.x'
+  homepage 'http://github.com/nsheaps/homebrew-devsetup'
+  url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
+  sha256 "b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db"
+  version '1.0.0'
+
+  livecheck do
+    skip "Meta formulas cannot be updated"
+  end
+
+  depends_on "https://raw.githubusercontent.com/Homebrew/homebrew-core/master/Formula/p/python@3.12.rb"
+
+  def install
+    system "touch", "trick-brew-to-install-meta-formula"
+    prefix.install "trick-brew-to-install-meta-formula"
+  end
+end
+```
+
+The key components are:
+
+1. The comment at the top of the file with the Renovate configuration:
+   ```ruby
+   # renovate: datasource=custom.ghfile registryUrl=Homebrew/homebrew-core depName=Formula/p/python@3.12.rb currentDigest=master
+   ```
+
+2. The `depends_on` line that references the raw GitHub URL of the upstream formula:
+   ```ruby
+   depends_on "https://raw.githubusercontent.com/Homebrew/homebrew-core/master/Formula/p/python@3.12.rb"
+   ```
+
+When Renovate runs, it will:
+1. Check for updates to the upstream formula
+2. Update the SHA in the `depends_on` line to point to the latest version
+3. Create a pull request with the changes
+
+### How It Works
+
+The Renovate configuration in `renovate.json` uses a custom manager and datasource to:
+1. Match formula files with the special comment format
+2. Check the GitHub API for updates to the referenced file
+3. Update the SHA in the `depends_on` line when changes are detected
+
 ## TODO
 
 * [ ] Test `brew list` and see if it dumps list prefixed with installed tap (no tap is `homebrew/core`)

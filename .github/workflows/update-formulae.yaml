@@ -32,7 +32,7 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "$GITHUB_CONTEXT"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: list-formulae
         name: List all formulae in this tap
         run: |

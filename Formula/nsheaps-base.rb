@@ -26,6 +26,7 @@ class NsheapsBase < Formula
   depends_on "kubectl"
   depends_on "mise"
   depends_on "openssl@3"
+  depends_on "tilt"
   depends_on "wget"
 
   depends_on cask: "loop"

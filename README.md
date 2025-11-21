@@ -14,12 +14,10 @@ You can copy and paste this whole thing into your terminal to install.
 <!-- TODO: what about tapping private repos? -->
 
 ```bash
-setopt interactivecomments
-# platform agnostic brew installer with shellenv installation
-FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL -H "Cache-Control: no-cache"' || echo 'wget -O -'))
+setopt interactivecomments;
+FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
 bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
 
-# set up your environment
 brew tap nsheaps/devsetup
 brew install nsheaps/devsetup/devsetup
 devsetup set-tap nsheaps/devsetup
@@ -28,13 +26,12 @@ devsetup install devsetup-base
 
 ### Just setup stuff without devsetup
 ```bash
-setopt interactivecomments
-# platform agnostic brew installer with shellenv installation
-FETCH=($(command -v curl &>/dev/null && echo 'curl -H "Cache-Control: no-cache" -fsSL' || echo 'wget -O -'))
+setopt interactivecomments;
+FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
 bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
+\. ~\.zshrc
 brew install nsheaps/devsetup/nsheaps-base
 
-# Configure antigen as noted in the formula
 cat << 'EOF' >> ~/.zshrc
 
 setopt interactivecomments

@@ -62,40 +62,36 @@ function enforce-line-in-file() {
       echo "✅ added to $1"
     fi
   else
-    echo "❓ $1 does not exist"
+    # echo "❓ $1 does not exist"
+    true
   fi
 }
 
 echo "🍺 Adding brew shellenvs..."
 
-
-
 HOMEBREW_PREFIX="$(brew --prefix)"
 
-
-
-
-LINE="eval \"$$($HOMEBREW_PREFIX/bin/brew shellenv)\""
+LINE="eval \"\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
 enforce-line-in-file ~/.bashrc "$LINE"
 enforce-line-in-file ~/.zshrc "$LINE"
 enforce-line-in-file ~/.profile "$LINE"
 enforce-line-in-file /etc/profile "$LINE"
 
 # if secure_path is set, add the brew path to it, $HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin
-sudo -v -p "🔒 requesting sudo access for protected file /etc/sudoers, please enter password: "
-if sudo grep -qF "secure_path" /etc/sudoers; then
-  echo "🍺 Ensuring sudo can use brew-installed packages"
-  # secure_path exists
-  if sudo cat /etc/sudoers | grep -q "secure_path=.*$HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin"; then
-    # brew path already in secure_path
-    echo "✅ brew path already in secure_path"
-  else
-    # brew path not in secure_path
-    echo "🔒 adding brew path to secure_path"
-    # todo sed is not the same on macos and linux
-    sudo sed -i "s#secure_path=\"#secure_path=\"$HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin:#g" /etc/sudoers
-    echo "✅ brew path added to secure_path"
-  fi
+# sudo -v -p "🔒 requesting sudo access for protected file /etc/sudoers, please enter password: "
+# if sudo grep -qF "secure_path" /etc/sudoers; then
+#   echo "🍺 Ensuring sudo can use brew-installed packages"
+#   # secure_path exists
+#   if sudo cat /etc/sudoers | grep -q "secure_path=.*$HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin"; then
+#     # brew path already in secure_path
+#     echo "✅ brew path already in secure_path"
+#   else
+#     # brew path not in secure_path
+#     echo "🔒 adding brew path to secure_path"
+#     # todo sed is not the same on macos and linux
+#     sudo sed -i "s#secure_path=\"#secure_path=\"$HOMEBREW_PREFIX/sbin:$HOMEBREW_PREFIX/bin:#g" /etc/sudoers
+#     echo "✅ brew path added to secure_path"
+#   fi
 # else
 #   # secure_path doesn't exist
 #   echo "🔒 adding secure_path to sudoers"

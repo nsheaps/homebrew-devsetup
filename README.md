@@ -14,8 +14,10 @@ You can copy and paste this whole thing into your terminal to install.
 <!-- TODO: what about tapping private repos? -->
 
 ```bash
+setopt interactivecomments
 # platform agnostic brew installer with shellenv installation
-wget -O - https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh | bash
+FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
+bash <($FETCH https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh)
 
 # set up your environment
 brew tap nsheaps/devsetup

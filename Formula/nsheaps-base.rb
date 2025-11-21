@@ -9,10 +9,6 @@ class NsheapsBase < Formula
     skip "Meta formulas cannot be updated"
   end
 
-  # if these are installed from this tap, then devsetup upgrade-all will upgrade
-  # them, otherwise the dependencies will only get upgraded if this formula changes.
-  tap nsheaps/devsetup
-
   depends_on "autojump"
   depends_on "antigen"
   depends_on "awscli"

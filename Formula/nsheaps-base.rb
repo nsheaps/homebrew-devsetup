@@ -18,6 +18,7 @@ class NsheapsBase < Formula
   depends_on "awscli"
   depends_on "bash"
   depends_on "ca-certificates"
+  depends_on "curl"
   depends_on "direnv"
   depends_on "gh"
   depends_on "git"
@@ -25,6 +26,7 @@ class NsheapsBase < Formula
   depends_on "kubectl"
   depends_on "mise"
   depends_on "openssl@3"
+  depends_on "wget"
 
   depends_on cask: "loop"
   depends_on cask: "claude"

@@ -26,13 +26,16 @@ devsetup install devsetup-base
 
 ### Just setup stuff without devsetup
 ```bash
-
+setopt interactivecomments
 # platform agnostic brew installer with shellenv installation
-wget -O - https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh | bash
+FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
+bash <($FETCH https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh)
 brew install nsheaps/devsetup/nsheaps-base
 
 # Configure antigen as noted in the formula
-cat < EOF >> ~/.zshrc
+cat << 'EOF' >> ~/.zshrc
+
+setopt interactivecomments
 
 source $(brew --prefix)/share/antigen/antigen.zsh
 
@@ -53,7 +56,7 @@ EOF
 
 \. ~/.zshrc
 
-# Configure mise's global installs
+# Configure mise global installs
 mise use -g \
   node@lts \
   yarn@latest \

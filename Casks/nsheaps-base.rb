@@ -1,4 +1,4 @@
-class NsheapsBase < Formula
+cask NsheapsBase do
   desc 'A metaformula for installing the base applications for Nathan Heaps < nsheaps[at]gmail[dot]com >'
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
@@ -9,21 +9,21 @@ class NsheapsBase < Formula
     skip "Meta formulas cannot be updated"
   end
 
-  depends_on "autojump"
-  depends_on "antigen"
-  depends_on "awscli"
-  depends_on "bash"
-  depends_on "ca-certificates"
-  depends_on "curl"
-  depends_on "direnv"
-  depends_on "gh"
-  depends_on "git"
-  depends_on "helm"
-  depends_on "kubectl"
-  depends_on "mise"
-  depends_on "openssl@3"
-  depends_on "tilt"
-  depends_on "wget"
+  depends_on formula: "autojump"
+  depends_on formula: "antigen"
+  depends_on formula: "awscli"
+  depends_on formula: "bash"
+  depends_on formula: "ca-certificates"
+  depends_on formula: "curl"
+  depends_on formula: "direnv"
+  depends_on formula: "gh"
+  depends_on formula: "git"
+  depends_on formula: "helm"
+  depends_on formula: "kubectl"
+  depends_on formula: "mise"
+  depends_on formula: "openssl@3"
+  depends_on formula: "tilt"
+  depends_on formula: "wget"
 
   depends_on cask: "loop"
   depends_on cask: "claude"

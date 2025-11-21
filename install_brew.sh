@@ -13,13 +13,15 @@ if ! command -v brew >/dev/null; then
   test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
   test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
   test -d /opt/homebrew/bin/brew && eval "$(/opt/homebrew/bin/brew shellenv)
+
+  echo "ℹ️  Brew version: $(brew --version)"
+  echo "ℹ️  Brew prefix: $(brew --prefix)"
+
   echo "✅ Brew installed."
 else
   echo "✅ Brew already installed."
 fi
 
-echo "ℹ️  Brew version: $(brew --version)"
-echo "ℹ️  Brew prefix: $(brew --prefix)"
 
 function line-exists-in-file() {
   # $1 = file

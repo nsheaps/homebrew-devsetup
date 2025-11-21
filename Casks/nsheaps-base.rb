@@ -4,7 +4,7 @@ cask "nsheaps-base" do
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
   sha256 "b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db"
-  version '1.0.1' # bump me if you want people to re-install these things, like if the list changed.
+  version '1.0.2' # bump me if you want people to re-install these things, like if the list changed.
 
   stage_only true
 
@@ -23,6 +23,10 @@ cask "nsheaps-base" do
   depends_on formula: "kubectl"
   depends_on formula: "mise"
   depends_on formula: "openssl@3"
+  depends_on formula: "pstree"
+  depends_on formula: "shellcheck"
+  depends_on formula: "shfmt"
+  depends_on formula: "tmux"
   depends_on formula: "tilt"
   depends_on formula: "wget"
 
@@ -37,6 +41,8 @@ cask "nsheaps-base" do
   depends_on cask: "iterm2"
   depends_on cask: "itermai"
   depends_on cask: "itermbrowserplugin"
+  depends_on cask: "zoom"
+  depends_on cask: "spotify"
   depends_on cask: "1password"
   depends_on cask: "1password-cli"
 

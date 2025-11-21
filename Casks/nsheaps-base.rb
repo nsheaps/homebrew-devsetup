@@ -1,5 +1,5 @@
 cask "NsheapsBase" do
-  name 'nsheapsBase'
+  name 'NsheapsBase'
   desc 'A metaformula for installing the base applications for Nathan Heaps < nsheaps[at]gmail[dot]com >'
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'

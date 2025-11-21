@@ -67,8 +67,15 @@ function enforce-line-in-file() {
 }
 
 echo "🍺 Adding brew shellenvs..."
-HOMEBREW_PREFIX=$(brew --prefix)
-LINE="eval \"\$($HOMEBREW_PREFIX/bin/brew shellenv)\""
+
+
+
+HOMEBREW_PREFIX="$(brew --prefix)"
+
+
+
+
+LINE="eval \"$$($HOMEBREW_PREFIX/bin/brew shellenv)\""
 enforce-line-in-file ~/.bashrc "$LINE"
 enforce-line-in-file ~/.zshrc "$LINE"
 enforce-line-in-file ~/.profile "$LINE"

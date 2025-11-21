@@ -58,7 +58,7 @@ mise use -g \
   node@lts \
   yarn@latest \
   bun@latest \
-  python@lts \
+  python@latest \
   direnv@latest \
   golang@lts
 mise install

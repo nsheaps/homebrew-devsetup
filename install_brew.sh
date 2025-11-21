@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+set -euo pipefail
+
 if ! command -v brew >/dev/null; then
   # brew is not installed
   # Install brew - Keep up to date with homepage script here: https://brew.sh/
@@ -45,9 +47,11 @@ function enforce-line-in-file() {
       # if the file is write protected, use sudo
       if [ ! -w "$1" ]; then
         # ensure sudo access
-        sudo -v -p "🔒 requesting sudo access for protected file $1, please enter password: "
-        echo "🔒 adding to $1 with sudo"
-        echo "$2" | sudo tee -a "$1" >/dev/null
+        # sudo -v -p "🔒 requesting sudo access for protected file $1, please enter password: "
+        # echo "🔒 adding to $1 with sudo"
+        # echo "$2" | sudo tee -a "$1" >/dev/null
+        echo "WARN: Skipping write protected file $1. Make sure to add the following to the file:"
+        echo "$2"
       else 
         # echo "adding to $1"
         echo "$2" >> "$1"

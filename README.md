@@ -28,7 +28,7 @@ devsetup install devsetup-base
 FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
 bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
 \. ~/.zshrc
-brew install nsheaps/devsetup/nsheaps-base
+brew install --cask nsheaps/devsetup/nsheaps-base
 
 cat << 'EOF' >> ~/.zshrc
 

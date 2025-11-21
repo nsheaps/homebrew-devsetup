@@ -9,6 +9,8 @@ cask NsheapsBase do
     skip "Meta formulas cannot be updated"
   end
 
+  stage_only true
+
   depends_on formula: "autojump"
   depends_on formula: "antigen"
   depends_on formula: "awscli"

@@ -23,50 +23,6 @@ devsetup set-tap nsheaps/devsetup
 devsetup install devsetup-base
 ```
 
-### Just setup stuff without devsetup
-```bash
-FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
-bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
-\. ~/.zshrc
-brew install --cask nsheaps/devsetup/nsheaps-base
-
-cat << 'EOF' >> ~/.zshrc
-
-setopt interactivecomments
-
-ANTIGEN_LOG="$HOME/.antigen/log.log"
-source $(brew --prefix)/share/antigen/antigen.zsh
-
-antigen use oh-my-zsh
-
-antigen bundles <<EOBUNDLES
-    getantidote/use-omz@main
-    git
-    autojump
-    brew
-    direnv
-    docker
-    mise
-    command-not-found
-    zsh-users/zsh-syntax-highlighting
-    zsh-users/zsh-autosuggestions
-EOBUNDLES
-antigen theme robbyrussell
-antigen apply
-
-EOF
-
-\. ~/.zshrc
-
-# Configure mise global installs
-mise use -g \
-  node@lts \
-  bun \
-  python \
-  golang
-mise ls
-```
-
 ## Maintenance
 
 ### Linting

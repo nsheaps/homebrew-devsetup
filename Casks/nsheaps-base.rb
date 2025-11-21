@@ -5,6 +5,75 @@ cask "nsheaps-base" do
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
   sha256 "b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db"
   version '1.0.3' # bump me if you want people to re-install these things, like if the list changed.
+  ### WHAT IS THIS
+  # Running the quick start script will:
+  # - install homebrew if not already installed
+  # - install this cask
+  # - install a set of base formulae and casks via brew (requires app not be installed)
+  # - set up ohmyzsh via antigen (todo: replace with antidote) and a set of plugins/themes
+  # It does not:
+  # - softwareupdate --install-rosetta (you must do this manually)
+  # - install docker-desktop (they're really anti casks because of permissions)
+  # - open all the apps/tools and log you in (you must do this manually)
+  #   - [ ] vscode
+  #   - [ ] 1password desktop login
+  #   - [ ] gh auth login
+  #   - [ ] gh setup-git
+  #   - [ ] generage gpg keys and add to github/git
+  # The formula itself does not:
+  # - manage the rc integrations
+  # - manage anything other than brew installs for casks and formulae
+  # - work on linux (casks are not supported)
+  ### QUICKSTART
+  # Prerequisites:
+  # - Don't have any apps installed already which will be installed by casks
+  # - must be on macos
+  #
+  # Updating:
+  # brew update && brew upgrade (will update all taps, then installed formulae/casks)
+  #
+  # Installation:
+  # Run the following (copy/paste) into your shell.
+  # FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
+  # bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
+  # \. ~/.zshrc
+  # brew install --cask nsheaps/devsetup/nsheaps-base
+  # 
+  # cat << 'EOF' >> ~/.zshrc
+  # 
+  # setopt interactivecomments
+  # 
+  # ANTIGEN_LOG="$HOME/.antigen/log.log"
+  # source $(brew --prefix)/share/antigen/antigen.zsh
+  # 
+  # antigen use oh-my-zsh
+  # 
+  # antigen bundles <<EOBUNDLES
+  #     getantidote/use-omz@main
+  #     git
+  #     autojump
+  #     brew
+  #     direnv
+  #     docker
+  #     mise
+  #     command-not-found
+  #     zsh-users/zsh-syntax-highlighting
+  #     zsh-users/zsh-autosuggestions
+  # EOBUNDLES
+  # antigen theme robbyrussell
+  # antigen apply
+  # 
+  # EOF
+  # 
+  # \. ~/.zshrc
+  # 
+  # mise use -g \
+  #   node@lts \
+  #   bun \
+  #   python \
+  #   golang
+  # mise ls
+
 
   stage_only true
 

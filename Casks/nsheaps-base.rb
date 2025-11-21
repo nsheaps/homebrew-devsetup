@@ -55,6 +55,7 @@ cask "nsheaps-base" do
 
 
   def caveats
+    # TODO make install/uninstall manage this
     <<~CAVEATS
       # Run the following to add the needed lines to your ~/.zshrc:
       cat << EOF >> ~/.zshrc

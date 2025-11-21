@@ -34,18 +34,23 @@ cat << 'EOF' >> ~/.zshrc
 
 setopt interactivecomments
 
+ANTIGEN_LOG="$HOME/.antigen/log.log"
 source $(brew --prefix)/share/antigen/antigen.zsh
 
 antigen use oh-my-zsh
-antigen bundle git
-antigen bundle autojump
-antigen bundle brew
-antigen bundle direnv
-antigen bundle docker
-antigen bundle mise
-antigen bundle command-not-found
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle zsh-users/zsh-autosuggestions
+
+antigen bundles <<EOBUNDLES
+    getantidote/use-omz@main
+    git
+    autojump
+    brew
+    direnv
+    docker
+    mise
+    command-not-found
+    zsh-users/zsh-syntax-highlighting
+    zsh-users/zsh-autosuggestions
+EOBUNDLES
 antigen theme robbyrussell
 antigen apply
 

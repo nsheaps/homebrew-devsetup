@@ -17,7 +17,7 @@ You can copy and paste this whole thing into your terminal to install.
 setopt interactivecomments
 # platform agnostic brew installer with shellenv installation
 FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
-bash <($FETCH https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh)
+bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
 
 # set up your environment
 brew tap nsheaps/devsetup
@@ -31,7 +31,7 @@ devsetup install devsetup-base
 setopt interactivecomments
 # platform agnostic brew installer with shellenv installation
 FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
-bash <($FETCH https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh)
+bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
 brew install nsheaps/devsetup/nsheaps-base
 
 # Configure antigen as noted in the formula

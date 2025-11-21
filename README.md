@@ -61,12 +61,10 @@ EOF
 # Configure mise global installs
 mise use -g \
   node@lts \
-  yarn@latest \
-  bun@latest \
-  python@latest \
-  direnv@latest \
-  golang@lts
-mise install
+  bun \
+  python \
+  golang
+mise ls
 ```
 
 ## Maintenance

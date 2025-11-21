@@ -4,7 +4,7 @@ cask "nsheaps-base" do
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
   sha256 "b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db"
-  version '1.0.2' # bump me if you want people to re-install these things, like if the list changed.
+  version '1.0.3' # bump me if you want people to re-install these things, like if the list changed.
 
   stage_only true
 
@@ -29,6 +29,7 @@ cask "nsheaps-base" do
   depends_on formula: "tmux"
   depends_on formula: "tilt"
   depends_on formula: "wget"
+  # depends_on formula: "zsh" # TODO: only on linux
 
   depends_on cask: "loop"
   depends_on cask: "claude"
@@ -55,7 +56,7 @@ cask "nsheaps-base" do
 
 
   def caveats
-    # TODO make install/uninstall manage this
+    # TODO: make install/uninstall manage this
     <<~CAVEATS
       # Run the following to add the needed lines to your ~/.zshrc:
       cat << EOF >> ~/.zshrc

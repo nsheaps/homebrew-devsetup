@@ -14,7 +14,6 @@ You can copy and paste this whole thing into your terminal to install.
 <!-- TODO: what about tapping private repos? -->
 
 ```bash
-setopt interactivecomments;
 FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
 bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
 
@@ -26,7 +25,6 @@ devsetup install devsetup-base
 
 ### Just setup stuff without devsetup
 ```bash
-setopt interactivecomments;
 FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
 bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
 \. ~\.zshrc

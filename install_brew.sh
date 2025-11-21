@@ -58,8 +58,8 @@ function enforce-line-in-file() {
       else 
         # echo "adding to $1"
         echo "$2" >> "$1"
+        echo "✅ added to $1"
       fi
-      echo "✅ added to $1"
     fi
   else
     # echo "❓ $1 does not exist"
@@ -97,6 +97,6 @@ enforce-line-in-file /etc/profile "$LINE"
 #   echo "🔒 adding secure_path to sudoers"
 #   sudo sed -i "s/Defaults    env_reset/Defaults    env_reset,secure_path=\"$BREW_PREFIX\/sbin:$BREW_PREFIX\/bin\"/g" /etc/sudoers
 #   echo "✅ secure_path added to sudoers"
-fi 
+# fi 
 
 echo "🍺 Brew setup complete."

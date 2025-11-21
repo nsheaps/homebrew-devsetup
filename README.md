@@ -24,6 +24,46 @@ devsetup set-tap nsheaps/devsetup
 devsetup install devsetup-base
 ```
 
+### Just setup stuff without devsetup
+```bash
+
+# platform agnostic brew installer with shellenv installation
+wget -O - https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh | bash
+brew install nsheaps/devsetup/nsheaps-base
+
+# Configure antigen as noted in the formula
+cat < EOF >> ~/.zshrc
+
+source $(brew --prefix)/share/antigen/antigen.zsh
+
+antigen use oh-my-zsh
+antigen bundle git
+antigen bundle autojump
+antigen bundle brew
+antigen bundle direnv
+antigen bundle docker
+antigen bundle mise
+antigen bundle command-not-found
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-autosuggestions
+antigen theme robbyrussell
+antigen apply
+
+EOF
+
+\. ~/.zshrc
+
+# Configure mise's global installs
+mise use -g \
+  node@lts \
+  yarn@latest \
+  bun@latest \
+  python@lts \
+  direnv@latest \
+  golang@lts
+mise install
+```
+
 ## Maintenance
 
 ### Linting

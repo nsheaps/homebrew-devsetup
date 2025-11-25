@@ -37,7 +37,7 @@ cask "nsheaps-base" do
   # FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
   # bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
   # \. ~/.zshrc
-  # brew install --cask nsheaps/devsetup/nsheaps-base
+  # brew install --cask --adopt nsheaps/devsetup/nsheaps-base
   # 
   # cat << 'EOF' >> ~/.zshrc
   # 
@@ -104,6 +104,7 @@ cask "nsheaps-base" do
   depends_on cask: "claude"
   depends_on cask: "claude-code"
   depends_on cask: "visual-studio-code"
+  depends_on cask: "google-chrome"
   depends_on cask: "slack"
   depends_on cask: "notion"
   depends_on cask: "linear-linear"

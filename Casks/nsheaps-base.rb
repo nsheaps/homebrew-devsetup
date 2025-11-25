@@ -30,10 +30,10 @@ cask "nsheaps-base" do
   # - must be on macos
   #
   # Dry run:
-  # brew outdated --greedy
+  # brew update && brew outdated
   #
   # Updating:
-  # brew update --greedy && brew upgrade --greedy (will update all taps, then installed formulae/casks)
+  # brew update && brew upgrade --greedy (will update all taps, then installed formulae/casks)
   #
   # Installation:
   # Run the following (copy/paste) into your shell.

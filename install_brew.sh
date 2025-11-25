@@ -67,6 +67,18 @@ function enforce-line-in-file() {
   fi
 }
 
+function enforce_current_shell_rcfile_exists(){
+  if [[ "$SHELL" == *zsh* ]]; then
+    touch $HOME/.zshrc
+  elif [[ "$SHELL" == *bash* ]]; then
+    touch $HOME/.bashrc
+  else
+    echo "WARN: Unsupported shell $SHELL"
+  fi
+}
+
+enforce_current_shell_rcfile_exists
+
 echo "🍺 Adding brew shellenvs..."
 
 HOMEBREW_PREFIX="$(brew --prefix)"

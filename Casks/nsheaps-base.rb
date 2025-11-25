@@ -54,9 +54,6 @@ cask "nsheaps-base" do
   # # from static mode.
   # source <(antidote init)
 
-  # antidote bundle 
-  # antidote bundle 
-
   # antidote bundle <<EOBUNDLES
   #     zsh-users/zsh-autosuggestions
   #     zsh-users/zsh-completions

@@ -34,45 +34,45 @@ cask "nsheaps-base" do
   #
   # Installation:
   # Run the following (copy/paste) into your shell.
-  # FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
-  # bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
-  # \. ~/.zshrc
-  # brew install --cask --adopt nsheaps/devsetup/nsheaps-base
-  # 
+# FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
+# bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
+# \. ~/.zshrc
+# brew install --cask --adopt nsheaps/devsetup/nsheaps-base
+# 
   # cat << 'EOF' >> ~/.zshrc
-  # 
+# 
   # setopt interactivecomments
-  # 
+# 
   # ANTIGEN_LOG="$HOME/.antigen/log.log"
-  # source $(brew --prefix)/share/antigen/antigen.zsh
-  # 
+# source $(brew --prefix)/share/antigen/antigen.zsh
+# 
   # antigen use oh-my-zsh
-  # 
+# 
   # antigen bundles <<EOBUNDLES
-  #     getantidote/use-omz@main
-  #     git
-  #     autojump
-  #     brew
-  #     direnv
-  #     docker
-  #     mise
-  #     command-not-found
-  #     zsh-users/zsh-syntax-highlighting
-  #     zsh-users/zsh-autosuggestions
-  # EOBUNDLES
-  # antigen theme robbyrussell
-  # antigen apply
-  # 
+#     getantidote/use-omz@main
+#     git
+#     autojump
+#     brew
+#     direnv
+#     docker
+#     mise
+#     command-not-found
+#     zsh-users/zsh-syntax-highlighting
+#     zsh-users/zsh-autosuggestions
+# EOBUNDLES
+# antigen theme robbyrussell
+# antigen apply
+# 
   # EOF
-  # 
+# 
   # \. ~/.zshrc
-  # 
+# 
   # mise use -g \
-  #   node@lts \
-  #   bun \
-  #   python \
-  #   golang
-  # mise ls
+#   node@lts \
+#   bun \
+#   python \
+#   golang
+# mise ls
 
 
   stage_only true
@@ -114,6 +114,7 @@ cask "nsheaps-base" do
   depends_on cask: "itermbrowserplugin"
   depends_on cask: "zoom"
   depends_on cask: "spotify"
+  depends_on cask: "telegram"
   depends_on cask: "1password"
   depends_on cask: "1password-cli"
 

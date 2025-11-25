@@ -4,7 +4,7 @@ cask "nsheaps-base" do
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
   sha256 "b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db"
-  version '1.0.3' # bump me if you want people to re-install these things, like if the list changed.
+  version '1.0.4' # bump me if you want people to re-install these things, like if the list changed.
   ### WHAT IS THIS
   # Running the quick start script will:
   # - install homebrew if not already installed
@@ -29,56 +29,65 @@ cask "nsheaps-base" do
   # - Don't have any apps installed already which will be installed by casks
   # - must be on macos
   #
+  # Dry run:
+  # brew outdated --greedy
+  #
   # Updating:
-  # brew update && brew upgrade (will update all taps, then installed formulae/casks)
+  # brew update --greedy && brew upgrade --greedy (will update all taps, then installed formulae/casks)
   #
   # Installation:
   # Run the following (copy/paste) into your shell.
-# FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
-# bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
-# \. ~/.zshrc
-# brew install --cask --adopt nsheaps/devsetup/nsheaps-base
-# 
-  # cat << 'EOF' >> ~/.zshrc
-# 
+
   # setopt interactivecomments
-# 
-  # ANTIGEN_LOG="$HOME/.antigen/log.log"
-# source $(brew --prefix)/share/antigen/antigen.zsh
-# 
-  # antigen use oh-my-zsh
-# 
-  # antigen bundles <<EOBUNDLES
-#     getantidote/use-omz@main
-#     git
-#     autojump
-#     brew
-#     direnv
-#     docker
-#     mise
-#     command-not-found
-#     zsh-users/zsh-syntax-highlighting
-#     zsh-users/zsh-autosuggestions
-# EOBUNDLES
-# antigen theme robbyrussell
-# antigen apply
-# 
-  # EOF
-# 
+  # FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
+  # bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
   # \. ~/.zshrc
-# 
+  # brew install --cask --adopt nsheaps/devsetup/nsheaps-base
+
+  # cat << 'EOF' >> ~/.zshrc
+
+  # setopt interactivecomments
+
+  # source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
+
+  # # Initialize antidote's dynamic mode, which changes `antidote bundle`
+  # # from static mode.
+  # source <(antidote init)
+
+  # antidote bundle 
+  # antidote bundle 
+
+  # antidote bundle <<EOBUNDLES
+  #     zsh-users/zsh-autosuggestions
+  #     zsh-users/zsh-completions
+  #     getantidote/use-omz
+  #     ohmyzsh/ohmyzsh path:lib
+  #     ohmyzsh/ohmyzsh path:plugins/git
+  #     ohmyzsh/ohmyzsh path:plugins/autojump
+  #     ohmyzsh/ohmyzsh path:plugins/brew
+  #     ohmyzsh/ohmyzsh path:plugins/direnv
+  #     ohmyzsh/ohmyzsh path:plugins/docker
+  #     ohmyzsh/ohmyzsh path:plugins/mise
+  #     ohmyzsh/ohmyzsh path:plugins/command-not-found
+  #     ohmyzsh/ohmyzsh path:themes/robbyrussell.zsh-theme
+  # EOBUNDLES
+
+  # EOF
+
+  # \. ~/.zshrc
+
   # mise use -g \
-#   node@lts \
-#   bun \
-#   python \
-#   golang
-# mise ls
+  #   node@lts \
+  #   bun \
+  #   python \
+  #   golang
+  # mise ls
 
 
   stage_only true
 
   depends_on formula: "autojump"
-  depends_on formula: "antigen"
+  depends_on formula: "antidote"
   depends_on formula: "awscli"
   depends_on formula: "bash"
   depends_on formula: "ca-certificates"

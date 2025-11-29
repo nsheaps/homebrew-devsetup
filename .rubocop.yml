@@ -1,4 +1,14 @@
 ---
+AllCops:
+  NewCops: enable
+
+Metrics/BlockLength:
+  Enabled: false
+
+Layout/LineLength:
+  AllowedPatterns:
+    - "# renovate: .*"
+
 Naming/FileName:
   Enabled: false
 

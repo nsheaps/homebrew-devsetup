@@ -22,7 +22,6 @@ else
   echo "✅ Brew already installed."
 fi
 
-
 function line-exists-in-file() {
   # $1 = file
   # $2 = line
@@ -55,9 +54,9 @@ function enforce-line-in-file() {
         # echo "$2" | sudo tee -a "$1" >/dev/null
         echo "WARN: Skipping write protected file $1. Make sure to add the following to the file:"
         echo "$2"
-      else 
+      else
         # echo "adding to $1"
-        echo "$2" >> "$1"
+        echo "$2" >>"$1"
         echo "✅ added to $1"
       fi
     fi
@@ -67,11 +66,11 @@ function enforce-line-in-file() {
   fi
 }
 
-function enforce_current_shell_rcfile_exists(){
+function enforce_current_shell_rcfile_exists() {
   if [[ "$SHELL" == *zsh* ]]; then
-    touch $HOME/.zshrc
+    touch "$HOME/.zshrc"
   elif [[ "$SHELL" == *bash* ]]; then
-    touch $HOME/.bashrc
+    touch "$HOME/.bashrc"
   else
     echo "WARN: Unsupported shell $SHELL"
   fi
@@ -109,6 +108,6 @@ enforce-line-in-file /etc/profile "$LINE"
 #   echo "🔒 adding secure_path to sudoers"
 #   sudo sed -i "s/Defaults    env_reset/Defaults    env_reset,secure_path=\"$BREW_PREFIX\/sbin:$BREW_PREFIX\/bin\"/g" /etc/sudoers
 #   echo "✅ secure_path added to sudoers"
-# fi 
+# fi
 
 echo "🍺 Brew setup complete."

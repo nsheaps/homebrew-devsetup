@@ -2,6 +2,10 @@
 # Configuration file for MegaLinter
 # See all available variables at https://megalinter.io/configuration/ and in linters documentation
 
+# run megalinter locally by:
+# docker info || open /Applications/Docker.app
+# npx mega-linter-runner --flavor cupcake
+
 APPLY_FIXES: all # all, none, or list of linter keys
 
 # ENABLE: # If you use ENABLE variable, all other languages/formats/tooling-formats will be disabled by default

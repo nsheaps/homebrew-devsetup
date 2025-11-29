@@ -1,0 +1,27 @@
+[tools]
+node = "lts"
+
+[tasks.test-renovate]
+description = "Run renovate in dry-run mode to test configuration"
+run = '''
+# running renovate in dry-run mode
+set -euo pipefail
+export RENOVATE_CONFIG_FILE_NAMES="renovate.json,renovate.json5"
+export RENOVATE_GITHUB_COM_TOKEN="$(gh auth token)"
+
+echo "Validating renovate configuration..."
+npx --yes --package renovate -- renovate-config-validator
+echo "==============================="
+echo "Running renovate in dry-run mode..."
+export LOG_LEVEL=${LOG_LEVEL:-debug}
+npx --yes --package renovate -- \
+  renovate \
+  --dry-run=full \
+  --config-validation-error=true \
+  --token=$(gh auth token) \
+  --platform=local \
+  --repository-cache=reset \
+  --rebase-when=never \
+  --github-token-warn=true \
+| tee renovate-log.txt
+'''

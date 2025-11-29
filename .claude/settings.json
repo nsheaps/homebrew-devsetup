@@ -1,8 +1,6 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(npx mega-linter-runner:*)"
-    ],
+    "allow": ["Bash(npx mega-linter-runner:*)"],
     "deny": [],
     "ask": []
   }

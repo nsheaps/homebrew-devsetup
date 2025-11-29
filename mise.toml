@@ -1,6 +1,12 @@
 [tools]
 node = "lts"
 
+[tasks.lint]
+description = "Run MegaLinter to lint the codebase"
+run = '''
+exec npx mega-linter-runner --flavor cupcake
+'''
+
 [tasks.test-renovate]
 description = "Run renovate in dry-run mode to test configuration"
 run = '''

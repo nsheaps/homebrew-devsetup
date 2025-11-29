@@ -2,6 +2,10 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "configMigration": true,
+  "automerge": true,
+  "automergeStrategy": "squash",
+  "timezone": "America/New_York",
+  "schedule": ["after 10am and before 4pm"],
   "packageRules": [
     {
       "matchManagers": ["github-actions"],

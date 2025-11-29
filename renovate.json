@@ -1,17 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
+  "extends": [
+    "config:recommended"
+  ],
   "configMigration": true,
   "packageRules": [
     {
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "pinDigests": true
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["Formula(/\\S+)?/\\S+\\.rb"],
+      "managerFilePatterns": [
+        "/Formula(/\\S+)?/\\S+\\.rb/"
+      ],
       "matchStrings": [
         "#\\s?renovate:?\\s*(registryUrl=(?<registryUrl>.+))?\\s*\\n\\s*depends_on \"https://raw.githubusercontent.com/(?<repo>[A-Za-z0-9-_]+/[A-Za-z0-9-_]+)/(?<currentValue>[A-Za-z0-9]+)/(?<depName>.+).rb\""
       ],

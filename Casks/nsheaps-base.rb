@@ -107,6 +107,7 @@ cask 'nsheaps-base' do
 
   depends_on cask: '1password'
   depends_on cask: '1password-cli'
+  depends_on cask: 'alfred'
   depends_on cask: 'loop'
   depends_on cask: 'claude'
   depends_on cask: 'claude-code'

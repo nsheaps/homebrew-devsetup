@@ -4,7 +4,7 @@ cask 'nsheaps-base' do
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
   sha256 'b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db'
-  version '1.0.10' # bump me if you want people to re-install these things, like if the list changed.
+  version '1.0.11' # bump me if you want people to re-install these things, like if the list changed.
   ### WHAT IS THIS
   # Running the quick start script will:
   # - install homebrew if not already installed
@@ -138,16 +138,21 @@ cask 'nsheaps-base' do
   def post_install
     # notify the user that we're about to install stuff from the app store
     # pass a heredoc to brew install as an in-line Brewfile in order to install apps from the mac store
-    # using the following syntax:
-    ohai "Installing mac app store apps..."
+    
+    # This is quiet and doesn't print to the user
+    ohai "ohai Installing mac app store apps..."
+    # we need to be louder and actually print
+    system "echo", "echo Installing mac app store apps..."
 
     system "brew", "bundle", "--file=/dev/stdin" , :input => <<~BUNDLE
       brew "mas"
       
       mas "Spokenly", id: 6740315592 # Speech To Text
+      mas "Paste", id: 967805235 # Paste - Clipboard Manager
     BUNDLE
 
-    ohai "Finished installing mac app store apps."
+    ohai "ohai Finished installing mac app store apps."
+    system "echo", "echo Finished installing mac app store apps."
 
   end
 

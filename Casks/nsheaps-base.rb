@@ -136,12 +136,13 @@ cask 'nsheaps-base' do
   end
 
   postflight do
-    ohai "Installing mac app store apps..."
     File.write "#{staged_path}/Brewfile.mas", <<~BUNDLE
       mas "Spokenly - Speech To Text", id: 6740315592
       mas "Paste", id: 967805235
     BUNDLE
+    ohai "Wrote bundle to #{staged_path}/Brewfile.mas"
 
+    ohai "Installing mac app store apps..."
     system "brew", "bundle", "--file=#{staged_path}/Brewfile.mas"
   end
 

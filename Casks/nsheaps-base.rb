@@ -4,7 +4,7 @@ cask 'nsheaps-base' do
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
   sha256 'b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db'
-  version '1.0.13' # bump me if you want people to re-install these things, like if the list changed.
+  version '1.0.14' # bump me if you want people to re-install these things, like if the list changed.
   ### WHAT IS THIS
   # Running the quick start script will:
   # - install homebrew if not already installed
@@ -80,7 +80,7 @@ cask 'nsheaps-base' do
   #   golang
   # mise ls
 
-  stage_only true
+  # stage_only true
 
   depends_on formula: 'autojump'
   depends_on formula: 'antidote'

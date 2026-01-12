@@ -4,7 +4,7 @@ cask 'nsheaps-base' do
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
   sha256 'b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db'
-  version '1.0.21' # bump me if you want people to re-install these things, like if the list changed.
+  version '1.0.22' # bump me if you want people to re-install these things, like if the list changed.
   ### WHAT IS THIS
   # Running the quick start script will:
   # - install homebrew if not already installed
@@ -97,7 +97,7 @@ cask 'nsheaps-base' do
   depends_on formula: 'gnupg'
   depends_on formula: 'helm'
   depends_on formula: 'kubectl'
-  depends_on formula: 'mas' # mac app store cli, used later to install apps from app store
+  # depends_on formula: 'mas' # mac app store cli, used later to install apps from app store
   depends_on formula: 'mise'
   depends_on formula: 'openssl@3'
   depends_on formula: 'pstree'
@@ -135,16 +135,17 @@ cask 'nsheaps-base' do
     prefix.install 'trick-brew-to-install-meta-formula'
   end
 
-  postflight do
-    File.write "#{staged_path}/Brewfile.mas", <<~BUNDLE
-      mas "Spokenly - Speech To Text", id: 6740315592
-      mas "Paste", id: 967805235
-    BUNDLE
-    ohai "Wrote bundle to #{staged_path}/Brewfile.mas"
+  # This doesn't do crap, and needs sudo for each app.
+  # postflight do
+  #   File.write "#{staged_path}/Brewfile.mas", <<~BUNDLE
+  #     mas "Spokenly - Speech To Text", id: 6740315592
+  #     mas "Paste", id: 967805235
+  #   BUNDLE
+  #   ohai "Wrote bundle to #{staged_path}/Brewfile.mas"
 
-    ohai "Installing mac app store apps..."
-    system "brew", "bundle", "--file=#{staged_path}/Brewfile.mas"
-  end
+  #   ohai "Installing mac app store apps..."
+  #   system "brew", "bundle", "--file=#{staged_path}/Brewfile.mas"
+  # end
 
   def caveats
     # TODO: make install/uninstall manage this

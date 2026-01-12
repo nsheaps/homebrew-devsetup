@@ -4,7 +4,7 @@ cask 'nsheaps-base' do
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
   sha256 'b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db'
-  version '1.0.8' # bump me if you want people to re-install these things, like if the list changed.
+  version '1.0.9' # bump me if you want people to re-install these things, like if the list changed.
   ### WHAT IS THIS
   # Running the quick start script will:
   # - install homebrew if not already installed
@@ -135,15 +135,19 @@ cask 'nsheaps-base' do
     prefix.install 'trick-brew-to-install-meta-formula'
 
     # notify the user that we're about to install stuff from the app store
-    ohai "Now installing apps from the mac app store using 'mas'. You may be prompted to log in."
+     "Now installing apps from the mac app store using 'mas'. You may be prompted to log in."
     # pass a heredoc to brew install as an in-line Brewfile in order to install apps from the mac store
     # using the following syntax:
-    # mas "App Name", id: 1234567890
-    (buildpath/'Brewfile.mas').write <<~EOS
-      mas "Spokenly", id: 6740315592
-    EOS
-    system 'brew', 'bundle', '--file=Brewfile.mas'
 
+      ohai "Installing mac app store apps..."
+
+      system "brew", "bundle", "--file=/dev/stdin" , :input => <<~BUNDLE
+        brew "mas"
+        
+        mas "Spokenly", id: 6740315592 # Speech To Text
+      BUNDLE
+
+      ohai "Finished installing mac app store apps."
   end
 
   def caveats

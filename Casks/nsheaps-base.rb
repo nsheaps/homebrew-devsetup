@@ -4,7 +4,7 @@ cask 'nsheaps-base' do
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
   sha256 'b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db'
-  version '1.0.17' # bump me if you want people to re-install these things, like if the list changed.
+  version '1.0.18' # bump me if you want people to re-install these things, like if the list changed.
   ### WHAT IS THIS
   # Running the quick start script will:
   # - install homebrew if not already installed
@@ -141,8 +141,10 @@ cask 'nsheaps-base' do
     
     # This is quiet and doesn't print to the user
     ohai "ohai Installing mac app store apps..."
-    system "mas", "6740315592" # Spokenly - Speech To Text
-
+    # system "mas", "6740315592" # Spokenly - Speech To Text
+    system "brew", "bundle", "--file=-" , :input => <<~BUNDLE
+      mas "Spokenly - Speech To Text", id: 6740315592
+    BUNDLE
   end
 
   def caveats

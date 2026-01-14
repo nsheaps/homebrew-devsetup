@@ -65,6 +65,7 @@ cask 'nsheaps-base' do
   #     ohmyzsh/ohmyzsh path:plugins/direnv
   #     ohmyzsh/ohmyzsh path:plugins/docker
   #     ohmyzsh/ohmyzsh path:plugins/mise
+  #     ohmyzsh/ohmyzsh path:plugins/thefuck
   #     ohmyzsh/ohmyzsh path:plugins/command-not-found
   #     ohmyzsh/ohmyzsh path:themes/robbyrussell.zsh-theme
   # EOBUNDLES
@@ -100,6 +101,8 @@ cask 'nsheaps-base' do
   depends_on formula: 'pstree'
   depends_on formula: 'shellcheck'
   depends_on formula: 'shfmt'
+  depends_on formula: 'thefuck'
+  depends_on formula: 'tree'
   depends_on formula: 'tmux'
   depends_on formula: 'tilt'
   depends_on formula: 'wget'

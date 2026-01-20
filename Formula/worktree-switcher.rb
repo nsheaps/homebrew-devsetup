@@ -3,15 +3,14 @@
 
 class WorktreeSwitcher < Formula
   desc 'Interactive TUI for git worktree management'
-  homepage 'https://github.com/nsheaps/homebrew-devsetup'
-  url 'https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/v1.0.0/bin/worktree-switcher'
-  sha256 'PLACEHOLDER'
-  version '1.0.0'
+  homepage 'https://github.com/nsheaps/git-wt'
+  # URL and sha256 are updated automatically by git-wt CI on release
+  url 'https://github.com/nsheaps/git-wt.git', branch: 'main'
+  version '0.1.0'
   license 'MIT'
 
-  # For development/HEAD installs, use the repo directly
   head do
-    url 'https://github.com/nsheaps/homebrew-devsetup.git', branch: 'main'
+    url 'https://github.com/nsheaps/git-wt.git', branch: 'main'
   end
 
   depends_on 'gum'
@@ -19,11 +18,7 @@ class WorktreeSwitcher < Formula
   depends_on 'jq'
 
   def install
-    if build.head?
-      bin.install 'bin/worktree-switcher'
-    else
-      bin.install 'worktree-switcher'
-    end
+    bin.install 'bin/worktree-switcher'
   end
 
   test do

@@ -34,10 +34,17 @@ jobs:
     steps:
       # Git Checkout
       - name: Checkout Code
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
           fetch-depth: 0 # If you use VALIDATE_ALL_CODEBASE = true, you can remove this line to improve performances
+
+      - name: Authenticate as GitHub App
+        id: auth
+        uses: ./.github/actions/github-app-auth
+        with:
+          app-id: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}
 
       # MegaLinter
       - name: MegaLinter
@@ -49,7 +56,7 @@ jobs:
           # All available variables are described in documentation
           # https://megalinter.io/configuration/
           VALIDATE_ALL_CODEBASE: ${{ github.ref_name == github.event.repository.default_branch }} # Validates all source when push on main, else just the git diff with main. Set 'true' if you always want to lint all sources
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.auth.outputs.token }}
           # ADD YOUR CUSTOM ENV VARIABLES HERE TO OVERRIDE VALUES OF .mega-linter.yml AT THE ROOT OF YOUR REPOSITORY
 
       # Create pull request if applicable (for now works only on PR from same repository, not from forks)
@@ -58,7 +65,7 @@ jobs:
         if: steps.ml.outputs.has_updated_sources == 1 && (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) && env.APPLY_FIXES_MODE == 'pull_request' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) && !contains(github.event.head_commit.message, 'skip fix')
         uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.auth.outputs.token }}
           commit-message: "[MegaLinter] Apply linters automatic fixes"
           title: "[MegaLinter] Apply linters automatic fixes"
           labels: bot
@@ -86,9 +93,9 @@ jobs:
         run: sudo chown -Rc $UID .git/
       - name: Commit and push applied linter fixes
         if: steps.ml.outputs.has_updated_sources == 1 && (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) && env.APPLY_FIXES_MODE == 'commit' && github.ref != 'refs/heads/main' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) && !contains(github.event.head_commit.message, 'skip fix')
-        uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403 # v5
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
           commit_message: "[MegaLinter] Apply linters fixes"
-          commit_user_name: megalinter-bot
-          commit_user_email: nicolas.vuillamy@ox.security
+          commit_user_name: ${{ steps.auth.outputs.user-name }}
+          commit_user_email: ${{ steps.auth.outputs.user-id }}+${{ steps.auth.outputs.user-name }}@users.noreply.github.com

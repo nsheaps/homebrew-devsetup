@@ -1,0 +1,582 @@
+#!/usr/bin/env bash
+# worktree-switcher - Interactive TUI for git worktree management
+# Usage: worktree-switcher [OPTIONS] [BRANCH]
+#
+# Arguments:
+#   BRANCH            Branch name to create/switch to worktree for (skips interactive selection)
+#
+# Options:
+#   --no-status       Skip fetching branch status (faster)
+#   --scan-dir DIR    Directory to scan for git repos (default: ~/src)
+#   --repo REPO       GitHub repo (owner/name) to clone if not in a git repo
+#   -h, --help        Show this help message
+#
+# Behavior:
+#   - If BRANCH provided: directly create/switch to worktree for that branch
+#   - If in a worktree: shows banner with main checkout location
+#   - If in a git repo: prompts to select/create worktree
+#   - If NOT in a git repo: prompts to select repo from ~/src or clone from GitHub
+#   - Worktrees created at: ../${repo}.worktrees/${branch}
+
+set -euo pipefail
+
+NO_STATUS="false"
+SCAN_DIR="${HOME}/src"
+TARGET_REPO=""
+TARGET_BRANCH=""
+
+show_help() {
+  sed -n '2,19p' "$0" | sed 's/^# //' | sed 's/^#//'
+  exit 0
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --no-status) NO_STATUS="true"; shift ;;
+    --scan-dir) SCAN_DIR="$2"; shift 2 ;;
+    --repo) TARGET_REPO="$2"; shift 2 ;;
+    -h|--help) show_help ;;
+    -*) echo "Unknown option: $1" >&2; show_help ;;
+    *) TARGET_BRANCH="$1"; shift ;;
+  esac
+done
+
+# Check for required tools
+check_tool() {
+  if ! command -v "$1" &>/dev/null; then
+    echo "Error: $1 is required but not installed" >&2
+    case "$1" in
+      gum) echo "Install with: brew install gum" >&2 ;;
+      gh)  echo "Install with: brew install gh" >&2 ;;
+    esac
+    exit 1
+  fi
+}
+
+check_tool gum
+check_tool gh
+check_tool git
+check_tool jq
+
+# Get branch status (optional companion tool)
+get_branch_status() {
+  local branch="$1"
+  if [[ "$NO_STATUS" == "true" ]]; then
+    echo "     "
+  elif command -v branch-status &>/dev/null; then
+    branch-status --emoji "$branch" 2>/dev/null || echo "     "
+  else
+    echo "     "
+  fi
+}
+
+# Function to find repos in a directory
+find_repos_in_dir() {
+  local dir="$1"
+  if [[ -d "$dir" ]]; then
+    find "$dir" -maxdepth 4 -name ".git" -type d 2>/dev/null | while read -r git_dir; do
+      dirname "$git_dir"
+    done
+  fi
+}
+
+# Function to select a repo from available options
+select_repo() {
+  local repos=()
+  local options=()
+
+  echo ""
+  gum style --bold "Not in a git repository"
+  echo ""
+
+  # Option 1: Scan local directory
+  options+=("📂 Scan $SCAN_DIR for repos")
+  # Option 2: Clone from GitHub
+  options+=("🌐 Clone from GitHub")
+  # Option 3: Enter path manually
+  options+=("📝 Enter repo path manually")
+
+  CHOICE=$(printf '%s\n' "${options[@]}" | gum choose --header "How would you like to find a repo?")
+
+  case "$CHOICE" in
+    "📂 Scan"*)
+      echo ""
+      gum spin --title "Scanning $SCAN_DIR for git repos..." -- sleep 0.5
+
+      # Find repos
+      while IFS= read -r repo_path; do
+        if [[ -n "$repo_path" ]]; then
+          repos+=("$repo_path")
+        fi
+      done < <(find_repos_in_dir "$SCAN_DIR")
+
+      if [[ ${#repos[@]} -eq 0 ]]; then
+        echo "No git repositories found in $SCAN_DIR" >&2
+        echo ""
+        # Offer to scan another directory
+        NEW_DIR=$(gum input --placeholder "Enter another directory to scan (or leave empty to cancel)...")
+        if [[ -n "$NEW_DIR" ]]; then
+          SCAN_DIR="$NEW_DIR"
+          select_repo
+          return
+        fi
+        exit 1
+      fi
+
+      # Let user select
+      SELECTED_REPO=$(printf '%s\n' "${repos[@]}" | gum filter --placeholder "Select repository...")
+      if [[ -z "$SELECTED_REPO" ]]; then
+        echo "Cancelled"
+        exit 0
+      fi
+      echo "$SELECTED_REPO"
+      ;;
+
+    "🌐 Clone from GitHub")
+      echo ""
+      # Ask for owner/org
+      OWNER=$(gum input --placeholder "Enter GitHub username or org...")
+      if [[ -z "$OWNER" ]]; then
+        echo "Cancelled"
+        exit 0
+      fi
+
+      # Get repos from GitHub
+      echo ""
+      gum spin --title "Fetching repos for $OWNER..." -- sleep 0.5
+
+      GH_REPOS=$(gh repo list "$OWNER" --limit 100 --json nameWithOwner,description \
+        -q '.[] | "\(.nameWithOwner) - \(.description // "No description")"' 2>/dev/null || echo "")
+
+      if [[ -z "$GH_REPOS" ]]; then
+        echo "No repos found or unable to access repos for $OWNER" >&2
+        exit 1
+      fi
+
+      SELECTED_GH_REPO=$(echo "$GH_REPOS" | gum filter --placeholder "Select repository to clone...")
+      if [[ -z "$SELECTED_GH_REPO" ]]; then
+        echo "Cancelled"
+        exit 0
+      fi
+
+      # Extract repo name (owner/repo format)
+      REPO_FULL_NAME=$(echo "$SELECTED_GH_REPO" | cut -d' ' -f1)
+
+      # Clone to organized location
+      CLONE_OWNER=$(echo "$REPO_FULL_NAME" | cut -d'/' -f1)
+      CLONE_NAME=$(echo "$REPO_FULL_NAME" | cut -d'/' -f2)
+      CLONE_PATH="${SCAN_DIR}/${CLONE_OWNER}/${CLONE_NAME}"
+
+      if [[ -d "$CLONE_PATH" ]]; then
+        echo "Repository already exists at: $CLONE_PATH"
+      else
+        echo ""
+        mkdir -p "$(dirname "$CLONE_PATH")"
+        gh repo clone "$REPO_FULL_NAME" "$CLONE_PATH"
+        echo ""
+        echo "Cloned to: $CLONE_PATH"
+      fi
+      echo "$CLONE_PATH"
+      ;;
+
+    "📝 Enter repo path manually")
+      MANUAL_PATH=$(gum input --placeholder "Enter full path to git repository...")
+      if [[ -z "$MANUAL_PATH" ]]; then
+        echo "Cancelled"
+        exit 0
+      fi
+      if [[ ! -d "$MANUAL_PATH/.git" ]]; then
+        echo "Error: $MANUAL_PATH is not a git repository" >&2
+        exit 1
+      fi
+      echo "$MANUAL_PATH"
+      ;;
+
+    *)
+      echo "Cancelled"
+      exit 0
+      ;;
+  esac
+}
+
+# Function to create/switch to worktree for a specific branch
+switch_to_branch() {
+  local branch="$1"
+  local git_root="$2"
+  local repo_name=$(basename "$git_root")
+
+  # Check if branch exists locally
+  local branch_exists_local=false
+  if git -C "$git_root" show-ref --verify --quiet "refs/heads/$branch" 2>/dev/null; then
+    branch_exists_local=true
+  fi
+
+  # Check if branch exists on remote
+  local branch_exists_remote=false
+  local remote_ref=""
+  if git -C "$git_root" show-ref --verify --quiet "refs/remotes/origin/$branch" 2>/dev/null; then
+    branch_exists_remote=true
+    remote_ref="origin/$branch"
+  fi
+
+  # Determine worktree path
+  local safe_branch=$(echo "$branch" | tr '/' '-')
+  local worktree_path="../${repo_name}.worktrees/${safe_branch}"
+
+  # Check if worktree already exists
+  local existing_worktree=""
+  while IFS= read -r line; do
+    local wt_path=$(echo "$line" | cut -d' ' -f1)
+    local wt_branch=$(git -C "$wt_path" branch --show-current 2>/dev/null || echo "")
+    if [[ "$wt_branch" == "$branch" ]]; then
+      existing_worktree="$wt_path"
+      break
+    fi
+  done < <(git -C "$git_root" worktree list --porcelain 2>/dev/null | grep "^worktree " | cut -d' ' -f2-)
+
+  if [[ -n "$existing_worktree" ]]; then
+    echo "Worktree for branch '$branch' already exists at: $existing_worktree"
+    echo ""
+    echo "WORKTREE_PATH=$existing_worktree"
+    return 0
+  fi
+
+  # Create worktree directory
+  mkdir -p "$(dirname "$git_root/$worktree_path")"
+
+  if [[ "$branch_exists_local" == "true" ]]; then
+    # Branch exists locally - create worktree for it
+    git -C "$git_root" worktree add "$worktree_path" "$branch"
+    echo "Created worktree at: $(cd "$git_root/$worktree_path" && pwd)"
+    echo "Branch: $branch (existing local branch)"
+  elif [[ "$branch_exists_remote" == "true" ]]; then
+    # Branch exists on remote - create tracking worktree
+    git -C "$git_root" worktree add --track -b "$branch" "$worktree_path" "$remote_ref"
+    echo "Created worktree at: $(cd "$git_root/$worktree_path" && pwd)"
+    echo "Branch: $branch (tracking $remote_ref)"
+  else
+    # Branch doesn't exist - create new branch
+    local default_branch=$(git -C "$git_root" symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "main")
+
+    echo "Branch '$branch' not found locally or on remote."
+    echo ""
+
+    # Ask what to base it on
+    local base_options=("$default_branch (default)" "other...")
+    local base_selected=$(printf '%s\n' "${base_options[@]}" | gum choose --header "Create new branch based on:")
+
+    local base_branch="$default_branch"
+    if [[ "$base_selected" == "other..."* ]]; then
+      base_branch=$(git -C "$git_root" branch -a --format='%(refname:short)' | gum filter --placeholder "Select base branch...")
+    fi
+
+    git -C "$git_root" worktree add -b "$branch" "$worktree_path" "$base_branch"
+    echo "Created worktree at: $(cd "$git_root/$worktree_path" && pwd)"
+    echo "Branch: $branch (new, based on $base_branch)"
+  fi
+
+  # Show branch status
+  if [[ "$NO_STATUS" != "true" ]] && command -v branch-status &>/dev/null; then
+    echo ""
+    echo "Branch status:"
+    branch-status --json "$branch" 2>/dev/null | jq . || true
+  fi
+
+  echo ""
+  echo "WORKTREE_PATH=$(cd "$git_root/$worktree_path" && pwd)"
+}
+
+# Check if we're in a git repository
+IN_GIT_REPO=false
+GIT_ROOT=""
+
+if git rev-parse --git-dir &>/dev/null; then
+  IN_GIT_REPO=true
+  GIT_ROOT=$(git rev-parse --show-toplevel)
+fi
+
+# Handle --repo flag (clone and switch)
+if [[ -n "$TARGET_REPO" ]]; then
+  # Clone or find the repo
+  REPO_OWNER=$(echo "$TARGET_REPO" | cut -d'/' -f1)
+  REPO_NAME=$(echo "$TARGET_REPO" | cut -d'/' -f2)
+  CLONE_PATH="${SCAN_DIR}/${REPO_OWNER}/${REPO_NAME}"
+
+  if [[ -d "$CLONE_PATH" ]]; then
+    echo "Repository already exists at: $CLONE_PATH"
+  else
+    mkdir -p "$(dirname "$CLONE_PATH")"
+    gh repo clone "$TARGET_REPO" "$CLONE_PATH"
+    echo "Cloned to: $CLONE_PATH"
+  fi
+
+  GIT_ROOT="$CLONE_PATH"
+  IN_GIT_REPO=true
+fi
+
+# If not in a git repo and no repo specified, prompt to find one
+if [[ "$IN_GIT_REPO" == "false" ]]; then
+  GIT_ROOT=$(select_repo)
+  if [[ -z "$GIT_ROOT" ]] || [[ ! -d "$GIT_ROOT" ]]; then
+    echo "No repository selected"
+    exit 1
+  fi
+  IN_GIT_REPO=true
+  cd "$GIT_ROOT"
+fi
+
+# Get repo info
+REPO_NAME=$(basename "$GIT_ROOT")
+
+# Check if we're in a worktree (not the main checkout)
+GIT_DIR=$(git -C "$GIT_ROOT" rev-parse --git-dir)
+if [[ "$GIT_DIR" == *".git/worktrees/"* ]]; then
+  # We're in a worktree - find the main checkout
+  MAIN_CHECKOUT=$(git -C "$GIT_ROOT" rev-parse --path-format=absolute --git-common-dir | sed 's|/.git$||')
+
+  if [[ -n "$TARGET_BRANCH" ]]; then
+    # If branch specified, switch to it from main checkout
+    echo "Currently in a worktree. Switching context to main checkout..."
+    GIT_ROOT="$MAIN_CHECKOUT"
+  else
+    echo ""
+    gum style --border rounded --padding "0 1" --border-foreground 214 \
+      "Already in a worktree"
+    echo ""
+    echo "Main checkout: $MAIN_CHECKOUT"
+    echo "Current worktree: $GIT_ROOT"
+    exit 0
+  fi
+fi
+
+# If branch specified, directly create/switch to that worktree
+if [[ -n "$TARGET_BRANCH" ]]; then
+  echo ""
+  gum style --bold "Switching to worktree for: $TARGET_BRANCH"
+  echo ""
+
+  # Fetch latest from remote first
+  git -C "$GIT_ROOT" fetch origin --prune 2>/dev/null || true
+
+  switch_to_branch "$TARGET_BRANCH" "$GIT_ROOT"
+  exit 0
+fi
+
+# Interactive mode - offer worktree selection
+echo ""
+gum style --bold "Git Worktree Switcher"
+echo ""
+
+# Get existing worktrees (excluding main)
+WORKTREES=()
+while IFS= read -r line; do
+  # Skip the main worktree
+  if [[ "$line" != "$GIT_ROOT" ]]; then
+    WORKTREES+=("$line")
+  fi
+done < <(git -C "$GIT_ROOT" worktree list --porcelain | grep "^worktree " | cut -d' ' -f2-)
+
+# Get current user for filtering branches
+CURRENT_USER=$(gh api user -q '.login' 2>/dev/null || echo "")
+
+# Build branch list with priorities
+declare -A BRANCH_PRIORITY
+declare -A BRANCH_STATUS
+
+# Priority levels:
+# 0 = (new branch)
+# 1 = user's open PRs
+# 2 = user's draft PRs
+# 3 = user's other branches
+# 4 = other local branches
+# 5 = remote branches
+
+# Get user's open and draft PRs
+if [[ -n "$CURRENT_USER" ]]; then
+  while IFS=$'\t' read -r branch is_draft; do
+    if [[ -n "$branch" ]]; then
+      if [[ "$is_draft" == "true" ]]; then
+        BRANCH_PRIORITY["$branch"]=2
+      else
+        BRANCH_PRIORITY["$branch"]=1
+      fi
+    fi
+  done < <(gh pr list --author "$CURRENT_USER" --json headRefName,isDraft \
+    -q '.[] | [.headRefName, (.isDraft | tostring)] | @tsv' 2>/dev/null || echo "")
+fi
+
+# Get local branches
+while IFS= read -r branch; do
+  if [[ -n "$branch" ]] && [[ -z "${BRANCH_PRIORITY[$branch]:-}" ]]; then
+    # Check if it's the user's branch (by checking commits or branch naming)
+    if [[ -n "$CURRENT_USER" ]] && [[ "$branch" == "$CURRENT_USER/"* ]]; then
+      BRANCH_PRIORITY["$branch"]=3
+    else
+      BRANCH_PRIORITY["$branch"]=4
+    fi
+  fi
+done < <(git -C "$GIT_ROOT" branch --format='%(refname:short)' 2>/dev/null || echo "")
+
+# Build sorted list of branches
+SORTED_BRANCHES=()
+
+# Add branches by priority
+for priority in 1 2 3 4; do
+  for branch in "${!BRANCH_PRIORITY[@]}"; do
+    if [[ "${BRANCH_PRIORITY[$branch]}" == "$priority" ]]; then
+      status=$(get_branch_status "$branch")
+      SORTED_BRANCHES+=("$status $branch")
+    fi
+  done
+done
+
+# Build menu options
+MENU_OPTIONS=()
+MENU_OPTIONS+=("📁 (create new worktree)")
+
+# Add existing worktrees first
+for wt in "${WORKTREES[@]}"; do
+  wt_branch=$(git -C "$wt" branch --show-current 2>/dev/null || echo "detached")
+  MENU_OPTIONS+=("📂 [existing] $wt_branch → $wt")
+done
+
+# Add branches
+for entry in "${SORTED_BRANCHES[@]}"; do
+  MENU_OPTIONS+=("$entry")
+done
+
+# Add option to use remote branch
+MENU_OPTIONS+=("🌐 (branch from remote)")
+
+# Add option to switch repo (step "up")
+MENU_OPTIONS+=("🔄 (switch repository)")
+
+# Show selection menu
+SELECTED=$(printf '%s\n' "${MENU_OPTIONS[@]}" | gum filter --placeholder "Select or create worktree...")
+
+if [[ -z "$SELECTED" ]]; then
+  echo "Cancelled"
+  exit 0
+fi
+
+# Handle selection
+case "$SELECTED" in
+  "📁 (create new worktree)")
+    # Get branch name
+    BRANCH_NAME=$(gum input --placeholder "Enter new branch name...")
+    if [[ -z "$BRANCH_NAME" ]]; then
+      echo "Cancelled"
+      exit 0
+    fi
+
+    # Ask for base branch
+    CURRENT_BRANCH=$(git -C "$GIT_ROOT" branch --show-current)
+    DEFAULT_BRANCH=$(git -C "$GIT_ROOT" symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "main")
+
+    BASE_OPTIONS=("$DEFAULT_BRANCH (default)" "$CURRENT_BRANCH (current)" "other...")
+    BASE_SELECTED=$(printf '%s\n' "${BASE_OPTIONS[@]}" | gum choose --header "Base branch:")
+
+    case "$BASE_SELECTED" in
+      *"(default)"*) BASE_BRANCH="$DEFAULT_BRANCH" ;;
+      *"(current)"*) BASE_BRANCH="$CURRENT_BRANCH" ;;
+      *) BASE_BRANCH=$(git -C "$GIT_ROOT" branch -a --format='%(refname:short)' | gum filter --placeholder "Select base branch...") ;;
+    esac
+
+    # Create worktree path
+    SAFE_BRANCH=$(echo "$BRANCH_NAME" | tr '/' '-')
+    WORKTREE_PATH="../${REPO_NAME}.worktrees/${SAFE_BRANCH}"
+
+    # Create the worktree
+    mkdir -p "$(dirname "$GIT_ROOT/$WORKTREE_PATH")"
+    git -C "$GIT_ROOT" worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" "$BASE_BRANCH"
+
+    echo ""
+    echo "Created worktree at: $(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+    echo "Branch: $BRANCH_NAME (based on $BASE_BRANCH)"
+
+    # Print the path for cd (can be captured by caller)
+    echo ""
+    echo "WORKTREE_PATH=$(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+    ;;
+
+  "📂 [existing]"*)
+    # Extract path from selection
+    WORKTREE_PATH=$(echo "$SELECTED" | sed 's/.*→ //')
+    echo ""
+    echo "Selected existing worktree: $WORKTREE_PATH"
+
+    # Show branch status
+    WT_BRANCH=$(git -C "$WORKTREE_PATH" branch --show-current 2>/dev/null || echo "detached")
+    if [[ "$NO_STATUS" != "true" ]] && command -v branch-status &>/dev/null; then
+      echo ""
+      echo "Branch status for $WT_BRANCH:"
+      branch-status --json "$WT_BRANCH" 2>/dev/null | jq . || true
+    fi
+
+    echo ""
+    echo "WORKTREE_PATH=$WORKTREE_PATH"
+    ;;
+
+  "🌐 (branch from remote)")
+    # List remote branches
+    git -C "$GIT_ROOT" fetch --all --prune 2>/dev/null || true
+    REMOTE_BRANCH=$(git -C "$GIT_ROOT" branch -r --format='%(refname:short)' | grep -v HEAD | gum filter --placeholder "Select remote branch...")
+
+    if [[ -z "$REMOTE_BRANCH" ]]; then
+      echo "Cancelled"
+      exit 0
+    fi
+
+    # Extract branch name without remote prefix
+    BRANCH_NAME=$(echo "$REMOTE_BRANCH" | sed 's|^[^/]*/||')
+    SAFE_BRANCH=$(echo "$BRANCH_NAME" | tr '/' '-')
+    WORKTREE_PATH="../${REPO_NAME}.worktrees/${SAFE_BRANCH}"
+
+    # Create the worktree tracking the remote branch
+    mkdir -p "$(dirname "$GIT_ROOT/$WORKTREE_PATH")"
+    git -C "$GIT_ROOT" worktree add --track -b "$BRANCH_NAME" "$WORKTREE_PATH" "$REMOTE_BRANCH"
+
+    echo ""
+    echo "Created worktree at: $(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+    echo "Branch: $BRANCH_NAME (tracking $REMOTE_BRANCH)"
+    echo ""
+    echo "WORKTREE_PATH=$(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+    ;;
+
+  "🔄 (switch repository)")
+    # Reset and re-run with repo selection
+    NEW_REPO=$(select_repo)
+    if [[ -n "$NEW_REPO" ]] && [[ -d "$NEW_REPO" ]]; then
+      exec "$0" --scan-dir "$SCAN_DIR" ${NO_STATUS:+--no-status}
+    fi
+    ;;
+
+  *)
+    # Selected an existing branch - create worktree for it
+    # Extract branch name (remove emoji prefix)
+    BRANCH_NAME=$(echo "$SELECTED" | sed 's/^[^a-zA-Z0-9_-]*//' | xargs)
+
+    SAFE_BRANCH=$(echo "$BRANCH_NAME" | tr '/' '-')
+    WORKTREE_PATH="../${REPO_NAME}.worktrees/${SAFE_BRANCH}"
+
+    if [[ -d "$GIT_ROOT/$WORKTREE_PATH" ]]; then
+      echo "Worktree already exists at: $(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+    else
+      mkdir -p "$(dirname "$GIT_ROOT/$WORKTREE_PATH")"
+      git -C "$GIT_ROOT" worktree add "$WORKTREE_PATH" "$BRANCH_NAME"
+      echo "Created worktree at: $(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+    fi
+
+    echo "Branch: $BRANCH_NAME"
+
+    # Show branch status
+    if [[ "$NO_STATUS" != "true" ]] && command -v branch-status &>/dev/null; then
+      echo ""
+      echo "Branch status:"
+      branch-status --json "$BRANCH_NAME" 2>/dev/null | jq . || true
+    fi
+
+    echo ""
+    echo "WORKTREE_PATH=$(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+    ;;
+esac

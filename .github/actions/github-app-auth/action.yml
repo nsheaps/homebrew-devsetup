@@ -41,7 +41,7 @@ runs:
   steps:
     - name: Generate GitHub App token
       id: app-token
-      uses: actions/create-github-app-token@v2
+      uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2
       with:
         app-id: ${{ inputs.app-id }}
         private-key: ${{ inputs.private-key }}
@@ -70,7 +70,7 @@ runs:
         git config user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.get-user-id.outputs.user-name }}@users.noreply.github.com'
 
     - name: Configure repo checkout token
-      uses: actions/checkout@v6
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       with:
         token: ${{ steps.app-token.outputs.token }}
         clean: false

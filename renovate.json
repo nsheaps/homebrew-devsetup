@@ -12,8 +12,8 @@
       "pinDigests": true
     },
     {
-      "matchPackagePrefixes": ["nsheaps/"],
-      "minimumReleaseAge": "0 days"
+      "minimumReleaseAge": "0 days",
+      "matchPackageNames": ["nsheaps/{/,}**"]
     }
   ],
   "customManagers": [

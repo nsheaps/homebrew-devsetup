@@ -69,7 +69,11 @@ jobs:
         if: steps.format.outputs.has_changes == 'true' && !cancelled()
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: `mise format`"
+          commit_message: |
+            chore: `mise format`
+
+            Triggered by: ${{ github.sha }}
+            Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           commit_user_name: ${{ steps.auth.outputs.user-name }}
           commit_user_email: ${{ steps.auth.outputs.user-id }}+${{ steps.auth.outputs.user-name }}@users.noreply.github.com
 

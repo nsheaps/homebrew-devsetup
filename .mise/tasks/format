@@ -15,4 +15,4 @@ echo "Checking editorconfig compliance..."
 editorconfig-checker
 
 echo "Validating config files with v8r..."
-v8r || true
+v8r

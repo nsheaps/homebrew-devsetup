@@ -91,6 +91,7 @@ jobs:
           - trivy
           - trufflehog
           - checkov
+          - kics
           - grype
           - gitleaks
     steps:
@@ -104,20 +105,3 @@ jobs:
         with:
           steps: |
             - uses: ./.github/actions/lint-${{ matrix.linter }}
-
-  # KICS uses checkmarx GitHub Action which doesn't work inside parallel-steps
-  security-kics:
-    name: Security - kics
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          fetch-depth: 0
-
-      - name: Run KICS
-        uses: checkmarx/kics-github-action@v2
-        with:
-          path: "."
-          fail_on: high,medium
-          output_formats: "json,sarif"

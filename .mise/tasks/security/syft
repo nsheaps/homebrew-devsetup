@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="Generate SBOM with syft"
+set -euo pipefail
+
+echo "Running syft SBOM generation..."
+syft . -o cyclonedx-json=syft-sbom.json
+echo "SBOM generated: syft-sbom.json"

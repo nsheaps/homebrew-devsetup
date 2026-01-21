@@ -1,0 +1,16 @@
+name: "Lint with KICS"
+description: "Run KICS IaC security scanner"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run KICS scan
+      shell: bash
+      run: |
+        echo "Running KICS via Docker..."
+        docker run --rm \
+          -v "${{ github.workspace }}:/path" \
+          checkmarx/kics:latest scan \
+          -p /path \
+          --no-progress \
+          --fail-on high,medium

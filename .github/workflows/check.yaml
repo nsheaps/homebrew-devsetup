@@ -1,0 +1,119 @@
+---
+name: check
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  # On push to main: unique group per SHA (every push builds)
+  # On PR: group by ref (cancels in-progress on new push)
+  group: ${{ github.event_name == 'push' && github.sha || format('{0}-{1}', github.workflow, github.ref) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Authenticate as GitHub App
+        id: auth
+        uses: ./.github/actions/github-app-auth
+        with:
+          app-id: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}
+
+      - name: Check for merge conflicts
+        id: git_diff
+        run: |
+          echo "Checking for merge conflicts..."
+          if git diff --check HEAD 2>/dev/null | grep -q "conflict"; then
+            echo "ERROR: Merge conflicts detected. Resolve conflicts before formatting."
+            echo "has_conflicts=true" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          echo "has_conflicts=false" >> "$GITHUB_OUTPUT"
+
+      - name: Install mise
+        uses: jdx/mise-action@v2
+
+      - name: Run format
+        id: format
+        run: |
+          set +e
+          mise run format
+          FORMAT_EXIT=$?
+
+          # Check if any files were changed
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+          exit $FORMAT_EXIT
+        continue-on-error: true
+
+      - name: Commit and push formatting fixes
+        if: steps.format.outputs.has_changes == 'true' && !cancelled()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: |
+            chore: `mise format`
+
+            Triggered by: ${{ github.sha }}
+            Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          commit_user_name: ${{ steps.auth.outputs.user-name }}
+          commit_user_email: ${{ steps.auth.outputs.user-id }}+${{ steps.auth.outputs.user-name }}@users.noreply.github.com
+
+      - name: Fail if changes were made
+        if: steps.format.outputs.has_changes == 'true' && !cancelled()
+        run: |
+          echo "Formatting changes were auto-committed. Re-running CI."
+          exit 1
+
+  security:
+    name: Security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Install mise and tools
+        uses: jdx/mise-action@v2
+        with:
+          install_args: "grype trivy syft gitleaks trufflehog checkov aqua:secretlint/secretlint"
+
+      - name: Run all security linters in parallel
+        uses: qoomon/actions--parallel-steps@v1
+        with:
+          steps: |
+            - uses: ./.github/actions/lint-secretlint
+              id: secretlint
+            - uses: ./.github/actions/lint-syft
+              id: syft
+            - uses: ./.github/actions/lint-trivy
+              id: trivy
+            - uses: ./.github/actions/lint-trufflehog
+              id: trufflehog
+            - uses: ./.github/actions/lint-checkov
+              id: checkov
+            - uses: ./.github/actions/lint-kics
+              id: kics
+            - uses: ./.github/actions/lint-grype
+              id: grype
+            - uses: ./.github/actions/lint-gitleaks
+              id: gitleaks

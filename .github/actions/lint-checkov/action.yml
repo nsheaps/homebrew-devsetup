@@ -1,0 +1,11 @@
+name: "Lint with Checkov"
+description: "Run checkov IaC security scanner"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run checkov
+      shell: bash
+      run: |
+        echo "Running checkov..."
+        checkov -d . --framework all

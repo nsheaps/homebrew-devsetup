@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Run gitleaks to detect secrets in git history"
+set -euo pipefail
+
+echo "Running gitleaks..."
+gitleaks detect --source . --verbose

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="Run trufflehog to detect secrets"
+set -euo pipefail
+
+echo "Running trufflehog..."
+# Exclude .git directory (contains checkout action token)
+trufflehog filesystem . --fail --exclude-paths=.git

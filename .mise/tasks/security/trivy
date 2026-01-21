@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Run trivy for vulnerability scanning and generate SBOM"
+set -euo pipefail
+
+echo "Running trivy filesystem scan..."
+trivy fs . --scanners vuln,secret,misconfig
+
+echo "Generating SBOM..."
+trivy fs . --format cyclonedx --output trivy-sbom.json
+echo "SBOM generated: trivy-sbom.json"

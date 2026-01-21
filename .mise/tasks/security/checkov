@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Run checkov IaC scanner"
+set -euo pipefail
+
+echo "Running checkov..."
+checkov -d . --framework all

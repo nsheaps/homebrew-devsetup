@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Format files with prettier and editorconfig-checker"
+#MISE description="Format and lint files (applies auto-fixes where possible)"
 set -euo pipefail
 
 echo "Checking for merge conflicts..."
@@ -16,3 +16,9 @@ editorconfig-checker
 
 echo "Validating config files with v8r..."
 v8r
+
+echo "Running rubocop with auto-correct..."
+rubocop -A
+
+echo "Running cspell..."
+cspell "**/*" --no-progress

@@ -1,0 +1,6 @@
+# Session-specific Claude files
+.claude/plans/
+.claude/todos/
+
+# Generated reports
+megalinter-reports/

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Lint Ruby files with rubocop"
+set -euo pipefail
+
+echo "Running rubocop..."
+rubocop

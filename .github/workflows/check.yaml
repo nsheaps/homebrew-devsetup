@@ -83,6 +83,27 @@ jobs:
           echo "Formatting changes were auto-committed. Re-running CI."
           exit 1
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Install mise and tools
+        uses: jdx/mise-action@v2
+        with:
+          install_args: "ruby gem:rubocop npm:cspell"
+
+      - name: Run all linters in parallel
+        uses: qoomon/actions--parallel-steps@v1
+        with:
+          steps: |
+            - uses: ./.github/actions/lint-rubocop
+              id: rubocop
+            - uses: ./.github/actions/lint-cspell
+              id: cspell
+
   security:
     name: Security
     runs-on: ubuntu-latest

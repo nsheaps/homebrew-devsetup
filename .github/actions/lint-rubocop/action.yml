@@ -1,0 +1,11 @@
+name: "Lint with Rubocop"
+description: "Run rubocop Ruby linter"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run rubocop
+      shell: bash
+      run: |
+        echo "Running rubocop..."
+        rubocop

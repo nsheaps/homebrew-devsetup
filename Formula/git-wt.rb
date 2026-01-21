@@ -4,8 +4,8 @@
 class GitWt < Formula
   desc 'Interactive TUI for git worktree management'
   homepage 'https://github.com/nsheaps/git-wt'
-  url 'https://github.com/nsheaps/git-wt/releases/download/v0.4.7/git-wt'
-  sha256 '67ea552c0b5384dd8689a69afafd5b4c29e0a3f6c610b31a0a06e7006d1e9aa0'
+  url 'https://github.com/nsheaps/git-wt/archive/refs/tags/v0.4.8.tar.gz'
+  sha256 '51eafb1136e23cbf8342b9a96f5575d1e24d46f37076a09373e5b559ddac9cbb'
   license 'MIT'
 
   head do
@@ -15,11 +15,7 @@ class GitWt < Formula
   depends_on 'gum'
 
   def install
-    if build.head?
-      bin.install 'bin/git-wt'
-    else
-      bin.install 'git-wt'
-    end
+    bin.install 'bin/git-wt'
   end
 
   test do

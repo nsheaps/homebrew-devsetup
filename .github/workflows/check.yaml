@@ -49,16 +49,35 @@ jobs:
         uses: jdx/mise-action@v2
 
       - name: Run format
-        run: mise run format
+        id: format
+        run: |
+          set +e
+          mise run format
+          FORMAT_EXIT=$?
+
+          # Check if any files were changed
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+          exit $FORMAT_EXIT
+        continue-on-error: true
 
       - name: Commit and push formatting fixes
-        if: github.ref != 'refs/heads/main' && github.event_name == 'pull_request'
+        if: steps.format.outputs.has_changes == 'true' && !cancelled()
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
-          commit_message: "[format] Apply automatic formatting fixes"
+          commit_message: "chore: auto-format"
           commit_user_name: ${{ steps.auth.outputs.user-name }}
           commit_user_email: ${{ steps.auth.outputs.user-id }}+${{ steps.auth.outputs.user-name }}@users.noreply.github.com
+
+      - name: Fail if changes were made
+        if: steps.format.outputs.has_changes == 'true' && !cancelled()
+        run: |
+          echo "Formatting changes were auto-committed. Re-running CI."
+          exit 1
 
   security:
     name: Security - ${{ matrix.linter }}

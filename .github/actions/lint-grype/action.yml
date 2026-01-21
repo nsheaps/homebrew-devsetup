@@ -1,0 +1,11 @@
+name: "Lint with Grype"
+description: "Run grype vulnerability scanner"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run grype
+      shell: bash
+      run: |
+        echo "Running grype..."
+        grype dir:.

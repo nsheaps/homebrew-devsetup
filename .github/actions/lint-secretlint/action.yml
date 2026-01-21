@@ -1,0 +1,11 @@
+name: "Lint with Secretlint"
+description: "Check for secrets using secretlint"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run secretlint
+      shell: bash
+      run: |
+        echo "Running secretlint..."
+        mise exec aqua:secretlint/secretlint -- secretlint "**/*"

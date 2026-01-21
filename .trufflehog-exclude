@@ -1,0 +1,3 @@
+# Trufflehog exclusion patterns
+# The .git directory contains tokens from GitHub Actions checkout
+.git/

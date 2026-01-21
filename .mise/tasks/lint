@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#MISE description="Run format checks (no fixes applied)"
+set -euo pipefail
+
+echo "Checking for merge conflicts..."
+if git diff --check HEAD 2>/dev/null | grep -q "conflict"; then
+  echo "ERROR: Merge conflicts detected."
+  exit 1
+fi
+
+echo "Checking prettier formatting..."
+prettier --check .
+
+echo "Checking editorconfig compliance..."
+editorconfig-checker
+
+echo "Validating config files with v8r..."
+v8r

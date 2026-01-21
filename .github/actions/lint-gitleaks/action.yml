@@ -1,0 +1,11 @@
+name: "Lint with Gitleaks"
+description: "Check for secrets in git history using gitleaks"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run gitleaks
+      shell: bash
+      run: |
+        echo "Running gitleaks..."
+        gitleaks detect --source . --verbose

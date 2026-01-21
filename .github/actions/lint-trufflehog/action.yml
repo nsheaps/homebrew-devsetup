@@ -1,0 +1,12 @@
+name: "Lint with TruffleHog"
+description: "Check for secrets using trufflehog"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run trufflehog
+      shell: bash
+      run: |
+        echo "Running trufflehog..."
+        # Use exclude file to skip .git directory (contains checkout action token)
+        trufflehog filesystem . --fail --exclude-paths=.trufflehog-exclude

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Run grype vulnerability scanner"
+set -euo pipefail
+
+echo "Running grype..."
+grype dir:.

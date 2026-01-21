@@ -1,33 +1,17 @@
 [tools]
 node = "lts"
+# Format tools
+editorconfig-checker = "latest"
+"npm:prettier" = "latest"
+"npm:v8r" = "latest"
 
-[tasks.lint]
-description = "Run MegaLinter to lint the codebase"
-run = '''
-exec npx mega-linter-runner --flavor cupcake
-'''
-
-[tasks.test-renovate]
-description = "Run renovate in dry-run mode to test configuration"
-run = '''
-# running renovate in dry-run mode
-set -euo pipefail
-export RENOVATE_CONFIG_FILE_NAMES="renovate.json,renovate.json5"
-export RENOVATE_GITHUB_COM_TOKEN="$(gh auth token)"
-
-echo "Validating renovate configuration..."
-npx --yes --package renovate -- renovate-config-validator
-echo "==============================="
-echo "Running renovate in dry-run mode..."
-export LOG_LEVEL=${LOG_LEVEL:-debug}
-npx --yes --package renovate -- \
-  renovate \
-  --dry-run=full \
-  --config-validation-error=true \
-  --token=$(gh auth token) \
-  --platform=local \
-  --repository-cache=reset \
-  --rebase-when=never \
-  --github-token-warn=true \
-| tee renovate-log.txt
-'''
+# Security tools
+"npm:secretlint" = "latest"
+"npm:@secretlint/secretlint-rule-preset-recommend" = "latest"
+syft = "latest"
+trivy = "latest"
+trufflehog = "latest"
+checkov = "latest"
+# KICS uses official GitHub Action in CI
+grype = "latest"
+gitleaks = "latest"

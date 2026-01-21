@@ -1,0 +1,19 @@
+name: "Lint with Syft"
+description: "Generate SBOM using syft"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run syft
+      shell: bash
+      run: |
+        echo "Running syft SBOM generation..."
+        syft . -o cyclonedx-json=syft-sbom.json
+        echo "SBOM generated: syft-sbom.json"
+
+    - name: Upload SBOM artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: syft-sbom
+        path: syft-sbom.json
+        retention-days: 30

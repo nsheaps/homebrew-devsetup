@@ -3,12 +3,16 @@ name: check
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
   pull_request:
-    branches: [master, main]
+    branches: [main]
 
 concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: ${{ github.ref_name != github.event.repository.default_branch }}
+  # On push to main: unique group per SHA (every push builds)
+  # On PR: group by ref (cancels in-progress on new push)
+  group: ${{ github.event_name == 'push' && github.sha || format('{0}-{1}', github.workflow, github.ref) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   format:

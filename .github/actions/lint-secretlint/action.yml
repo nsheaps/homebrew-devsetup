@@ -13,4 +13,4 @@ runs:
       shell: bash
       run: |
         echo "Running secretlint..."
-        secretlint "**/*" || exit 1
+        mise exec aqua:secretlint/secretlint -- secretlint "**/*"

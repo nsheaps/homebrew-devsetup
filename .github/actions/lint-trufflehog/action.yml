@@ -13,4 +13,5 @@ runs:
       shell: bash
       run: |
         echo "Running trufflehog..."
-        trufflehog filesystem . --fail
+        # Exclude .git directory (contains checkout action token)
+        mise exec trufflehog -- trufflehog filesystem . --fail --exclude-paths=.git

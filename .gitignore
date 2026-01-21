@@ -1,6 +1,7 @@
 *.gem
 *.rbc
 /.config
+!/.config/cspell/
 /coverage/
 /InstalledFiles
 /pkg/

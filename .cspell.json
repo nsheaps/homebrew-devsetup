@@ -7,11 +7,20 @@
     ".github/workflows/**",
     ".vscode",
     "megalinter",
+    "megalinter-reports/**",
     "package-lock.json",
-    "report"
+    "report",
+    "renovate-log.txt"
   ],
   "language": "en",
   "noConfigSearch": true,
-  "words": ["megalinter", "oxsecurity"],
+  "dictionaryDefinitions": [
+    {
+      "name": "project",
+      "path": ".config/cspell/project.txt",
+      "addWords": true
+    }
+  ],
+  "dictionaries": ["project"],
   "version": "0.2"
 }

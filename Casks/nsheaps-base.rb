@@ -19,7 +19,7 @@ cask 'nsheaps-base' do
   #   - [ ] 1password desktop login
   #   - [ ] gh auth login
   #   - [ ] gh setup-git
-  #   - [ ] generage gpg keys and add to github/git
+  #   - [ ] generate gpg keys and add to github/git
   # The formula itself does not:
   # - manage the rc integrations
   # - manage anything other than brew installs for casks and formulae

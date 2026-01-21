@@ -5,6 +5,11 @@ editorconfig-checker = "latest"
 "npm:prettier" = "latest"
 "npm:v8r" = "latest"
 
+# Lint tools
+ruby = "latest"
+"gem:rubocop" = "latest"
+"npm:cspell" = "latest"
+
 # Security tools
 "npm:secretlint" = "latest"
 "npm:@secretlint/secretlint-rule-preset-recommend" = "latest"

@@ -6,7 +6,7 @@ Works for WSL, Linux, and macOS.
 
 ## Why not just use `brew` directly?
 
-This creates a more focused interface for end users to set up their devices in a consistent manner, with short and concise documentation for referece rather than dealing with the brew docs each time. It also allows an abstract way to reference packages regardless of OS.
+This creates a more focused interface for end users to set up their devices in a consistent manner, with short and concise documentation for reference rather than dealing with the brew docs each time. It also allows an abstract way to reference packages regardless of OS.
 
 ## Install
 
@@ -86,7 +86,7 @@ When upgraded, the formula should only configure new or additional things, and w
 When removed, the uninstall scripts should remove any configuration they had set up interactively. Passing `--preserve` will make it non-interactive and not remove any configuration.
 Passing `--force` will remove the configuration without warning.
 
-If you want any of these configurations to happen automatically on `devsetup install`, add the formula as a depdendency to the `devsetup` formula.
+If you want any of these configurations to happen automatically on `devsetup install`, add the formula as a dependency to the `devsetup` formula.
 
 | topic          | description                                                                                                                                                                                                                                                       |
 | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

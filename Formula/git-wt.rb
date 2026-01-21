@@ -6,7 +6,6 @@ class GitWt < Formula
   homepage 'https://github.com/nsheaps/git-wt'
   url 'https://github.com/nsheaps/git-wt/archive/refs/tags/v0.4.2.tar.gz'
   sha256 '4d2c95315f103de19d5b557337207e9fc841e0e4f008b0edebea2b1fcc2ccd97'
-  version '0.3.1'
   license 'MIT'
 
   head do

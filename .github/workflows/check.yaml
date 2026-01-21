@@ -46,7 +46,7 @@ jobs:
           echo "has_conflicts=false" >> "$GITHUB_OUTPUT"
 
       - name: Install mise
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2
 
       - name: Run format
         id: format
@@ -67,7 +67,7 @@ jobs:
 
       - name: Commit and push formatting fixes
         if: steps.format.outputs.has_changes == 'true' && !cancelled()
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403 # v5
         with:
           commit_message: |
             chore: `mise format`
@@ -93,12 +93,12 @@ jobs:
           fetch-depth: 0
 
       - name: Install mise and tools
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2
         with:
           install_args: "grype trivy syft gitleaks trufflehog checkov aqua:secretlint/secretlint"
 
       - name: Run all security linters in parallel
-        uses: qoomon/actions--parallel-steps@v1
+        uses: qoomon/actions--parallel-steps@9c60934766e6685e38f5b06be635070883ba1fd5 # v1
         with:
           steps: |
             - uses: ./.github/actions/lint-secretlint

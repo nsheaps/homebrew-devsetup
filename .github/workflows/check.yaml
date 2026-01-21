@@ -84,28 +84,31 @@ jobs:
           exit 1
 
   security:
-    name: Security - ${{ matrix.linter }}
+    name: Security
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        linter:
-          - secretlint
-          - syft
-          - trivy
-          - trufflehog
-          - checkov
-          - kics
-          - grype
-          - gitleaks
     steps:
       - name: Checkout Code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
 
-      - name: Run ${{ matrix.linter }}
+      - name: Run all security linters in parallel
         uses: qoomon/actions--parallel-steps@v1
         with:
           steps: |
-            - uses: ./.github/actions/lint-${{ matrix.linter }}
+            - uses: ./.github/actions/lint-secretlint
+              id: secretlint
+            - uses: ./.github/actions/lint-syft
+              id: syft
+            - uses: ./.github/actions/lint-trivy
+              id: trivy
+            - uses: ./.github/actions/lint-trufflehog
+              id: trufflehog
+            - uses: ./.github/actions/lint-checkov
+              id: checkov
+            - uses: ./.github/actions/lint-kics
+              id: kics
+            - uses: ./.github/actions/lint-grype
+              id: grype
+            - uses: ./.github/actions/lint-gitleaks
+              id: gitleaks

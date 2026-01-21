@@ -47,18 +47,9 @@ jobs:
 
       - name: Install mise
         uses: jdx/mise-action@v2
-        with:
-          install_args: "editorconfig-checker npm:prettier npm:v8r"
 
-      - name: Run editorconfig-checker
-        run: editorconfig-checker
-
-      - name: Run prettier
-        run: prettier --write .
-
-      - name: Run v8r
-        run: v8r || true
-        continue-on-error: true
+      - name: Run format
+        run: mise run format
 
       - name: Commit and push formatting fixes
         if: github.ref != 'refs/heads/main' && github.event_name == 'pull_request'

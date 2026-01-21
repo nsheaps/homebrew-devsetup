@@ -1,0 +1,101 @@
+---
+name: check
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [master, main]
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: ${{ github.ref_name != github.event.repository.default_branch }}
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Authenticate as GitHub App
+        id: auth
+        uses: ./.github/actions/github-app-auth
+        with:
+          app-id: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}
+
+      - name: Check for merge conflicts
+        id: git_diff
+        run: |
+          echo "Checking for merge conflicts..."
+          if git diff --check HEAD 2>/dev/null | grep -q "conflict"; then
+            echo "ERROR: Merge conflicts detected. Resolve conflicts before formatting."
+            echo "has_conflicts=true" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          echo "has_conflicts=false" >> "$GITHUB_OUTPUT"
+
+      - name: Install mise
+        uses: jdx/mise-action@v2
+        with:
+          install_args: "editorconfig-checker npm:prettier npm:v8r"
+
+      - name: Run editorconfig-checker
+        run: editorconfig-checker
+
+      - name: Run prettier
+        run: prettier --write .
+
+      - name: Run v8r
+        run: v8r || true
+        continue-on-error: true
+
+      - name: Commit and push formatting fixes
+        if: github.ref != 'refs/heads/main' && github.event_name == 'pull_request'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
+          commit_message: "[format] Apply automatic formatting fixes"
+          commit_user_name: ${{ steps.auth.outputs.user-name }}
+          commit_user_email: ${{ steps.auth.outputs.user-id }}+${{ steps.auth.outputs.user-name }}@users.noreply.github.com
+
+  security:
+    name: Security - ${{ matrix.linter }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        linter:
+          - secretlint
+          - syft
+          - trufflehog
+          - checkov
+          - kics
+          - grype
+          - gitleaks
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Run ${{ matrix.linter }}
+        uses: ./.github/actions/lint-${{ matrix.linter }}
+
+  trivy:
+    name: Security - trivy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Run trivy
+        uses: ./.github/actions/lint-trivy

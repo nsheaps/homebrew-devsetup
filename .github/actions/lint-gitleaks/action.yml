@@ -1,0 +1,16 @@
+name: "Lint with Gitleaks"
+description: "Check for secrets in git history using gitleaks"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install mise
+      uses: jdx/mise-action@v2
+      with:
+        install_args: "gitleaks"
+
+    - name: Run gitleaks
+      shell: bash
+      run: |
+        echo "Running gitleaks..."
+        gitleaks detect --source . --verbose

@@ -1,0 +1,16 @@
+name: "Lint with Secretlint"
+description: "Check for secrets using secretlint"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install mise
+      uses: jdx/mise-action@v2
+      with:
+        install_args: "aqua:secretlint/secretlint"
+
+    - name: Run secretlint
+      shell: bash
+      run: |
+        echo "Running secretlint..."
+        secretlint "**/*" || exit 1

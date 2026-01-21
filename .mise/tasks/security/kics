@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Run KICS IaC scanner"
+set -euo pipefail
+
+echo "Running KICS via Docker..."
+docker run --rm -v "$(pwd):/path" checkmarx/kics:latest scan -p /path --no-progress

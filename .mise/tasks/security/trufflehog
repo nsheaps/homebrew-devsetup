@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Run trufflehog to detect secrets"
+set -euo pipefail
+
+echo "Running trufflehog..."
+trufflehog filesystem . --fail

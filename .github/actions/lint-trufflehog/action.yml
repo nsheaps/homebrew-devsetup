@@ -1,0 +1,16 @@
+name: "Lint with TruffleHog"
+description: "Check for secrets using trufflehog"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install mise
+      uses: jdx/mise-action@v2
+      with:
+        install_args: "trufflehog"
+
+    - name: Run trufflehog
+      shell: bash
+      run: |
+        echo "Running trufflehog..."
+        trufflehog filesystem . --fail

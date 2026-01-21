@@ -1,0 +1,57 @@
+# Project-specific words for cspell
+# One word per line
+
+# Project names
+devsetup
+nsheaps
+
+# Homebrew terms
+livecheck
+metaformula
+postflight
+
+# Shell/zsh terms
+EOBUNDLES
+interactivecomments
+rcfile
+setopt
+shellenv
+shellenvs
+
+# Tools and packages
+autojump
+awscli
+coreutils
+direnv
+getantidote
+ghfile
+iterm
+itermai
+itermbrowserplugin
+jsonnet
+karabiner
+KICS
+linuxbrew
+megalinter
+oxsecurity
+pstree
+robbyrussell
+rubocop
+shellcheck
+shfmt
+softwareupdate
+syft
+tfenv
+tgenv
+thefuck
+worktree
+
+# People/organizations
+jordanbaird
+stefanzweifel
+
+# App names
+Spokenly
+
+# Config terms
+keytype

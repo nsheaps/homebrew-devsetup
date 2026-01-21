@@ -4,14 +4,9 @@ description: "Check for secrets using trufflehog"
 runs:
   using: "composite"
   steps:
-    - name: Install mise
-      uses: jdx/mise-action@v2
-      with:
-        install_args: "trufflehog"
-
     - name: Run trufflehog
       shell: bash
       run: |
         echo "Running trufflehog..."
         # Use exclude file to skip .git directory (contains checkout action token)
-        mise exec trufflehog -- trufflehog filesystem . --fail --exclude-paths=.trufflehog-exclude
+        trufflehog filesystem . --fail --exclude-paths=.trufflehog-exclude

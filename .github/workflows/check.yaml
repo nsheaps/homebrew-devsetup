@@ -92,6 +92,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install mise and tools
+        uses: jdx/mise-action@v2
+        with:
+          install_args: "grype trivy syft gitleaks trufflehog checkov aqua:secretlint/secretlint"
+
       - name: Run all security linters in parallel
         uses: qoomon/actions--parallel-steps@v1
         with:

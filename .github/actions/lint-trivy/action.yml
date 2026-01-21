@@ -4,11 +4,6 @@ description: "Run trivy vulnerability scanner and generate SBOM"
 runs:
   using: "composite"
   steps:
-    - name: Install mise
-      uses: jdx/mise-action@v2
-      with:
-        install_args: "trivy"
-
     - name: Run trivy filesystem scan
       shell: bash
       run: |

@@ -4,11 +4,6 @@ description: "Run grype vulnerability scanner"
 runs:
   using: "composite"
   steps:
-    - name: Install mise
-      uses: jdx/mise-action@v2
-      with:
-        install_args: "grype"
-
     - name: Run grype
       shell: bash
       run: |

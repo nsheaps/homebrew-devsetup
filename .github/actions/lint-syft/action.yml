@@ -4,11 +4,6 @@ description: "Generate SBOM using syft"
 runs:
   using: "composite"
   steps:
-    - name: Install mise
-      uses: jdx/mise-action@v2
-      with:
-        install_args: "syft"
-
     - name: Run syft
       shell: bash
       run: |

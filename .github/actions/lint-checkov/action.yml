@@ -4,11 +4,6 @@ description: "Run checkov IaC security scanner"
 runs:
   using: "composite"
   steps:
-    - name: Install mise
-      uses: jdx/mise-action@v2
-      with:
-        install_args: "checkov"
-
     - name: Run checkov
       shell: bash
       run: |

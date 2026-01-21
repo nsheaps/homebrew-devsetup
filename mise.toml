@@ -6,7 +6,8 @@ editorconfig-checker = "latest"
 "npm:v8r" = "latest"
 
 # Security tools
-"aqua:secretlint/secretlint" = "latest"
+"npm:secretlint" = "latest"
+"npm:@secretlint/secretlint-rule-preset-recommend" = "latest"
 syft = "latest"
 trivy = "latest"
 trufflehog = "latest"

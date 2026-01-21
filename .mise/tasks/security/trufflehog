@@ -3,4 +3,5 @@
 set -euo pipefail
 
 echo "Running trufflehog..."
-trufflehog filesystem . --fail
+# Exclude .git directory (contains checkout action token)
+trufflehog filesystem . --fail --exclude-paths=.git

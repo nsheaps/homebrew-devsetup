@@ -69,7 +69,7 @@ jobs:
         if: steps.format.outputs.has_changes == 'true' && !cancelled()
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: auto-format"
+          commit_message: "chore: `mise format`"
           commit_user_name: ${{ steps.auth.outputs.user-name }}
           commit_user_email: ${{ steps.auth.outputs.user-id }}+${{ steps.auth.outputs.user-name }}@users.noreply.github.com
 
@@ -88,6 +88,7 @@ jobs:
         linter:
           - secretlint
           - syft
+          - trivy
           - trufflehog
           - checkov
           - kics
@@ -101,15 +102,3 @@ jobs:
 
       - name: Run ${{ matrix.linter }}
         uses: ./.github/actions/lint-${{ matrix.linter }}
-
-  trivy:
-    name: Security - trivy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          fetch-depth: 0
-
-      - name: Run trivy
-        uses: ./.github/actions/lint-trivy

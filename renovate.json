@@ -1,25 +1,35 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended"
+  ],
   "configMigration": true,
   "automerge": true,
   "automergeStrategy": "squash",
   "timezone": "America/New_York",
-  "schedule": ["after 10am and before 4pm"],
+  "schedule": [
+    "after 10am and before 4pm"
+  ],
   "packageRules": [
     {
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "pinDigests": true
     },
     {
-      "matchPackagePrefixes": ["nsheaps/"],
-      "minimumReleaseAge": "0 days"
+      "minimumReleaseAge": "0 days",
+      "matchPackageNames": [
+        "nsheaps/{/,}**"
+      ]
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/Formula(/\\S+)?/\\S+\\.rb/"],
+      "managerFilePatterns": [
+        "/Formula(/\\S+)?/\\S+\\.rb/"
+      ],
       "matchStrings": [
         "#\\s?renovate:?\\s*(registryUrl=(?<registryUrl>.+))?\\s*\\n\\s*depends_on \"https://raw.githubusercontent.com/(?<repo>[A-Za-z0-9-_]+/[A-Za-z0-9-_]+)/(?<currentValue>[A-Za-z0-9]+)/(?<depName>.+).rb\""
       ],

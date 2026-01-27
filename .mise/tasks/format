@@ -12,7 +12,7 @@ echo "Running prettier..."
 prettier --write .
 
 echo "Checking editorconfig compliance..."
-editorconfig-checker
+ec -verbose | grep -v "Adding "
 
 echo "Validating config files with v8r..."
 v8r

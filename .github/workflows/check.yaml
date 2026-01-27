@@ -83,6 +83,12 @@ jobs:
           echo "Formatting changes were auto-committed. Re-running CI."
           exit 1
 
+      - name: Fail if otherwise failed
+        if: steps.format.outputs.has_changes == 'false' && !cancelled() && steps.format.outcome == 'failure'
+        run: |
+          echo "Linting failed for some other reason."
+          exit 1
+
   security:
     name: Security
     runs-on: ubuntu-latest

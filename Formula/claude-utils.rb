@@ -4,8 +4,8 @@
 class ClaudeUtils < Formula
   desc 'CLI utilities for Claude Code workflow management'
   homepage 'https://github.com/nsheaps/claude-utils'
-  url 'https://github.com/nsheaps/claude-utils/archive/refs/tags/v0.4.0.tar.gz'
-  sha256 'e92cb96865861ae2182818196809aa0a236131766d1d727c8adb6e39c284ddec'
+  url 'https://github.com/nsheaps/claude-utils/archive/refs/tags/v0.5.0.tar.gz'
+  sha256 '95ebd3153069bc70de48d10987aee5ad56cf2c718b83317547d24b8aafdf4df6'
   license 'MIT'
 
   head do
@@ -13,6 +13,7 @@ class ClaudeUtils < Formula
   end
 
   depends_on 'fzf'
+  depends_on 'gum'
 
   def install
     bin.install Dir['bin/*']

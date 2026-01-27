@@ -7,13 +7,13 @@ runs:
     - name: Cache Grype vulnerability DB
       uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
       with:
-        path: ~/.cache/grype/db
+        path: ~/.cache/grype/db/
         key: grype-db
 
     - name: Check if DB needs updates
       shell: bash
       env:
-        GRYPE_DB_CACHE_DIR: ~/.cache/grype/db
+        GRYPE_DB_CACHE_DIR: ~/.cache/grype/db/
       run: |
         echo "Checking for Grype DB updates..."
         if ! grype db check; then
@@ -26,7 +26,7 @@ runs:
     - name: Run grype
       shell: bash
       env:
-        GRYPE_DB_CACHE_DIR: ~/.cache/grype/db
+        GRYPE_DB_CACHE_DIR: ~/.cache/grype/db/
       run: |
         echo "Running grype..."
         grype dir:.

@@ -9,7 +9,7 @@ runs:
       with:
         path: ~/.cache/grype/db
         key: grype-db
-    
+
     - name: Check if DB needs updates
       shell: bash
       run: |

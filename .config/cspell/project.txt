@@ -5,6 +5,8 @@
 devsetup
 nsheaps
 
+ccresume
+
 # Homebrew terms
 livecheck
 metaformula

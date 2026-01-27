@@ -1,5 +1,5 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "$schema": "https://www.schemastore.org/renovate-41.json",
   "extends": ["config:recommended"],
   "configMigration": true,
   "automerge": true,

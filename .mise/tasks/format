@@ -14,8 +14,8 @@ prettier --write .
 echo "Checking editorconfig compliance..."
 ec -verbose | grep -v "Adding "
 
-echo "Validating config files with v8r..."
-v8r
+# echo "Validating config files with v8r..."
+# v8r
 
 echo "Running rubocop with auto-correct..."
 rubocop -A

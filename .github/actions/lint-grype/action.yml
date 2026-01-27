@@ -32,23 +32,21 @@ runs:
         grype dir:.
 
         grype db status
-      
+
     - name: debug
       uses: pyTooling/Actions/with-post-step@v7.4.2
       with:
         main: |
           echo "Grype DB status after scan:"
           grype db status
-          
+
           echo "cache status"
           find ~/.cache/grype/db/ -type f
           ls -lha ~/.cache/grype/db/**
         post: |
           echo "Grype DB status after scan:"
           grype db status
-          
+
           echo "cache status"
           find ~/.cache/grype/db/ -type f
           ls -lha ~/.cache/grype/db/**
-
-          

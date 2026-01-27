@@ -12,6 +12,8 @@ runs:
 
     - name: Check if DB needs updates
       shell: bash
+      env:
+        GRYPE_DB_CACHE_DIR: ~/.cache/grype/db
       run: |
         echo "Checking for Grype DB updates..."
         if ! grype db check; then
@@ -23,6 +25,10 @@ runs:
 
     - name: Run grype
       shell: bash
+      env:
+        GRYPE_DB_CACHE_DIR: ~/.cache/grype/db
       run: |
         echo "Running grype..."
         grype dir:.
+
+        grype db status

@@ -5,13 +5,15 @@ runs:
   using: "composite"
   steps:
     - name: Cache Grype vulnerability DB
-      uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
+      uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
       with:
-        path: ~/.cache/grype/db
+        path: /home/runner/.cache/grype/db/
         key: grype-db
 
     - name: Check if DB needs updates
       shell: bash
+      env:
+        GRYPE_DB_CACHE_DIR: /home/runner/.cache/grype/db/
       run: |
         echo "Checking for Grype DB updates..."
         if ! grype db check; then
@@ -23,6 +25,28 @@ runs:
 
     - name: Run grype
       shell: bash
+      env:
+        GRYPE_DB_CACHE_DIR: /home/runner/.cache/grype/db/
       run: |
         echo "Running grype..."
         grype dir:.
+
+        grype db status
+
+    - name: debug
+      uses: pyTooling/Actions/with-post-step@370c306306304663febee1525552a09e061588fa # v7.4.2
+      with:
+        main: |
+          echo "Grype DB status after scan:"
+          grype db status
+
+          echo "cache status"
+          find ~/.cache/grype/db/ -type f
+          ls -lha ~/.cache/grype/db/**
+        post: |
+          echo "Grype DB status after scan:"
+          grype db status
+
+          echo "cache status"
+          find ~/.cache/grype/db/ -type f
+          ls -lha ~/.cache/grype/db/**

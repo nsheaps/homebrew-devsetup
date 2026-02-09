@@ -130,6 +130,7 @@ cask 'nsheaps-base' do
   depends_on cask: 'zoom'
   depends_on cask: 'spotify'
   depends_on cask: 'telegram'
+  depends_on cask: 'abhinav/tap/git-spice'
 
   def install
     # even though there's stuff in the brew-meta-formula, brew needs something to install or it will

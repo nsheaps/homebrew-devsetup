@@ -20,3 +20,21 @@ checkov = "latest"
 # KICS uses official GitHub Action in CI
 grype = "latest"
 gitleaks = "latest"
+
+[tasks.format]
+description = "Format all files with prettier"
+run = "prettier --write ."
+
+[tasks.format-check]
+description = "Check formatting without changes"
+run = "prettier --check ."
+
+[tasks.lint]
+description = "Run all linters"
+depends = ["format-check"]
+run = "echo 'All lint checks passed'"
+
+[tasks.check]
+description = "Run all checks"
+depends = ["lint"]
+run = "echo 'All checks passed'"

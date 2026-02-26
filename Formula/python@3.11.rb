@@ -1,5 +1,5 @@
 # renovate: datasource=custom.ghfile registryUrl=Homebrew/homebrew-core depName=Formula/p/python@3.11.rb currentDigest=master
-class PythonAT311 < formula
+class PythonAT311 < Formula
   desc 'Installs Python 3.11.x'
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'

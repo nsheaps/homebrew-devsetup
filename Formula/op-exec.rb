@@ -12,7 +12,7 @@ class OpExec < Formula
     url 'https://github.com/nsheaps/op-exec.git', branch: 'main'
   end
 
-  depends_on '1password-cli'
+  depends_on 'nsheaps/devsetup/onepassword-cli'
 
   def install
     bin.install Dir['bin/*']

@@ -9,6 +9,15 @@ Layout/LineLength:
   AllowedPatterns:
     - "# renovate: .*"
 
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
 Naming/FileName:
   Enabled: false
 

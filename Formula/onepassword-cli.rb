@@ -22,10 +22,13 @@ class OnepasswordCli < Formula
       end
     elsif OS.linux?
       setup_apt_repo
-      system 'sudo', 'apt-get', 'update',
-             '-o', 'Dir::Etc::sourcelist=sources.list.d/1password.list',
-             '-o', 'Dir::Etc::sourceparts=-',
-             '-o', 'APT::Get::List-Cleanup=0'
+      apt_update_args = [
+        'sudo', 'apt-get', 'update',
+        '-o', 'Dir::Etc::sourcelist=sources.list.d/1password.list',
+        '-o', 'Dir::Etc::sourceparts=-',
+        '-o', 'APT::Get::List-Cleanup=0',
+      ]
+      system(*apt_update_args)
       system 'sudo', 'apt-get', 'install', '-y', '1password-cli'
     end
   end
@@ -49,45 +52,40 @@ class OnepasswordCli < Formula
   def setup_apt_repo
     ohai 'Setting up 1Password APT repository...'
 
-    arch = if Hardware::CPU.arm?
-             'arm64'
-           else
-             'amd64'
-           end
+    arch = Hardware::CPU.arm? ? 'arm64' : 'amd64'
 
-    # Add GPG key
     gpg_keyring = '/usr/share/keyrings/1password-archive-keyring.gpg'
-    unless File.exist?(gpg_keyring)
-      system 'bash', '-c',
-             'curl -sS https://downloads.1password.com/linux/keys/1password.asc | ' \
-             "sudo gpg --dearmor --output #{gpg_keyring}"
-    end
-
-    # Add APT source
     sources_file = '/etc/apt/sources.list.d/1password.list'
-    unless File.exist?(sources_file)
-      system 'bash', '-c',
-             "echo 'deb [arch=#{arch} signed-by=#{gpg_keyring}] " \
-             "https://downloads.1password.com/linux/debian/#{arch} stable main' | " \
-             "sudo tee #{sources_file}"
-    end
-
-    # Set up debsig-verify policy
     policy_dir = '/etc/debsig/policies/AC2D62742012EA22'
     keyring_dir = '/usr/share/debsig/keyrings/AC2D62742012EA22'
 
+    # Add GPG key
+    unless File.exist?(gpg_keyring)
+      gpg_cmd = 'curl -sS https://downloads.1password.com/linux/keys/1password.asc | ' \
+                "sudo gpg --dearmor --output #{gpg_keyring}"
+      system 'bash', '-c', gpg_cmd
+    end
+
+    # Add APT source
+    unless File.exist?(sources_file)
+      deb_line = "deb [arch=#{arch} signed-by=#{gpg_keyring}] " \
+        "https://downloads.1password.com/linux/debian/#{arch} stable main"
+      system 'bash', '-c', "echo '#{deb_line}' | sudo tee #{sources_file}"
+    end
+
+    # Set up debsig-verify policy
     unless File.exist?("#{policy_dir}/1password.pol")
       system 'sudo', 'mkdir', '-p', policy_dir
-      system 'bash', '-c',
-             'curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | ' \
-             "sudo tee #{policy_dir}/1password.pol"
+      pol_cmd = 'curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | ' \
+                "sudo tee #{policy_dir}/1password.pol"
+      system 'bash', '-c', pol_cmd
     end
 
     return if File.exist?("#{keyring_dir}/debsig.gpg")
 
     system 'sudo', 'mkdir', '-p', keyring_dir
-    system 'bash', '-c',
-           'curl -sS https://downloads.1password.com/linux/keys/1password.asc | ' \
-           "sudo gpg --dearmor --output #{keyring_dir}/debsig.gpg"
+    debsig_cmd = 'curl -sS https://downloads.1password.com/linux/keys/1password.asc | ' \
+      "sudo gpg --dearmor --output #{keyring_dir}/debsig.gpg"
+    system 'bash', '-c', debsig_cmd
   end
 end

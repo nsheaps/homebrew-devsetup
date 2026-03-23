@@ -18,6 +18,9 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
 
+Layout/LineEndStringConcatenationIndentation:
+  EnforcedStyle: indented
+
 Naming/FileName:
   Enabled: false
 

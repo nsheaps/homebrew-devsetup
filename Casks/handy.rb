@@ -39,48 +39,29 @@ cask 'handy' do
     on_arm do
       url "https://github.com/cjpais/Handy/releases/download/v#{version}/Handy_#{version}_aarch64.AppImage"
       sha256 '2e7be5b88aab3f900612fc83d9d451cde6ad9f52c632bba80aab8e5493efee72'
+
+      binary "Handy_#{version}_aarch64.AppImage", target: 'handy'
     end
 
     on_intel do
       url "https://github.com/cjpais/Handy/releases/download/v#{version}/Handy_#{version}_amd64.AppImage"
       sha256 '421f363ef644ad65a1011b3b673a061659505cab05eb71941aa1b9b5a4fe915f'
-    end
 
-    binary Dir['*.AppImage'].first, target: 'handy'
-
-    postflight do
-      system 'chmod', '+x', "#{HOMEBREW_PREFIX}/bin/handy"
-
-      # Set up GNOME keyboard shortcut if gsettings is available
-      if File.exist?('/usr/bin/gsettings') && (ENV['DISPLAY'] || ENV['WAYLAND_DISPLAY'])
-        shortcut_path = '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/handy/'
-        schema = 'org.gnome.settings-daemon.plugins.media-keys'
-        binding_schema = 'org.gnome.settings-daemon.plugins.media-keys.custom-keybinding'
-
-        current = `gsettings get #{schema} custom-keybindings 2>/dev/null`.strip
-        unless current.include?('handy')
-          updated = if current == '@as []'
-                      "['#{shortcut_path}']"
-                    else
-                      current.sub(/\]$/, ", '#{shortcut_path}']")
-                    end
-          system '/usr/bin/gsettings', 'set', schema, 'custom-keybindings', updated
-        end
-
-        system '/usr/bin/gsettings', 'set', "#{binding_schema}:#{shortcut_path}",
-               'name', 'Toggle Handy Transcription'
-        system '/usr/bin/gsettings', 'set', "#{binding_schema}:#{shortcut_path}",
-               'command', "#{HOMEBREW_PREFIX}/bin/handy --toggle-transcription"
-        system '/usr/bin/gsettings', 'set', "#{binding_schema}:#{shortcut_path}",
-               'binding', '<Super>z'
-      end
+      binary "Handy_#{version}_amd64.AppImage", target: 'handy'
     end
 
     caveats <<~EOS
-      GNOME keyboard shortcut (Super+Z) was configured automatically if gsettings
-      was available. To change the binding:
+      To set up a GNOME keyboard shortcut for Handy (Super+Z):
 
-        gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/handy/ binding '<Control>z'
+        SHORTCUT_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/handy/"
+        SCHEMA="org.gnome.settings-daemon.plugins.media-keys"
+        BINDING_SCHEMA="org.gnome.settings-daemon.plugins.media-keys.custom-keybinding"
+        CURRENT=$(gsettings get "$SCHEMA" custom-keybindings)
+        [ "$CURRENT" = "@as []" ] && NEW="['$SHORTCUT_PATH']" || NEW=$(echo "$CURRENT" | sed "s|]$|, '$SHORTCUT_PATH']|")
+        gsettings set "$SCHEMA" custom-keybindings "$NEW"
+        gsettings set "$BINDING_SCHEMA:$SHORTCUT_PATH" name "Toggle Handy Transcription"
+        gsettings set "$BINDING_SCHEMA:$SHORTCUT_PATH" command "#{HOMEBREW_PREFIX}/bin/handy --toggle-transcription"
+        gsettings set "$BINDING_SCHEMA:$SHORTCUT_PATH" binding "<Super>z"
 
       For Wayland text input, install wtype or dotool:
         sudo apt install wtype

@@ -26,7 +26,7 @@ class OnepasswordCli < Formula
         'sudo', 'apt-get', 'update',
         '-o', 'Dir::Etc::sourcelist=sources.list.d/1password.list',
         '-o', 'Dir::Etc::sourceparts=-',
-        '-o', 'APT::Get::List-Cleanup=0',
+        '-o', 'APT::Get::List-Cleanup=0'
       ]
       system(*apt_update_args)
       system 'sudo', 'apt-get', 'install', '-y', '1password-cli'
@@ -69,7 +69,7 @@ class OnepasswordCli < Formula
     # Add APT source
     unless File.exist?(sources_file)
       deb_line = "deb [arch=#{arch} signed-by=#{gpg_keyring}] " \
-        "https://downloads.1password.com/linux/debian/#{arch} stable main"
+                 "https://downloads.1password.com/linux/debian/#{arch} stable main"
       system 'bash', '-c', "echo '#{deb_line}' | sudo tee #{sources_file}"
     end
 
@@ -85,7 +85,7 @@ class OnepasswordCli < Formula
 
     system 'sudo', 'mkdir', '-p', keyring_dir
     debsig_cmd = 'curl -sS https://downloads.1password.com/linux/keys/1password.asc | ' \
-      "sudo gpg --dearmor --output #{keyring_dir}/debsig.gpg"
+                 "sudo gpg --dearmor --output #{keyring_dir}/debsig.gpg"
     system 'bash', '-c', debsig_cmd
   end
 end

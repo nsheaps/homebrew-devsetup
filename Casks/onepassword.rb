@@ -25,7 +25,7 @@ cask 'onepassword' do
           'apt-get', 'update',
           '-o', 'Dir::Etc::sourcelist=sources.list.d/1password.list',
           '-o', 'Dir::Etc::sourceparts=-',
-          '-o', 'APT::Get::List-Cleanup=0',
+          '-o', 'APT::Get::List-Cleanup=0'
         ]
       system_command '/usr/bin/sudo',
         args: ['apt-get', 'install', '-y', '1password']

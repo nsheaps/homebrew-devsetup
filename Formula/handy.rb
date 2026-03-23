@@ -21,10 +21,10 @@ class Handy < Formula
   def install
     appimage = Dir['*.AppImage'].first
     bin.install appimage => 'handy'
-    chmod 0755, bin/'handy'
+    chmod 0o755, bin / 'handy'
 
     # Install GNOME keybinding setup script
-    (libexec/'setup-gnome-shortcut').write <<~BASH
+    (libexec / 'setup-gnome-shortcut').write <<~BASH
       #!/usr/bin/env bash
       set -euo pipefail
 
@@ -57,13 +57,13 @@ class Handy < Formula
 
       echo "GNOME shortcut bound: $BINDING → handy --toggle-transcription"
     BASH
-    chmod 0755, libexec/'setup-gnome-shortcut'
+    chmod 0o755, libexec / 'setup-gnome-shortcut'
   end
 
   def post_install
     return unless ENV['DISPLAY'] || ENV['WAYLAND_DISPLAY']
 
-    system libexec/'setup-gnome-shortcut'
+    system libexec / 'setup-gnome-shortcut'
   end
 
   def caveats

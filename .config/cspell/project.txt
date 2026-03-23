@@ -50,6 +50,7 @@ thefuck
 worktree
 
 # People/organizations
+cjpais
 jordanbaird
 stefanzweifel
 

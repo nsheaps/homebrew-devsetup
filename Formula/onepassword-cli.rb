@@ -85,16 +85,22 @@ class OnepasswordCli < Formula
   end
 
   def install_debsig_policy
+    install_debsig_policy_file
+    install_debsig_keyring
+  end
+
+  def install_debsig_policy_file
     policy_dir = '/etc/debsig/policies/AC2D62742012EA22'
+    return if File.exist?("#{policy_dir}/1password.pol")
+
+    system 'sudo', 'mkdir', '-p', policy_dir
+    pol_cmd = 'curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol ' \
+      "| sudo tee #{policy_dir}/1password.pol"
+    system 'bash', '-c', pol_cmd
+  end
+
+  def install_debsig_keyring
     keyring_dir = '/usr/share/debsig/keyrings/AC2D62742012EA22'
-
-    unless File.exist?("#{policy_dir}/1password.pol")
-      system 'sudo', 'mkdir', '-p', policy_dir
-      pol_cmd = 'curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol ' \
-        "| sudo tee #{policy_dir}/1password.pol"
-      system 'bash', '-c', pol_cmd
-    end
-
     return if File.exist?("#{keyring_dir}/debsig.gpg")
 
     system 'sudo', 'mkdir', '-p', keyring_dir

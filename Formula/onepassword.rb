@@ -25,9 +25,9 @@ class Onepassword < Formula
     elsif OS.linux?
       # APT repo is already set up by the onepassword-cli dependency
       system 'sudo', 'apt-get', 'update',
-        '-o', 'Dir::Etc::sourcelist=sources.list.d/1password.list',
-        '-o', 'Dir::Etc::sourceparts=-',
-        '-o', 'APT::Get::List-Cleanup=0'
+             '-o', 'Dir::Etc::sourcelist=sources.list.d/1password.list',
+             '-o', 'Dir::Etc::sourceparts=-',
+             '-o', 'APT::Get::List-Cleanup=0'
       system 'sudo', 'apt-get', 'install', '-y', '1password'
     end
   end

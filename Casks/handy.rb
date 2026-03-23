@@ -25,7 +25,7 @@ cask 'handy' do
   zap trash: [
     '~/Library/Application Support/computer.handy',
     '~/Library/Caches/computer.handy',
-    '~/Library/Preferences/computer.handy.plist',
+    '~/Library/Preferences/computer.handy.plist'
   ]
 
   caveats <<~EOS

@@ -39,15 +39,15 @@ cask 'onepassword' do
 
   def caveats
     if OS.mac?
-      <<~EOS
+      <<~CAVEAT
         1Password has been installed via the upstream Homebrew cask.
         Update with: brew upgrade --cask 1password
-      EOS
+      CAVEAT
     else
-      <<~EOS
+      <<~CAVEAT
         1Password has been installed via the official 1Password APT repository.
         Update with: sudo apt-get update && sudo apt-get upgrade 1password
-      EOS
+      CAVEAT
     end
   end
 end

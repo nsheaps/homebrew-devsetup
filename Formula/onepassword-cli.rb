@@ -17,63 +17,77 @@ class OnepasswordCli < Formula
 
   def post_install
     if OS.mac?
-      unless system(HOMEBREW_BREW_FILE, 'list', '--cask', '1password-cli', err: :close, out: :close)
-        system HOMEBREW_BREW_FILE, 'install', '--cask', '1password-cli'
-      end
+      install_macos_cask
     elsif OS.linux?
-      setup_apt_repo
-      apt_update_args = [
-        'sudo', 'apt-get', 'update',
-        '-o', 'Dir::Etc::sourcelist=sources.list.d/1password.list',
-        '-o', 'Dir::Etc::sourceparts=-',
-        '-o', 'APT::Get::List-Cleanup=0'
-      ]
-      system(*apt_update_args)
-      system 'sudo', 'apt-get', 'install', '-y', '1password-cli'
+      install_linux_apt
     end
   end
 
   def caveats
     if OS.mac?
-      <<~EOS
+      <<~CAVEAT
         1Password CLI has been installed as a Homebrew cask.
         Update with: brew upgrade --cask 1password-cli
-      EOS
+      CAVEAT
     else
-      <<~EOS
+      <<~CAVEAT
         1Password CLI has been installed via the official 1Password APT repository.
         Update with: sudo apt-get update && sudo apt-get upgrade 1password-cli
-      EOS
+      CAVEAT
     end
   end
 
   private
 
+  def install_macos_cask
+    return if system(HOMEBREW_BREW_FILE, 'list', '--cask', '1password-cli', err: :close, out: :close)
+
+    system HOMEBREW_BREW_FILE, 'install', '--cask', '1password-cli'
+  end
+
+  def install_linux_apt
+    setup_apt_repo
+    apt_update_args = [
+      'sudo', 'apt-get', 'update',
+      '-o', 'Dir::Etc::sourcelist=sources.list.d/1password.list',
+      '-o', 'Dir::Etc::sourceparts=-',
+      '-o', 'APT::Get::List-Cleanup=0'
+    ]
+    system(*apt_update_args)
+    system 'sudo', 'apt-get', 'install', '-y', '1password-cli'
+  end
+
   def setup_apt_repo
     ohai 'Setting up 1Password APT repository...'
-
     arch = Hardware::CPU.arm? ? 'arm64' : 'amd64'
+    install_apt_gpg_key
+    install_apt_source(arch)
+    install_debsig_policy
+  end
 
+  def install_apt_gpg_key
+    gpg_keyring = '/usr/share/keyrings/1password-archive-keyring.gpg'
+    return if File.exist?(gpg_keyring)
+
+    gpg_cmd = 'curl -sS https://downloads.1password.com/linux/keys/1password.asc ' \
+      "| sudo gpg --dearmor --output #{gpg_keyring}"
+    system 'bash', '-c', gpg_cmd
+  end
+
+  def install_apt_source(arch)
     gpg_keyring = '/usr/share/keyrings/1password-archive-keyring.gpg'
     sources_file = '/etc/apt/sources.list.d/1password.list'
+    return if File.exist?(sources_file)
+
+    deb_line = "deb [arch=#{arch} signed-by=#{gpg_keyring}] " \
+      "https://downloads.1password.com/linux/debian/#{arch} stable main"
+    system 'bash', '-c', "echo '#{deb_line}' | sudo tee #{sources_file}"
+  end
+
+  def install_debsig_policy
     policy_dir = '/etc/debsig/policies/AC2D62742012EA22'
     keyring_dir = '/usr/share/debsig/keyrings/AC2D62742012EA22'
 
-    # Add GPG key
-    unless File.exist?(gpg_keyring)
-      gpg_cmd = 'curl -sS https://downloads.1password.com/linux/keys/1password.asc ' \
-        "| sudo gpg --dearmor --output #{gpg_keyring}"
-      system 'bash', '-c', gpg_cmd
-    end
-
-    # Add APT source
-    unless File.exist?(sources_file)
-      deb_line = "deb [arch=#{arch} signed-by=#{gpg_keyring}] " \
-        "https://downloads.1password.com/linux/debian/#{arch} stable main"
-      system 'bash', '-c', "echo '#{deb_line}' | sudo tee #{sources_file}"
-    end
-
-    # Set up debsig-verify policy
     unless File.exist?("#{policy_dir}/1password.pol")
       system 'sudo', 'mkdir', '-p', policy_dir
       pol_cmd = 'curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol ' \

@@ -50,11 +50,18 @@ thefuck
 worktree
 
 # People/organizations
+cjpais
 jordanbaird
 stefanzweifel
 
 # App names
 Spokenly
+gsettings
+dconf
+xdotool
+wtype
+dotool
+appimage
 
 # Config terms
 keytype

@@ -29,10 +29,10 @@ cask 'handy' do
       '~/Library/Preferences/computer.handy.plist'
     ]
 
-    caveats <<~EOS
+    caveats <<~CAVEATS
       Handy registers its own global keyboard shortcut for push-to-talk.
       Configure the shortcut in the Handy app preferences after first launch.
-    EOS
+    CAVEATS
   end
 
   on_linux do
@@ -50,7 +50,7 @@ cask 'handy' do
       binary "Handy_#{version}_amd64.AppImage", target: 'handy'
     end
 
-    caveats <<~EOS
+    caveats <<~CAVEATS
       To set up a GNOME keyboard shortcut for Handy (Super+Z):
 
         SHORTCUT_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/handy/"
@@ -68,6 +68,6 @@ cask 'handy' do
 
       For X11 text input, install xdotool:
         sudo apt install xdotool
-    EOS
+    CAVEATS
   end
 end

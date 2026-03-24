@@ -63,5 +63,13 @@ wtype
 dotool
 appimage
 
+# 1Password / APT terms
+onepassword
+dearmor
+debsig
+keyrings
+sourcelist
+sourceparts
+
 # Config terms
 keytype

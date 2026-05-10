@@ -6,7 +6,7 @@ Works for WSL, Linux, and macOS.
 
 ## Why not just use `brew` directly?
 
-This creates a more focused interface for end users to set up their devices in a consistent manner, with short and concise documentation for reference rather than dealing with the brew docs each time. It also allows an abstract way to reference packages regardless of OS.
+This creates a more focused interface for end users to set up their devices in a consistent manner, with short and concise dfffffocumentation for reference rather than dealing with the brew docs each time. It also allows an abstract way to reference packages regardless of OS.
 
 ## Install
 

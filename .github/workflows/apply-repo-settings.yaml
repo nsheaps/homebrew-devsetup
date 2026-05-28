@@ -1,0 +1,63 @@
+# This file is managed by nsheaps/.github (sync-files).
+# Source: https://github.com/nsheaps/.github/blob/main/ansible/templates/.github/workflows/apply-repo-settings.yaml
+# Edit-in-place will be overwritten on the next sync.
+name: Apply Repo Settings
+
+# Reads `.github/settings.yml` from THIS repo and applies the
+# repository config + rulesets via the apply-repo-settings action
+# (https://github.com/nsheaps/github-actions/tree/main/.github/actions/apply-repo-settings).
+#
+# Ephemeral, in-workflow alternative to the third-party
+# repository-settings GitHub App. Runs only when invoked.
+#
+# Auth: reuses the org's automation App (AUTOMATION_GITHUB_APP_*) —
+# same app used by sync-labels / sync-files / sync-secrets / sync-stars.
+# That app must have `Administration: write` for rulesets to apply; if
+# they don't, check the app's permission grants first.
+#
+# Triggers:
+#   workflow_dispatch    manual, with dry-run toggle
+#   repository_dispatch  external triggers (other workflows / curl)
+#   push to main         when .github/settings.yml changes
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: "Render only; don't apply"
+        type: boolean
+        default: false
+  repository_dispatch:
+    types: [apply-repo-settings]
+  push:
+    branches: [main]
+    paths:
+      - '.github/settings.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  # Serialize per-ref so a fast follow-up push waits for the in-flight run.
+  group: apply-repo-settings-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    name: Apply settings to this repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Apply
+        id: apply
+        uses: nsheaps/github-actions/.github/actions/apply-repo-settings@main
+        with:
+          app-id: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}
+          dry-run: ${{ inputs.dry-run || false }}
+
+      - name: Show summary
+        if: always()
+        run: |
+          echo "Summary: ${{ steps.apply.outputs.summary }}"

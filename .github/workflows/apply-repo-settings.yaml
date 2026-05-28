@@ -32,7 +32,7 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/settings.yml'
+      - ".github/settings.yml"
 
 permissions:
   contents: read

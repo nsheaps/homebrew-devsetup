@@ -4,8 +4,8 @@
 class ClaudeTeam < Formula
   desc 'Launch and manage Claude Code agent team sessions'
   homepage 'https://github.com/nsheaps/agent-team'
-  url 'https://github.com/nsheaps/agent-team/archive/refs/tags/v0.1.0.tar.gz'
-  sha256 'fd43d2ba0f364d046fcf8a06eaefb188a793a2aa90459993894784ae29d2337a'
+  url 'https://github.com/nsheaps/agent-team/archive/refs/tags/v0.1.1.tar.gz'
+  sha256 '0cddfa1ad90fbe47b5351109e2bf030f7b2d3018bd0215fccf454716a98ba5ec'
   license 'MIT'
 
   head do

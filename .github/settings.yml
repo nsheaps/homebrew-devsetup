@@ -1,15 +1,22 @@
 # ----------------------------------------------------------------
 # Auto-merged from nsheaps/.github on every sync.
-#   Source: https://github.com/nsheaps/.github/blob/a42edbcc711fe08e6b79eb3bc42c6d1a19c8e426/.github/repo-settings.yaml
+#   Source: https://github.com/nsheaps/.github/blob/94540ea2770f26f5a0159aba7184040e8d5eaba8/.github/repo-settings.yaml
 # Edits to this file are KEPT on the next sync (deep merge).
 # To remove an org default, delete the key here — it will not come back.
 # ----------------------------------------------------------------
 # ----------------------------------------------------------------
-# nsheaps org-wide repository defaults
+# nsheaps org-wide repository defaults — TEMPLATE
 #
-# Consumed by https://github.com/repository-settings/app
-# Deep-merged into each managed repo's .github/settings.yml by the
-# sync-repo-settings workflow:
+# This file is the source of truth. It contains ${ENV_VAR} placeholders
+# that get substituted by the render-repo-settings workflow (envsubst),
+# which writes the rendered output to repo-settings.yaml in this repo.
+# Edit this file (not repo-settings.yaml) for org-wide changes.
+#
+# Render workflow:
+#   https://github.com/nsheaps/.github/blob/main/.github/workflows/render-repo-settings.yaml
+#
+# After rendering, the resolved repo-settings.yaml is deep-merged into
+# each managed repo's .github/settings.yml by sync-repo-settings:
 #   https://github.com/nsheaps/.github/blob/main/.github/workflows/sync-repo-settings.yaml
 #
 # Merger script + tests:
@@ -135,35 +142,31 @@ rulesets:
   # ---- 1. No delete / no force-push on the default branch ----
   - name: protect-default-branch
     target: branch
-    enforcement: active # always enforced — overriding this is discouraged
+    enforcement: active        # always enforced — overriding this is discouraged
     conditions:
       ref_name:
         include:
-          - "~DEFAULT_BRANCH" # special selector: whatever the default branch is
+          - "~DEFAULT_BRANCH"   # special selector: whatever the default branch is
         exclude: []
     bypass_actors:
       # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
       # Repos can add more actors (other teams, integrations).
       - actor_id: 5
-        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
         bypass_mode: always
-      - actor_id: 101490915
-        actor_type: Integration
-        bypass_mode: always
-      - actor_id: -1
-        actor_type: Integration
-        bypass_mode: always
+      # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+      # by render-repo-settings when this template is rendered to repo-settings.yaml.
       - actor_id: 2549081
         actor_type: Integration
         bypass_mode: always
     rules:
-      - type: deletion # block branch deletion
-      - type: non_fast_forward # block force-push
+      - type: deletion          # block branch deletion
+      - type: non_fast_forward  # block force-push
 
-    # ---- 2. PR required (0 reviews) ----
+  # ---- 2. PR required (0 reviews) ----
   - name: require-pr
     target: branch
-    enforcement: active
+    # enforcement: 'active'    # uncomment to lock this ruleset on in this repo
     conditions:
       ref_name:
         include: ["~DEFAULT_BRANCH"]
@@ -172,14 +175,10 @@ rulesets:
       # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
       # Repos can add more actors (other teams, integrations).
       - actor_id: 5
-        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
         bypass_mode: always
-      - actor_id: 101490915
-        actor_type: Integration
-        bypass_mode: always
-      - actor_id: -1
-        actor_type: Integration
-        bypass_mode: always
+      # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+      # by render-repo-settings when this template is rendered to repo-settings.yaml.
       - actor_id: 2549081
         actor_type: Integration
         bypass_mode: always
@@ -194,32 +193,14 @@ rulesets:
           # required_review_thread_resolution: false
           # allowed_merge_methods: [merge, squash, rebase]
 
-  # - # ---- 3. Checks required ----
-  #   # NOTE: shipped ACTIVE with an empty required_status_checks list — a valid
-  #   # GitHub config that's a no-op until a repo populates the list. Repos just
-  #   # add entries under required_status_checks below; no enforcement flip needed.
-  #   # The org doesn't mandate specific status checks (each repo has its own CI),
-  #   # which is why the list is empty here.
-  #   name: require-checks
-  #   target: branch
-  #   enforcement: active
-  #   conditions:
-  #     ref_name:
-  #       include: ["~DEFAULT_BRANCH"]
-  #       exclude: []
-  #   bypass_actors:
-  #     # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
-  #     # Repos can add more actors (other teams, integrations).
-  #     - actor_id: 5
-  #       actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
-  #       bypass_mode: always
-  #   rules:
-  #     - type: required_status_checks
-  #       parameters:
-  #         strict_required_status_checks_policy: true
-  #         required_status_checks: []   # ← repos add { context, integration_id } entries
-  # ---- 4. Review required — 1 reviewer (active by default) ----
-  - name: require-1-review
+  # ---- 3. Checks required ----
+  # NOTE: shipped ACTIVE with an empty required_status_checks list — a valid
+  # GitHub config that's a no-op until a repo populates the list. Repos just
+  # add entries under required_status_checks below; no enforcement flip needed.
+  # The org doesn't mandate specific status checks (each repo has its own CI),
+  # which is why the list is empty here.
+    enforcement: active
+  - name: require-checks
     target: branch
     enforcement: active
     conditions:
@@ -230,14 +211,35 @@ rulesets:
       # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
       # Repos can add more actors (other teams, integrations).
       - actor_id: 5
-        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
         bypass_mode: always
-      - actor_id: 101490915
+      # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+      # by render-repo-settings when this template is rendered to repo-settings.yaml.
+      - actor_id: 2549081
         actor_type: Integration
         bypass_mode: always
-      - actor_id: -1
-        actor_type: Integration
+    rules:
+      - type: required_status_checks
+        parameters:
+          strict_required_status_checks_policy: true
+          required_status_checks: []   # ← repos add { context, integration_id } entries
+
+  # ---- 4. Review required — 1 reviewer (active by default) ----
+  - name: require-1-review
+    target: branch
+    # enforcement: 'active'    # uncomment to lock this ruleset on in this repo
+    conditions:
+      ref_name:
+        include: ["~DEFAULT_BRANCH"]
+        exclude: []
+    bypass_actors:
+      # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
+      # Repos can add more actors (other teams, integrations).
+      - actor_id: 5
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
         bypass_mode: always
+      # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+      # by render-repo-settings when this template is rendered to repo-settings.yaml.
       - actor_id: 2549081
         actor_type: Integration
         bypass_mode: always
@@ -249,10 +251,11 @@ rulesets:
           require_last_push_approval: false
           required_review_thread_resolution: true
 
-    # ---- 5. Review required — 1 reviewer from CODEOWNERS (disabled by default) ----
-    # NOTE: shipped DISABLED. Repos with a meaningful CODEOWNERS file flip to
-    # `enforcement: active` and likely set `require-1-review.enforcement: disabled`
-    # so the two don't double up.
+  # ---- 5. Review required — 1 reviewer from CODEOWNERS (disabled by default) ----
+  # NOTE: shipped DISABLED. Repos with a meaningful CODEOWNERS file flip to
+  # `enforcement: active` and likely set `require-1-review.enforcement: disabled`
+  # so the two don't double up.
+    enforcement: active
   - name: require-codeowner-review
     target: branch
     enforcement: disabled
@@ -265,14 +268,10 @@ rulesets:
       # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
       # Repos can add more actors (other teams, integrations).
       - actor_id: 5
-        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
         bypass_mode: always
-      - actor_id: 101490915
-        actor_type: Integration
-        bypass_mode: always
-      - actor_id: -1
-        actor_type: Integration
-        bypass_mode: always
+      # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+      # by render-repo-settings when this template is rendered to repo-settings.yaml.
       - actor_id: 2549081
         actor_type: Integration
         bypass_mode: always
@@ -283,33 +282,3 @@ rulesets:
           require_code_owner_review: true
           dismiss_stale_reviews_on_push: true
           required_review_thread_resolution: true
-  - name: require-checks
-    target: branch
-    enforcement: active
-    conditions:
-      ref_name:
-        include: ["~DEFAULT_BRANCH"]
-        exclude: []
-    bypass_actors:
-      # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
-      # Repos can add more actors (other teams, integrations).
-      - actor_id: 5
-        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
-        bypass_mode: always
-      - actor_id: 101490915
-        actor_type: Integration
-        bypass_mode: always
-      - actor_id: -1
-        actor_type: Integration
-        bypass_mode: always
-      - actor_id: 2549081
-        actor_type: Integration
-        bypass_mode: always
-    rules:
-      - type: required_status_checks
-        parameters:
-          strict_required_status_checks_policy: true
-          required_status_checks: [] # ← repos add { context, integration_id } entries
-
-
-  # ---- 4. Review required — 1 reviewer (active by default) ----

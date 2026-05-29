@@ -1,0 +1,62 @@
+# PR Status Dispatch — CONSUMER-REPO TEMPLATE (GSD-101, #706)
+#
+# Copy this file into ANY repo in REPOS.md scope as
+# `.github/workflows/pr-status-dispatch.yaml`. It fires a `repository_dispatch`
+# (event type `pr-status-refresh`) at nsheaps/.org whenever a PR in THIS repo
+# changes state, so .org's PR Status Digest regenerates and picks up the change.
+#
+# Why this exists: .org's pr-status-digest.yaml only sees its OWN pull_request
+# events. When a PR in agents / ai-mktpl / op-exec / … moves open→merged, .org
+# never hears about it and the combined digest goes stale until the 12h cron.
+# This template closes that gap — a state change here pings .org immediately.
+#
+# Requirements (already satisfied for REPOS.md repos via .github/secret-sync.yaml):
+#   - secrets.AUTOMATION_GITHUB_APP_ID
+#   - secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY
+# The automation GitHub App must be installed on nsheaps/.org (it is — .org is a
+# secret-sync target), so a token minted here can dispatch to .org.
+#
+# State changes only — explicitly NOT `synchronize` (don't ping on every push).
+
+name: PR Status Dispatch
+
+on:
+  pull_request:
+    types: [opened, closed, reopened, ready_for_review, converted_to_draft]
+
+# No write perms needed on THIS repo — the dispatch is authorized by the app
+# token scoped to nsheaps/.org, not by GITHUB_TOKEN.
+permissions: {}
+
+concurrency:
+  group: pr-status-dispatch-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    # Only dispatch for same-repo PRs — fork PRs can't carry secrets and their
+    # state isn't tracked in the digest anyway.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Authenticate as GitHub App
+        id: app-token
+        uses: nsheaps/github-actions/.github/actions/github-app-auth@main
+        with:
+          app-id: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}
+          owner: nsheaps
+          skip-checkout: "true"
+
+      - name: Dispatch pr-status-refresh to nsheaps/.org
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: nsheaps/.org
+          event-type: pr-status-refresh
+          client-payload: |-
+            {
+              "source_repo": "${{ github.repository }}",
+              "pr_number": ${{ github.event.pull_request.number }},
+              "action": "${{ github.event.action }}"
+            }

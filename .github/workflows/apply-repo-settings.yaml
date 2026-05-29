@@ -32,8 +32,8 @@ on:
   push:
     branches: [main]
     paths:
-      - ".github/settings.yml"
-      - ".github/workflows/apply-repo-settings.yaml"
+      - '.github/settings.yml'
+      - '.github/workflows/apply-repo-settings.yaml'
 
 permissions:
   contents: read
@@ -50,14 +50,14 @@ jobs:
     steps:
       - name: Checkout as GitHub App
         id: checkout
-        uses: nsheaps/github-actions/.github/actions/checkout-as-app@48658213c698dbbe3fdbe82506b41d880d49abfb # main
+        uses: nsheaps/github-actions/.github/actions/checkout-as-app@main
         with:
           app-id: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
           private-key: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}
 
       - name: Apply
         id: apply
-        uses: nsheaps/github-actions/.github/actions/apply-repo-settings@48658213c698dbbe3fdbe82506b41d880d49abfb # main
+        uses: nsheaps/github-actions/.github/actions/apply-repo-settings@main
         with:
           token: ${{ steps.checkout.outputs.token }}
           dry-run: ${{ inputs.dry-run || false }}

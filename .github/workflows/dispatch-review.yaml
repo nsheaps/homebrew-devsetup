@@ -1,0 +1,64 @@
+# Runs the dispatch GATE for AI code reviews on this repo's PRs.
+# Forwards to the shared decider workflow in nsheaps/agents, which evaluates
+# whether to dispatch a review and (if yes) fires a repository_dispatch to the
+# target agent repo's dispatch-receiver-review.yaml.
+#
+# This file is a template — copy into your repo at
+# `.github/workflows/dispatch-review.yaml`. Synced via `nsheaps/.github` CI
+# automation when configured; until then, copy-paste.
+#
+# Spec: https://github.com/nsheaps/agents/blob/main/plugins/claude-code/review-utils/specs/review-dispatch.md
+#
+# Requirements (provisioned via nsheaps/.github/secret-sync.yaml):
+#   - AUTOMATION_GITHUB_APP_ID
+#   - AUTOMATION_GITHUB_APP_PRIVATE_KEY  (automation-nsheaps[bot]; installed on
+#                                         THIS repo for label edit + check_run
+#                                         posting, AND on the target agent repo
+#                                         so it can fire repository_dispatch)
+#
+# Why automation creds (not REVIEW_GITHUB_APP_*)? The gate is routing only —
+# it never speaks AS the reviewer. It edits a label, posts a queued check, and
+# fires a repository_dispatch. The reviewer-identity (REVIEW_GITHUB_APP_*) is
+# owned by the target agent's `dispatch-receiver-review.yaml`, where the review
+# actually executes. See plugins/claude-code/review-utils/specs/review-dispatch.md
+# §Secrets for the gate-vs-receiver creds rationale.
+#
+# LLM-auth secrets (REVIEW_ANTHROPIC_API_KEY / CLAUDE_CODE_OAUTH_TOKEN) are
+# NOT needed here — owned by the target agent's receiver for the same reason.
+
+name: Dispatch PR Review
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review, labeled, converted_to_draft]
+
+jobs:
+  review:
+    # Gate at the template level (post-2026-05-23 redesign): only dispatch
+    # when the PR is open AND carries the request-review label. The
+    # `converted_to_draft` event also fires (PR is still in state=open while
+    # draft) so the receiver can short-circuit with a `neutral` check rather
+    # than running a review on a drafted PR. If you change the request label
+    # name, update the literal in the `contains(...)` expression below.
+    if: |
+      github.event.pull_request.state == 'open' &&
+      contains(github.event.pull_request.labels.*.name, 'request-review')
+    # Explicit permissions: default_workflow_permissions is "read" in many
+    # repos but the called workflow needs pull-requests + checks write.
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    # @main = rolling updates: any change merged to nsheaps/agents takes effect
+    # on the next PR event in repos using this template. This is intentional —
+    # operators who need pinned stability should replace @main with a commit SHA
+    # and update it in lock-step with plugin version bumps.
+    uses: nsheaps/agents/.github/workflows/review-dispatch.yaml@main
+    # secrets: inherit doesn't pass cross-repo (GitHub limitation).
+    secrets:
+      AUTOMATION_GITHUB_APP_ID: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
+      AUTOMATION_GITHUB_APP_PRIVATE_KEY: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}
+    # Optional overrides (uncomment to use):
+    # with:
+    #   target-repo: nsheaps/.ai-agent-henry  # default
+    #   event-type: pr-review                 # default repository_dispatch event_type

@@ -4,8 +4,8 @@
 class OpExec < Formula
   desc 'Execute commands with 1Password secrets as environment variables'
   homepage 'https://github.com/nsheaps/op-exec'
-  url 'https://github.com/nsheaps/op-exec/archive/refs/tags/v0.1.9.tar.gz'
-  sha256 '642714694258f9e8f2c67bd6c91c64ccda598bedc38fe522e5bf39aae0c25a5e'
+  url 'https://github.com/nsheaps/op-exec/archive/refs/tags/v0.1.10.tar.gz'
+  sha256 'c344bb18edda64d0ecb9569b210733a80de3e624aefd3aaa10cb55280e6e608f'
   license 'MIT'
 
   head do

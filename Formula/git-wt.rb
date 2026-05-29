@@ -4,8 +4,8 @@
 class GitWt < Formula
   desc 'Interactive TUI for git worktree management'
   homepage 'https://github.com/nsheaps/git-wt'
-  url 'https://github.com/nsheaps/git-wt/archive/refs/tags/v0.6.20.tar.gz'
-  sha256 '9d1805834fcdeecd97a912fb934773b3ad8da9042b439a944e2cfc3fb7e9a666'
+  url 'https://github.com/nsheaps/git-wt/archive/refs/tags/v0.6.21.tar.gz'
+  sha256 'd33c32ff2fc882d6cdee5587121af7ace6bed61f50bfaba012781af55e320e4d'
   license 'MIT'
 
   head do

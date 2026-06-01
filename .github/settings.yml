@@ -193,12 +193,12 @@ rulesets:
         # required_review_thread_resolution: false
         # allowed_merge_methods: [merge, squash, rebase]
 
-    # ---- 3. Checks required ----
-    # NOTE: shipped ACTIVE with an empty required_status_checks list — a valid
-    # GitHub config that's a no-op until a repo populates the list. Repos just
-    # add entries under required_status_checks below; no enforcement flip needed.
-    # The org doesn't mandate specific status checks (each repo has its own CI),
-    # which is why the list is empty here.
+        # ---- 3. Checks required ----
+        # NOTE: shipped ACTIVE with an empty required_status_checks list — a valid
+        # GitHub config that's a no-op until a repo populates the list. Repos just
+        # add entries under required_status_checks below; no enforcement flip needed.
+        # The org doesn't mandate specific status checks (each repo has its own CI),
+        # which is why the list is empty here.
         parameters:
           required_approving_review_count: 0
           dismiss_stale_reviews_on_push: false
@@ -207,7 +207,7 @@ rulesets:
           required_review_thread_resolution: false
           # allowed_merge_methods: [merge, squash, rebase]   # optional
 
-  # ---- 3. Review required — 1 reviewer (active by default) ----
+    # ---- 3. Review required — 1 reviewer (active by default) ----
     enforcement: active
   - name: require-checks
     target: branch
@@ -260,10 +260,10 @@ rulesets:
           require_last_push_approval: false
           required_review_thread_resolution: true
 
-    # ---- 5. Review required — 1 reviewer from CODEOWNERS (disabled by default) ----
-    # NOTE: shipped DISABLED. Repos with a meaningful CODEOWNERS file flip to
-    # `enforcement: active` and likely set `require-1-review.enforcement: disabled`
-    # so the two don't double up.
+          # ---- 5. Review required — 1 reviewer from CODEOWNERS (disabled by default) ----
+          # NOTE: shipped DISABLED. Repos with a meaningful CODEOWNERS file flip to
+          # `enforcement: active` and likely set `require-1-review.enforcement: disabled`
+          # so the two don't double up.
           require_code_owner_review: false
     enforcement: active
   - name: require-codeowner-review

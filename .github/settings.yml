@@ -1,0 +1,310 @@
+# ----------------------------------------------------------------
+# Auto-merged from nsheaps/.github on every sync.
+#   Source: https://github.com/nsheaps/.github/blob/fb6a7e20587af3544fe16767d34da50483b1c728/ansible/config/org-settings.yaml
+# Edits to this file are KEPT on the next sync (deep merge).
+# To remove an org default, delete the key here — it will not come back.
+# ----------------------------------------------------------------
+# ----------------------------------------------------------------
+# Auto-generated from ansible/config/org-settings.yaml. DO NOT EDIT.
+# Edit the template, not this file.
+# Source: https://github.com/nsheaps/.github/blob/fb6a7e20587af3544fe16767d34da50483b1c728/ansible/config/org-settings.yaml
+# ----------------------------------------------------------------
+# nsheaps org-wide repository defaults — TEMPLATE
+#
+# This file is the source of truth. It contains ${ENV_VAR} placeholders
+# that get substituted by the sync-org-settings workflow (envsubst),
+# which writes two rendered outputs back to this repo:
+#   - .github/org-settings.yaml      — rendered (no @default hydration)
+#   - .github/default-settings.yaml  — rendered + @default uncommented
+# Edit THIS file for org-wide changes; the rendered outputs are auto-generated.
+#
+# Sync workflow:
+#   https://github.com/nsheaps/.github/blob/main/.github/workflows/sync-org-settings.yaml
+#
+# After rendering, the ansible playbook (sync-org-settings) walks every
+# managed repo and either:
+#   - First-touch (no .github/settings.yml in target) → pushes default-settings.yaml
+#   - Existing target                                 → merges org-settings.yaml in
+#
+# Merger script + tests:
+#   https://github.com/nsheaps/.github/blob/main/scripts/org_settings_merge.py
+#
+# Merge semantics — short version:
+#   - scalars             : target wins (repo's existing value preserved)
+#   - mappings            : recurse
+#   - rulesets[]          : matched by `name`, deep-merged per item
+#   - rulesets[].rules[]  : matched by `type`, deep-merged per item
+#   - bypass_actors[]     : matched by (actor_id, actor_type) — SOURCE wins on scalars
+#   - enforcement omitted : normalized to `active` at write time
+#
+# Do not set per-repo identity (name/description/homepage/topics) here —
+# those belong to each repo.
+#
+# `# @default` convention: lines tagged `# @default` are uncommented ONLY
+# on a repo's FIRST sync (when it has no settings.yml yet). After that the
+# commented source line is invisible to deep-merge, so a later change to
+# the commented value can't accidentally overwrite the repo's value.
+# ----------------------------------------------------------------
+
+# These settings affect the repository itself.
+# See https://docs.github.com/en/rest/repos/repos#update-a-repository
+repository:
+  # NOTE: We deliberately do NOT set `name`, `description`, `homepage`,
+  # or `topics` from the org defaults — those belong to each repo.
+  # Edit them directly in your repo's .github/settings.yml.
+  #
+  # The booleans below are commented with `# @default` — they're set on
+  # this repo's FIRST sync only. After that, your value wins; org changes
+  # to the commented line are invisible to subsequent merges.
+
+  # A short description of the repository that will show up on GitHub
+  # description: ...
+
+  # A URL with more information about the repository
+  # homepage: https://example.github.io/
+
+  # A comma-separated list of topics to set on the repository
+  # topics: ...
+
+  # Either `true` to make the repository private, or `false` to make it public.
+  # NOTE: intentionally not set org-wide — public/private is a per-repo decision.
+  # private: false
+
+  # Either `true` to enable issues for this repository, `false` to disable them.
+  has_issues: true
+
+  # Either `true` to enable projects for this repository, or `false` to disable them.
+  # NOTE: We use org-level projects, not repo-level.
+  has_projects: false
+
+  # Either `true` to enable the wiki for this repository, `false` to disable it.
+  has_wiki: false
+
+  # Either `true` to enable downloads for this repository, `false` to disable them.
+  has_downloads: false
+
+  # Updates the default branch for this repository.
+  default_branch: main
+
+  # Either `true` to allow squash-merging pull requests, or `false` to prevent
+  # squash-merging.
+  allow_squash_merge: true
+
+  # Either `true` to allow merging pull requests with a merge commit, or `false`
+  # to prevent merging pull requests with merge commits.
+  allow_merge_commit: false
+
+  # Either `true` to allow rebase-merging pull requests, or `false` to prevent
+  # rebase-merging.
+  allow_rebase_merge: true
+
+  # Either `true` to enable automatic deletion of branches on merge, or `false`
+  # to disable.
+  delete_branch_on_merge: true
+
+  # Either `true` to allow auto-merge on pull requests, or `false` to disallow.
+  allow_auto_merge: true
+
+  # The default value for a squash merge commit title:
+  #   - PR_TITLE            — default to the pull request's title
+  #   - COMMIT_OR_PR_TITLE  — default to the commit's title (if only one commit)
+  #                           or the pull request's title (when more than one commit)
+  squash_merge_commit_title: PR_TITLE
+
+  # The default value for a squash merge commit message:
+  #   - PR_BODY             — default to the pull request's body
+  #   - COMMIT_MESSAGES     — default to the branch's commit messages
+  #   - BLANK               — default to a blank commit message
+  squash_merge_commit_message: PR_BODY
+
+# Labels: managed centrally via .github/labels.yaml + sync-labels workflow.
+# Intentionally omitted here so the two sources don't fight.
+
+# Rulesets — repository-level branch/tag rulesets.
+# Docs: https://github.com/repository-settings/app/blob/master/docs/plugins/rulesets.md
+# API : https://docs.github.com/en/rest/repos/rules
+#
+# enforcement values:
+#   - active    : rules are enforced
+#   - disabled  : ruleset exists but is not enforced (dormant)
+#   - evaluate  : rules are checked and reported but not enforced (preview)
+# NOTE: If `enforcement` is omitted on a ruleset, the sync writer fills it
+# with `active`. Each ruleset below either:
+#   - sets `enforcement: active` (always-on org policy — overriding is discouraged), or
+#   - sets `enforcement: disabled` plus a commented `# enforcement: 'active'`
+#     sibling that a repo can uncomment (and delete the disabled line) to enable, or
+#   - omits `enforcement` and provides a commented `# enforcement: 'active'`
+#     hint that a repo can uncomment to lock the ruleset on explicitly.
+#
+# bypass_actors[].bypass_mode values:
+#   - always       : prompts the user to bypass at push/merge time (GitHub UI default)
+#   - pull_request : bypass only allowed via a PR (push-time bypass blocked)
+# NOTE: omitting bypass_mode lets the merger fill `always`.
+#
+# Every ruleset seeds repo admins (RepositoryRole id 5) as bypass actors so
+# the org doesn't lock admins out. Repos can append more bypass_actors; for
+# the admin entry itself, source-wins (you can't silently widen admin bypass
+# to `always` if the org set `pull_request`).
+rulesets:
+  # ---- 1. No delete / no force-push on the default branch ----
+  - name: protect-default-branch
+    target: branch
+    enforcement: active        # always enforced — overriding this is discouraged
+    conditions:
+      ref_name:
+        include:
+          - "~DEFAULT_BRANCH"   # special selector: whatever the default branch is
+        exclude: []
+    bypass_actors:
+      # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
+      # Repos can add more actors (other teams, integrations).
+      - actor_id: 5
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
+        bypass_mode: always
+      # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+      # by sync-org-settings when this template is rendered to org-settings.yaml.
+      - actor_id: 2549081
+        actor_type: Integration
+        bypass_mode: always
+    rules:
+      - type: deletion          # block branch deletion
+      - type: non_fast_forward  # block force-push
+
+  # ---- 2. PR required (0 reviews) ----
+  - name: require-pr
+    target: branch
+    enforcement: 'active'    # uncomment to lock this ruleset on in this repo
+    conditions:
+      ref_name:
+        include: ["~DEFAULT_BRANCH"]
+        exclude: []
+    bypass_actors:
+      # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
+      # Repos can add more actors (other teams, integrations).
+      - actor_id: 5
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
+        bypass_mode: always
+      # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+      # by sync-org-settings when this template is rendered to org-settings.yaml.
+      - actor_id: 2549081
+        actor_type: Integration
+        bypass_mode: exempt
+    rules:
+      - type: pull_request
+        # The 5 params below are REQUIRED by the API for type=pull_request.
+        # All defaults here are permissive (0 reviewers, no other gates) so
+        # the rule only gates "must use a PR" — repos override to add stricter
+        # checks. allowed_merge_methods is optional; left to repo preference.
+        parameters:
+          required_approving_review_count: 0
+          dismiss_stale_reviews_on_push: false
+          require_code_owner_review: false
+          require_last_push_approval: false
+          required_review_thread_resolution: false
+          # allowed_merge_methods: [merge, squash, rebase]   # optional
+
+  # ---- 3. Review required — 1 reviewer (active by default) ----
+  - name: require-1-review
+    target: branch
+    enforcement: disabled
+    # enforcement: 'active'
+    conditions:
+      ref_name:
+        include: ["~DEFAULT_BRANCH"]
+        exclude: []
+    bypass_actors:
+      # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
+      # Repos can add more actors (other teams, integrations).
+      - actor_id: 5
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
+        bypass_mode: always
+      # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+      # by sync-org-settings when this template is rendered to org-settings.yaml.
+      - actor_id: 2549081
+        actor_type: Integration
+        bypass_mode: exempt
+    rules:
+      - type: pull_request
+        parameters:
+          required_approving_review_count: 1
+          # The remaining 4 fields are required by the API for type=pull_request
+          # whenever ANY parameters are provided. Sensible safe defaults below;
+          # repos override per-repo.
+          dismiss_stale_reviews_on_push: true
+          require_code_owner_review: false
+          require_last_push_approval: false
+          required_review_thread_resolution: true
+
+  # ---- 4. Checks required ----
+  # NOTE: shipped ACTIVE. The required_status_checks list seeds an org-wide
+  # lint check (GitHub Actions App, context "lint") so every managed repo
+  # gates merges on a workflow named `lint`. Repos that don't yet have one
+  # should add `.github/workflows/lint.yaml` (or have it synced in via
+  # sync-files); per-repo additional checks go in this same list.
+  # GitHub App IDs in `integration_id`:
+  #   15368   = github-actions[bot] (workflows running on GitHub Actions)
+  # This is commented because not every repo has a lint workflow but they should
+  # When this is copied, so is the comment, and they can then uncomment as needed.
+  # In the long term, we should try to keep build/test/format/lint consistent between all repos
+  # - name: require-checks
+  #   target: branch
+  #   enforcement: active
+  #   conditions:
+  #     ref_name:
+  #       include: ["~DEFAULT_BRANCH"]
+  #       exclude: []
+  #   bypass_actors:
+  #     # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
+  #     # Repos can add more actors (other teams, integrations).
+  #     - actor_id: 5
+  #       actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
+  #       bypass_mode: always
+  #     # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+  #     # by sync-org-settings when this template is rendered to org-settings.yaml.
+  #     - actor_id: 2549081
+  #       actor_type: Integration
+  #       bypass_mode: always
+  #   rules:
+  #     - type: required_status_checks
+  #       parameters:
+  #         strict_required_status_checks_policy: false
+  #         required_status_checks:
+  #           # Org-wide: a workflow named `lint` must pass. Repos that don't
+  #           # have one yet should add .github/workflows/lint.yaml (or sync the
+  #           # canonical one in). Repos add more entries below for their own CI.
+  #           - context: lint
+  #             integration_id: 15368   # github-actions[bot]
+
+  # ---- 5. Review required — 1 reviewer from CODEOWNERS (disabled by default) ----
+  # NOTE: shipped DISABLED. Repos with a meaningful CODEOWNERS file flip to
+  # `enforcement: active` and likely set `require-1-review.enforcement: disabled`
+  # so the two don't double up.
+  - name: require-codeowner-review
+    target: branch
+    enforcement: disabled
+    # enforcement: 'active'    # uncomment (and remove the disabled line above) to enable
+    conditions:
+      ref_name:
+        include: ["~DEFAULT_BRANCH"]
+        exclude: []
+    bypass_actors:
+      # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
+      # Repos can add more actors (other teams, integrations).
+      - actor_id: 5
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
+        bypass_mode: always
+      # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+      # by sync-org-settings when this template is rendered to org-settings.yaml.
+      - actor_id: 2549081
+        actor_type: Integration
+        bypass_mode: exempt
+    rules:
+      - type: pull_request
+        parameters:
+          required_approving_review_count: 1
+          require_code_owner_review: true
+          dismiss_stale_reviews_on_push: true
+          # Required by the API for type=pull_request whenever any
+          # parameters are provided. Sensible default; repos override.
+          require_last_push_approval: false
+          required_review_thread_resolution: true

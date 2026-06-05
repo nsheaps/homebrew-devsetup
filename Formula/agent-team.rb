@@ -18,7 +18,7 @@ class AgentTeam < Formula
     bin.install 'bin/claude-team'
     bin.install 'bin/ct'
     bin.install 'bin/agent-launch.ts'
-    (bin/'lib').install Dir['bin/lib/*']
+    (bin / 'lib').install Dir['bin/lib/*']
   end
 
   test do

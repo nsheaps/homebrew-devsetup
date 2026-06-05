@@ -61,7 +61,7 @@ jobs:
     # on the next PR event in repos using this template. This is intentional —
     # operators who need pinned stability should replace @main with a commit SHA
     # and update it in lock-step with plugin version bumps.
-    uses: nsheaps/agents/.github/workflows/review-dispatch.yaml@ee06c6968befd6992f6a791ed7253604e9cb8ac1 # main
+    uses: nsheaps/agents/.github/workflows/review-dispatch.yaml@573e8ed3146c6b325a3352e40ba35062e9c2ab0b # main
     # secrets: inherit doesn't pass cross-repo (GitHub limitation).
     secrets:
       AUTOMATION_GITHUB_APP_ID: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}

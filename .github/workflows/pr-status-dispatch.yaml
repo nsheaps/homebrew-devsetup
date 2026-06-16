@@ -41,7 +41,7 @@ jobs:
     steps:
       - name: Authenticate as GitHub App
         id: app-token
-        uses: nsheaps/github-actions/.github/actions/github-app-auth@main
+        uses: nsheaps/github-actions/.github/actions/github-app-auth@7555ab0d0444ac5b59ddcac0c28aa25307db0cf5 # main
         with:
           app-id: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
           private-key: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}

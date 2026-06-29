@@ -30,15 +30,7 @@ name: Dispatch PR Review
 
 on:
   pull_request:
-    types:
-      [
-        opened,
-        reopened,
-        synchronize,
-        ready_for_review,
-        labeled,
-        converted_to_draft,
-      ]
+    types: [opened, reopened, synchronize, ready_for_review, labeled, converted_to_draft]
 
 jobs:
   review:
@@ -61,7 +53,7 @@ jobs:
     # on the next PR event in repos using this template. This is intentional —
     # operators who need pinned stability should replace @main with a commit SHA
     # and update it in lock-step with plugin version bumps.
-    uses: nsheaps/agents/.github/workflows/review-dispatch.yaml@d450612dee223b99f6be521cd21d35de9c739298 # main
+    uses: nsheaps/agents/.github/workflows/review-dispatch.yaml@main
     # secrets: inherit doesn't pass cross-repo (GitHub limitation).
     secrets:
       AUTOMATION_GITHUB_APP_ID: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}

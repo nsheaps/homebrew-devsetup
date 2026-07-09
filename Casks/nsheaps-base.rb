@@ -96,7 +96,7 @@ cask 'nsheaps-base' do
   depends_on formula: 'tree'
   depends_on formula: 'tmux'
 
-  # shell setup 
+  # shell setup
   depends_on formula: 'antidote' # antigen replacement, zsh package manager
   depends_on formula: 'autojump' # fuzzy path cd based on frequency of use
   depends_on formula: 'direnv' # load env files when cd-ing into a dir
@@ -109,8 +109,8 @@ cask 'nsheaps-base' do
   depends_on formula: 'git'
   depends_on formula: 'git-lfs'
   depends_on formula: 'git-extras'
-  depends_on formula: 'shellcheck' # todo: get from mise?
-  depends_on formula: 'shfmt' # todo: get from mise?
+  depends_on formula: 'shellcheck' # TODO: get from mise?
+  depends_on formula: 'shfmt' # TODO: get from mise?
 
   # docker dev tooling
   depends_on formula: 'tilt'
@@ -119,7 +119,7 @@ cask 'nsheaps-base' do
 
   # depends_on formula: 'mas' # mac app store cli, used later to install apps from app store
   on_linux do
-    depends_on formula: "zsh"
+    depends_on formula: 'zsh'
   end
 
   depends_on cask: '1password'
@@ -150,7 +150,6 @@ cask 'nsheaps-base' do
     system 'touch', 'trick-brew-to-install-meta-formula'
     prefix.install 'trick-brew-to-install-meta-formula'
   end
-
 
   def caveats
     # TODO: make install/uninstall manage this
@@ -188,7 +187,7 @@ cask 'nsheaps-base' do
       EOF
 
       # re-source the rc file to load the plugins
-      \. ~/.zshrc
+      . ~/.zshrc
 
       gum spin --show-output --title "installing node@lts using mise" -- mise use -g node@lts
       gum spin --show-output --title "installing bun using mise"      -- mise use -g bun

@@ -29,7 +29,7 @@ class Dotfiles < Formula
     # stable opt path (so managed sections written into ~/.zshrc survive
     # `brew upgrade`) and execs the real CLI. Inside a checkout of the repo,
     # direnv shadows this wrapper with the repo's own bin/dotfiles.
-    (bin/'dotfiles').write <<~SH
+    (bin / 'dotfiles').write <<~SH
       #!/bin/bash
       export DOTFILES_DIR="${DOTFILES_DIR:-#{opt_libexec}}"
       exec "#{opt_libexec}/bin/dotfiles" "$@"
@@ -41,7 +41,7 @@ class Dotfiles < Formula
     # setup after `brew install`. `ensure-wired` runs non-interactively, only
     # wires when not already wired, and never fails the install. Opt out with
     # DOTFILES_SKIP_AUTOWIRE=1 (e.g. in CI).
-    system bin/'dotfiles', 'ensure-wired'
+    system bin / 'dotfiles', 'ensure-wired'
   end
 
   def caveats

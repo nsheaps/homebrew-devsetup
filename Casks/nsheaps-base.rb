@@ -39,7 +39,7 @@ cask 'nsheaps-base' do
   # FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
   # bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
 
-  # then follow the instructions in the CAVEATS section 
+  # then follow the instructions in the CAVEATS section
 
   # =====
 
@@ -159,7 +159,7 @@ cask 'nsheaps-base' do
         bun \
         python \
         golang
-      
+
       gum log --structured --level info "installed tools with mise" "mise-ls" "$(mise ls)"
 
       # install rosetta compatibility layer

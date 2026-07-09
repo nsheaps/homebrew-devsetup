@@ -109,8 +109,9 @@ cask 'nsheaps-base' do
   depends_on formula: 'git'
   depends_on formula: 'git-lfs'
   depends_on formula: 'git-extras'
-  depends_on formula: 'shellcheck' # TODO: get from mise?
-  depends_on formula: 'shfmt' # TODO: get from mise?
+  depends_on formula: 'shellcheck' # todo: get from mise?
+  depends_on formula: 'shfmt' # todo: get from mise?
+  depends_on formula: 'git-spice'
 
   # docker dev tooling
   depends_on formula: 'tilt'
@@ -141,7 +142,6 @@ cask 'nsheaps-base' do
   # depends_on cask: 'zoom'
   # depends_on cask: 'spotify'
   # depends_on cask: 'telegram'
-  depends_on cask: 'abhinav/tap/git-spice'
   depends_on cask: 'nsheaps/devsetup/handy' # voice transcription for mac/linux
 
   def install

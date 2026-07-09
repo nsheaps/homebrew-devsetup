@@ -9,6 +9,8 @@ ccresume
 abhinav
 
 # Homebrew terms
+gotmpl
+libexec
 livecheck
 metaformula
 postflight
@@ -55,6 +57,7 @@ jordanbaird
 stefanzweifel
 
 # App names
+customizer
 Spokenly
 gsettings
 dconf

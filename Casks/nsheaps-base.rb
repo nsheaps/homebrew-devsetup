@@ -60,7 +60,8 @@ cask 'nsheaps-base' do
   depends_on formula: 'tmux'
 
   # shell setup
-  depends_on formula: 'nsheaps/devsetup/dotfiles' # installs the `dotfiles` CLI and auto-wires the shell config into $HOME
+  # installs the `dotfiles` CLI and auto-wires the shell config into $HOME
+  depends_on formula: 'nsheaps/devsetup/dotfiles'
   depends_on formula: 'antidote' # antigen replacement, zsh package manager
   depends_on formula: 'autojump' # fuzzy path cd based on frequency of use
   depends_on formula: 'direnv' # load env files when cd-ing into a dir

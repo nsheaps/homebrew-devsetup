@@ -41,7 +41,7 @@ cask 'nsheaps-base' do
   # setopt interactivecomments
   # FETCH=($(command -v curl &>/dev/null && echo 'curl -fsSL' || echo 'wget -O -'))
   # bash <($FETCH "https://raw.githubusercontent.com/nsheaps/homebrew-devsetup/HEAD/install_brew.sh")
-  
+
   # \. ~/.zshrc
   # brew update && brew trust nsheaps/devsetup && brew install --cask --adopt nsheaps/devsetup/nsheaps-base
 

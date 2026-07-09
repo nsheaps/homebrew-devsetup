@@ -21,12 +21,10 @@ name: Apply Repo Settings
 #   push to main         when .github/settings.yml changes
 
 on:
+  # No workflow_dispatch inputs: user-controllable inputs are disallowed by
+  # checkov CKV_GHA_7. Trigger a dry run via repository_dispatch client_payload
+  # (see the Apply step's dry-run wiring below) instead of a manual input.
   workflow_dispatch:
-    inputs:
-      dry-run:
-        description: "Render only; don't apply"
-        type: boolean
-        default: false
   repository_dispatch:
     types: [apply-repo-settings]
   push:
@@ -60,7 +58,10 @@ jobs:
         uses: nsheaps/github-actions/.github/actions/apply-repo-settings@7555ab0d0444ac5b59ddcac0c28aa25307db0cf5 # main
         with:
           token: ${{ steps.checkout.outputs.token }}
-          dry-run: ${{ inputs.dry-run || false }}
+          # Dry run is opt-in via a repository_dispatch client_payload flag,
+          # e.g. curl -d '{"event_type":"apply-repo-settings",
+          # "client_payload":{"dry-run":true}}'. Defaults to a real apply.
+          dry-run: ${{ github.event.client_payload.dry-run || false }}
 
       - name: Show summary
         if: always()

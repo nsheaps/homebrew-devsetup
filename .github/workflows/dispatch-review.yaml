@@ -28,6 +28,13 @@
 
 name: Dispatch PR Review
 
+# Least-privilege default for the workflow. The `review` job is a reusable
+# workflow call that declares its own explicit (broader) permissions block,
+# which sets the ceiling for the called workflow; this top-level default only
+# governs anything not otherwise specified.
+permissions:
+  contents: read
+
 on:
   pull_request:
     types:

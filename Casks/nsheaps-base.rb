@@ -109,8 +109,8 @@ cask 'nsheaps-base' do
   depends_on formula: 'git'
   depends_on formula: 'git-lfs'
   depends_on formula: 'git-extras'
-  depends_on formula: 'shellcheck' # todo: get from mise?
-  depends_on formula: 'shfmt' # todo: get from mise?
+  depends_on formula: 'shellcheck' # TODO: get from mise?
+  depends_on formula: 'shfmt' # TODO: get from mise?
   depends_on formula: 'git-spice'
 
   # docker dev tooling

@@ -4,7 +4,7 @@ cask 'nsheaps-base' do
   homepage 'http://github.com/nsheaps/homebrew-devsetup'
   url 'https://github.com/nsheaps/brew-meta-formula/archive/refs/tags/v1.0.0.tar.gz'
   sha256 'b14702dd54ea5c48d2ebeb6425015c14794159a6b9d342178c81d2f2e79ed2db'
-  version '1.0.26' # bump me if you want people to re-install these things, like if the list changed.
+  version '1.0.27' # bump me if you want people to re-install these things, like if the list changed.
   ### WHAT IS THIS
   # Running the quick start script will:
   # - install homebrew if not already installed
@@ -90,7 +90,7 @@ cask 'nsheaps-base' do
   depends_on cask: 'alfred' # spotlight replacement
   depends_on cask: 'loop' # window tiling manager
   # depends_on cask: 'claude' # claude desktop
-  depends_on cask: 'claude-code'
+  # depends_on cask: 'claude-code'
   depends_on cask: 'visual-studio-code'
   depends_on cask: 'google-chrome'
   depends_on cask: 'karabiner-elements' # keyboard customizer

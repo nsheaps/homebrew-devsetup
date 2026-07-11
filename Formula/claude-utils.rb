@@ -4,8 +4,8 @@
 class ClaudeUtils < Formula
   desc 'CLI utilities for Claude Code workflow management'
   homepage 'https://github.com/nsheaps/claude-utils'
-  url 'https://github.com/nsheaps/claude-utils/archive/refs/tags/v0.12.165.tar.gz'
-  sha256 '2c8217bea8f7d689e1b9792ed5cf8216a310e4884bd2f5dbff8e56b2a62e2521'
+  url 'https://github.com/nsheaps/claude-utils/archive/refs/tags/v0.12.166.tar.gz'
+  sha256 '06b9b6f2158116b09c20c177da41db2f5367c31679db43802c4bfebb760179bf'
   license 'MIT'
 
   head do

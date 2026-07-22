@@ -189,6 +189,9 @@ rulesets:
       - actor_id: 2549081
         actor_type: Integration
         bypass_mode: exempt
+      - actor_id: 2740
+        actor_type: Integration
+        bypass_mode: exempt
     rules:
       - type: pull_request
         # The 5 params below are REQUIRED by the API for type=pull_request.
@@ -221,6 +224,9 @@ rulesets:
       # automation-nsheaps GitHub App — actor_id is substituted from 2549081
       # by sync-org-settings when this template is rendered to org-settings.yaml.
       - actor_id: 2549081
+        actor_type: Integration
+        bypass_mode: exempt
+      - actor_id: 2740
         actor_type: Integration
         bypass_mode: exempt
     rules:
@@ -296,6 +302,9 @@ rulesets:
       # automation-nsheaps GitHub App — actor_id is substituted from 2549081
       # by sync-org-settings when this template is rendered to org-settings.yaml.
       - actor_id: 2549081
+        actor_type: Integration
+        bypass_mode: exempt
+      - actor_id: 2740
         actor_type: Integration
         bypass_mode: exempt
     rules:

@@ -10,7 +10,8 @@ cask 'nsheaps-base' do
   # - install homebrew if not already installed
   # - install this cask
   # - install a set of base formulae and casks via brew (requires app not be installed)
-  # - set up ohmyzsh via antigen (todo: replace with antidote) and a set of plugins/themes
+  # - install the `dotfiles` formula, which wires the shell config into $HOME
+  #   (antidote plugins, mise tools, aliases) automatically via its post_install
   # It does not:
   # - softwareupdate --install-rosetta (you must do this manually)
   # - install docker-desktop (they're really anti casks because of permissions)
@@ -21,8 +22,8 @@ cask 'nsheaps-base' do
   #   - [ ] gh setup-git
   #   - [ ] generate gpg keys and add to github/git
   # The formula itself does not:
-  # - manage the rc integrations
   # - manage anything other than brew installs for casks and formulae
+  #   (rc integrations are now handled by the `dotfiles` formula dependency)
   # - work on linux (casks are not supported)
   ### QUICKSTART
   #
@@ -59,6 +60,8 @@ cask 'nsheaps-base' do
   depends_on formula: 'tmux'
 
   # shell setup
+  # installs the `dotfiles` CLI and auto-wires the shell config into $HOME
+  depends_on formula: 'nsheaps/devsetup/dotfiles'
   depends_on formula: 'antidote' # antigen replacement, zsh package manager
   depends_on formula: 'autojump' # fuzzy path cd based on frequency of use
   depends_on formula: 'direnv' # load env files when cd-ing into a dir
@@ -114,80 +117,28 @@ cask 'nsheaps-base' do
   end
 
   def caveats
-    # TODO: make install/uninstall manage this
     <<~CAVEATS
-      # Run the following to add the needed lines to your ~/.zshrc:
+      Shell setup is handled automatically by the `dotfiles` formula (a
+      dependency of this cask). Its post_install runs `dotfiles ensure-wired`,
+      which symlinks the config into $HOME and injects the managed sections into
+      ~/.zshrc / ~/.zshenv / ~/.zprofile — including the antidote plugin bundle,
+      the mise tool list, and the brew helper aliases. No manual ~/.zshrc edits
+      or `mise use -g` are required.
 
-      ### COPY FROM HERE
+      Open a new terminal (or `source ~/.zshrc`) to load it. Verify with:
+        $ dotfiles check
+      Re-deploy manually at any time with:
+        $ dotfiles wire
 
-      cat << 'EOF' >> ~/.zshrc
+      Remaining manual steps (not handled automatically):
+        - softwareupdate --install-rosetta --agree-to-license
+        - gh auth login && gh auth setup-git
+        - generate gpg/ssh keys and add them to GitHub / 1Password
+        - restart so login shells re-source at the OS level
 
-      setopt interactivecomments
-
-      source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
-
-      # Initialize antidote's dynamic mode, which changes `antidote bundle`
-      # from static mode.
-      source <(antidote init)
-
-      antidote bundle <<EOBUNDLES
-          zsh-users/zsh-autosuggestions
-          zsh-users/zsh-completions
-          getantidote/use-omz
-          ohmyzsh/ohmyzsh path:lib
-          ohmyzsh/ohmyzsh path:plugins/git
-          ohmyzsh/ohmyzsh path:plugins/autojump
-          ohmyzsh/ohmyzsh path:plugins/brew
-          ohmyzsh/ohmyzsh path:plugins/direnv
-          ohmyzsh/ohmyzsh path:plugins/docker
-          ohmyzsh/ohmyzsh path:plugins/mise
-          ohmyzsh/ohmyzsh path:plugins/thefuck
-          ohmyzsh/ohmyzsh path:plugins/command-not-found
-          ohmyzsh/ohmyzsh path:themes/robbyrussell.zsh-theme
-      EOBUNDLES
-
-      alias brew-outdated="brew update && brew outdated"
-      alias brew-update-all="brew update && brew upgrade --greedy"
-
-      EOF
-
-      # re-source the rc file to load the plugins
-      . ~/.zshrc
-      gum log --structured --level debug "installing global tools using mise"
-      gum spin --show-output --title "installing global tools using mise" -- mise use --raw -g \
-        node@lts \
-        bun \
-        python \
-        golang
-
-      gum log --structured --level info "installed tools with mise" "mise-ls" "$(mise ls)"
-
-      # install rosetta compatibility layer
-      gum log --structured --level debug "installing rosetta compatibility layer"
-      { gum spin --show-output --title "installing rosetta compatibility layer" -- softwareupdate --install-rosetta --agree-to-license ; } && gum log --structured --level info "Installed rosetta"
-
-      # login to `gh`
-      gum log  --structured --level debug "logging into github with gh"
-      { gh auth login ; } && gum log  --structured --level info "Logged into github"
-
-      # set up git to use `gh` as the credential helper
-      gh auth setup-git && gum log --structured --level info "Set gh as git credential helper"
-
-      gum style \
-        --foreground 212 --border-foreground 212 --border double \
-        --align left --margin "1 2" --padding "2 4" \
-        'Setup is mostly complete. Please do the following:' \
-        '  - restart your computer so the rc file gets sourced at the OS level on login' \
-        '  - generate gpg keys and add to github / 1pass' \
-        '  - generate ssh keys and add to github / 1pass' \
-        '' \
-        'To see what formulae/casks are out of date:' \
-        '  $ brew-outdated' \
-        'To update all taps and their installed formulae/casks:' \
-        '  $ brew-update-all'
-
-      ### END COPY HERE
-
+      Handy aliases (provided by dotfiles once wired):
+        $ brew-outdated     # brew update && brew outdated
+        $ brew-update-all   # brew update && brew upgrade --greedy
     CAVEATS
   end
 end

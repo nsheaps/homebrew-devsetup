@@ -1,0 +1,10 @@
+# Checkov configuration (auto-loaded by `checkov -d .`).
+#
+# skip-check: security checks intentionally disabled repo-wide.
+#   CKV_GHA_7 — "workflow_dispatch inputs MUST be empty". This SLSA build-
+#   integrity check does not fit our automation workflows (e.g. the
+#   apply-repo-settings dry-run toggle), which legitimately expose a small
+#   set of manual-dispatch inputs and produce no build artifact. Disabled
+#   rather than stripping the useful inputs.
+skip-check:
+  - CKV_GHA_7

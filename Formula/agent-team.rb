@@ -4,8 +4,8 @@
 class AgentTeam < Formula
   desc 'Provider-agnostic agent team orchestration for Claude Code'
   homepage 'https://github.com/nsheaps/agent-team'
-  url 'https://github.com/nsheaps/agent-team/archive/refs/tags/v0.3.99.tar.gz'
-  sha256 '3a3ae66608be06b95e03ac3e79d588c2ade7fcaa6e4134615cae43b75a21f9b9'
+  url 'https://github.com/nsheaps/agent-team/archive/refs/tags/v0.3.100.tar.gz'
+  sha256 'd6fd8b1242b76ec0baa10d03f87b2ae3f0d7cae7513920d81c34e0de17417aca'
   license 'MIT'
 
   head do
@@ -18,7 +18,7 @@ class AgentTeam < Formula
     bin.install 'bin/claude-team'
     bin.install 'bin/ct'
     bin.install 'bin/agent-launch.ts'
-    (bin / 'lib').install Dir['bin/lib/*']
+    (bin/'lib').install Dir['bin/lib/*']
   end
 
   test do

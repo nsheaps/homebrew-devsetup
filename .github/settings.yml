@@ -158,16 +158,9 @@ rulesets:
     bypass_actors:
       # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
       # Repos can add more actors (other teams, integrations).
-      - actor_id: 5
-        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
-        bypass_mode: always
-      # automation-nsheaps GitHub App — actor_id is substituted from 2549081
-      # by sync-org-settings when this template is rendered to org-settings.yaml.
-      - actor_id: 2549081
-        actor_type: Integration
-        bypass_mode: always
-    rules:
-      - type: deletion # block branch deletion
+[]
+    rules:   -
+        type: deletion # block branch deletion
       - type: non_fast_forward # block force-push
 
   # ---- 2. PR required (0 reviews) ----

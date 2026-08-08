@@ -6,8 +6,8 @@ require 'language/node'
 class ClaudeUtils < Formula
   desc 'CLI utilities for Claude Code workflow management'
   homepage 'https://github.com/nsheaps/claude-utils'
-  url 'https://github.com/nsheaps/claude-utils/archive/refs/tags/v0.12.242.tar.gz'
-  sha256 'd023e5a430228b0b91491e0ae5720ce7ce38f838b02023393c361171e9ad54a9'
+  url 'https://github.com/nsheaps/claude-utils/archive/refs/tags/v0.12.243.tar.gz'
+  sha256 'cd9c81341aaae64794fac4876172246447be80f2370bd84b474c1568390ff539'
   license 'MIT'
 
   head do

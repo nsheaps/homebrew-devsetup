@@ -4,8 +4,8 @@
 class ClaudeTeam < Formula
   desc 'Launch and manage Claude Code agent team sessions'
   homepage 'https://github.com/nsheaps/agent-team'
-  url 'https://github.com/nsheaps/agent-team/archive/refs/tags/v0.3.113.tar.gz'
-  sha256 'ec6fd303a13a5c9165c8c574abfd798692662049ce04e88370bd2debc97b2c94'
+  url 'https://github.com/nsheaps/agent-team/archive/refs/tags/v0.3.114.tar.gz'
+  sha256 'f21ca51247456e945de7cb2335a155fe138a1c2693e94025a11256031f5621bf'
   license 'MIT'
 
   head do
@@ -17,7 +17,7 @@ class ClaudeTeam < Formula
   def install
     bin.install 'bin/claude-team'
     bin.install 'bin/ct'
-    (bin / 'lib').install 'bin/lib/stdlib.sh'
+    (bin/'lib').install 'bin/lib/stdlib.sh'
   end
 
   test do

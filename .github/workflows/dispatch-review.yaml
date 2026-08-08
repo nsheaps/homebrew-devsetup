@@ -30,27 +30,24 @@ name: Dispatch PR Review
 
 on:
   pull_request:
-    types:
-      [
-        opened,
-        reopened,
-        synchronize,
-        ready_for_review,
-        labeled,
-        converted_to_draft,
-      ]
+    types: [opened, reopened, synchronize, ready_for_review, labeled]
 
 jobs:
   review:
-    # Gate at the template level (post-2026-05-23 redesign): only dispatch
-    # when the PR is open AND carries the request-review label. The
-    # `converted_to_draft` event also fires (PR is still in state=open while
-    # draft) so the receiver can short-circuit with a `neutral` check rather
-    # than running a review on a drafted PR. If you change the request label
-    # name, update the literal in the `contains(...)` expression below.
+    # Gate: review fires automatically on any OPEN, non-draft PR event
+    # (opened, reopened, synchronize, ready_for_review) -- no label needed.
+    # The `request-review` label only matters to FORCE a review on a DRAFT
+    # PR (apply the label while it's still a draft). `converted_to_draft`
+    # does NOT fire a review by itself -- a PR converted to draft is simply
+    # not reviewed until it's marked ready again or explicitly labeled. If
+    # you change the request label name, update the literal in the `==`
+    # comparison below.
     if: |
       github.event.pull_request.state == 'open' &&
-      contains(github.event.pull_request.labels.*.name, 'request-review')
+      (
+        github.event.pull_request.draft != true ||
+        (github.event.action == 'labeled' && github.event.label.name == 'request-review')
+      )
     # Explicit permissions: default_workflow_permissions is "read" in many
     # repos but the called workflow needs pull-requests + checks write.
     permissions:
@@ -61,7 +58,7 @@ jobs:
     # on the next PR event in repos using this template. This is intentional —
     # operators who need pinned stability should replace @main with a commit SHA
     # and update it in lock-step with plugin version bumps.
-    uses: nsheaps/agents/.github/workflows/review-dispatch.yaml@24f64f5e0aa5ddc56d98da003c4221416d8e2b1c # main
+    uses: nsheaps/agents/.github/workflows/review-dispatch.yaml@main
     # secrets: inherit doesn't pass cross-repo (GitHub limitation).
     secrets:
       AUTOMATION_GITHUB_APP_ID: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}

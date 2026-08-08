@@ -1,0 +1,5 @@
+# Centrally synced from nsheaps/.github (ansible/templates/.github/workflows/) —
+# must stay byte-identical to the canonical template, so local formatting
+# must not touch it. See the sync-dispatch-workflows skill in
+# nsheaps/agents/plugins/claude-code/review-utils for the mechanism.
+.github/workflows/dispatch-review.yaml

@@ -27,7 +27,7 @@ jobs:
           app-id: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
           private-key: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}
           ref: ${{ github.head_ref || github.ref }}
-          fetch-depth: '0'
+          fetch-depth: "0"
 
       - name: Check for merge conflicts
         id: git_diff

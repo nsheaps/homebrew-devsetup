@@ -170,22 +170,22 @@ rulesets:
   # place — the next sync will strip it anyway.
   - name: protect-default-branch
     target: branch
-    enforcement: active        # always enforced — overriding this is discouraged
+    enforcement: active # always enforced — overriding this is discouraged
     conditions:
       ref_name:
         include:
-          - "~DEFAULT_BRANCH"   # special selector: whatever the default branch is
+          - "~DEFAULT_BRANCH" # special selector: whatever the default branch is
         exclude: []
     # Intentionally empty — see the SECURITY note above. Do not add actors.
     bypass_actors: []
     rules:
-      - type: deletion          # block branch deletion
-      - type: non_fast_forward  # block force-push
+      - type: deletion # block branch deletion
+      - type: non_fast_forward # block force-push
 
   # ---- 2. PR required (0 reviews) ----
   - name: require-pr
     target: branch
-    enforcement: 'active'    # uncomment to lock this ruleset on in this repo
+    enforcement: "active" # uncomment to lock this ruleset on in this repo
     conditions:
       ref_name:
         include: ["~DEFAULT_BRANCH"]
@@ -194,7 +194,7 @@ rulesets:
       # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
       # Repos can add more actors (other teams, integrations).
       - actor_id: 5
-        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
+        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
         bypass_mode: always
       # automation-nsheaps GitHub App — actor_id is substituted from 2549081
 
@@ -240,7 +240,7 @@ rulesets:
       # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
       # Repos can add more actors (other teams, integrations).
       - actor_id: 5
-        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
+        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
         bypass_mode: always
       # automation-nsheaps GitHub App — actor_id is substituted from 2549081
 
@@ -325,7 +325,7 @@ rulesets:
       # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
       # Repos can add more actors (other teams, integrations).
       - actor_id: 5
-        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
+        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
         bypass_mode: always
       # automation-nsheaps GitHub App — actor_id is substituted from 2549081
 

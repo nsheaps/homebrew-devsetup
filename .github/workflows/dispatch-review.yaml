@@ -34,15 +34,21 @@ on:
 
 jobs:
   review:
-    # Gate at the template level (post-2026-05-23 redesign): only dispatch
-    # when the PR is open AND carries the request-review label. The
-    # `converted_to_draft` event also fires (PR is still in state=open while
-    # draft) so the receiver can short-circuit with a `neutral` check rather
-    # than running a review on a drafted PR. If you change the request label
-    # name, update the literal in the `contains(...)` expression below.
+    # Gate: review fires automatically on any OPEN, non-draft PR event
+    # (opened, reopened, synchronize, ready_for_review) -- no label needed.
+    # The `request-review` label only matters to FORCE a review on a DRAFT
+    # PR (apply the label while it's still a draft). `converted_to_draft` is
+    # let through unconditionally so the receiver can short-circuit with a
+    # `neutral` check instead of leaving a stale pending check-run. If you
+    # change the request label name, update the literal in the `==`
+    # comparison below.
     if: |
       github.event.pull_request.state == 'open' &&
-      contains(github.event.pull_request.labels.*.name, 'request-review')
+      (
+        github.event.pull_request.draft != true ||
+        github.event.action == 'converted_to_draft' ||
+        (github.event.action == 'labeled' && github.event.label.name == 'request-review')
+      )
     # Explicit permissions: default_workflow_permissions is "read" in many
     # repos but the called workflow needs pull-requests + checks write.
     permissions:

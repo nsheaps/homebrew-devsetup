@@ -1,13 +1,13 @@
 # ----------------------------------------------------------------
 # Auto-merged from nsheaps/.github on every sync.
-#   Source: https://github.com/nsheaps/.github/blob/main/.github/org-settings.yaml
+#   Source: https://github.com/nsheaps/.github/blob/b7444e13365b511d2fbe547641d26b8500cc93a0/ansible/config/org-settings.yaml
 # Edits to this file are KEPT on the next sync (deep merge).
 # To remove an org default, delete the key here — it will not come back.
 # ----------------------------------------------------------------
 # ----------------------------------------------------------------
 # Auto-generated from ansible/config/org-settings.yaml. DO NOT EDIT.
 # Edit the template, not this file.
-# Source: https://github.com/nsheaps/.github/blob/fb6a7e20587af3544fe16767d34da50483b1c728/ansible/config/org-settings.yaml
+# Source: https://github.com/nsheaps/.github/blob/b7444e13365b511d2fbe547641d26b8500cc93a0/ansible/config/org-settings.yaml
 # ----------------------------------------------------------------
 # nsheaps org-wide repository defaults — TEMPLATE
 #
@@ -19,9 +19,9 @@
 # Edit THIS file for org-wide changes; the rendered outputs are auto-generated.
 #
 # Sync workflow:
-#   https://github.com/nsheaps/.github/blob/main/.github/workflows/sync-org-settings.yaml
+#   https://github.com/nsheaps/.github/blob/main/.github/workflows/sync-all.yaml
 #
-# After rendering, the ansible playbook (sync-org-settings) walks every
+# After rendering, the unified ansible playbook (sync-all) walks every
 # managed repo and either:
 #   - First-touch (no .github/settings.yml in target) → pushes default-settings.yaml
 #   - Existing target                                 → merges org-settings.yaml in
@@ -36,6 +36,13 @@
 #   - rulesets[].rules[]  : matched by `type`, deep-merged per item
 #   - bypass_actors[]     : matched by (actor_id, actor_type) — SOURCE wins on scalars
 #   - enforcement omitted : normalized to `active` at write time
+#   - NO_BYPASS_RULESETS  : for rulesets named here (currently just
+#                           `protect-default-branch`), bypass_actors is
+#                           force-cleared to [] on EVERY sync, even if a
+#                           repo added its own bypass_actors — see
+#                           scripts/org_settings_merge.py. This is the one
+#                           exception to "repos can layer their own
+#                           bypass_actors on top of the org defaults".
 #
 # Do not set per-repo identity (name/description/homepage/topics) here —
 # those belong to each repo.
@@ -117,8 +124,9 @@ repository:
   #   - BLANK               — default to a blank commit message
   squash_merge_commit_message: PR_BODY
 
-# Labels: managed centrally via .github/labels.yaml + sync-labels workflow.
-# Intentionally omitted here so the two sources don't fight.
+# Labels: managed centrally via .github/org-labels.yaml and synced to all
+# managed repos by the sync-org-settings workflow's sync-labels job.
+# Intentionally omitted from settings.yml so the two sources don't fight.
 
 # Rulesets — repository-level branch/tag rulesets.
 # Docs: https://github.com/repository-settings/app/blob/master/docs/plugins/rulesets.md
@@ -147,26 +155,37 @@ repository:
 # to `always` if the org set `pull_request`).
 rulesets:
   # ---- 1. No delete / no force-push on the default branch ----
+  # SECURITY: this ruleset must have NO bypass_actors. Nobody — not repo
+  # admins, not the automation app, not Renovate — may bypass deletion or
+  # force-push protection on the default branch. Unlike the other rulesets
+  # below, this one is in NO_BYPASS_RULESETS (scripts/org_settings_merge.py),
+  # so the merger force-clears bypass_actors to [] on every sync even if a
+  # repo has manually added its own bypass_actors here.
+  #
+  # If a bypass is ever genuinely needed (e.g. an incident requires a
+  # force-push or branch deletion to recover the default branch), do NOT
+  # add a bypass_actor to config. Instead: a repo admin manually grants a
+  # temporary bypass on the ruleset in the GitHub UI, completes the task,
+  # then immediately removes the bypass. Never leave a standing bypass in
+  # place — the next sync will strip it anyway.
   - name: protect-default-branch
     target: branch
-    enforcement: active # always enforced — overriding this is discouraged
+    enforcement: active        # always enforced — overriding this is discouraged
     conditions:
       ref_name:
         include:
-          - "~DEFAULT_BRANCH" # special selector: whatever the default branch is
+          - "~DEFAULT_BRANCH"   # special selector: whatever the default branch is
         exclude: []
-    bypass_actors:
-      # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
-      # Repos can add more actors (other teams, integrations).
-[]
-    rules:   -
-        type: deletion # block branch deletion
-      - type: non_fast_forward # block force-push
+    # Intentionally empty — see the SECURITY note above. Do not add actors.
+    bypass_actors: []
+    rules:
+      - type: deletion          # block branch deletion
+      - type: non_fast_forward  # block force-push
 
   # ---- 2. PR required (0 reviews) ----
   - name: require-pr
     target: branch
-    enforcement: "active" # uncomment to lock this ruleset on in this repo
+    enforcement: 'active'    # uncomment to lock this ruleset on in this repo
     conditions:
       ref_name:
         include: ["~DEFAULT_BRANCH"]
@@ -175,13 +194,22 @@ rulesets:
       # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
       # Repos can add more actors (other teams, integrations).
       - actor_id: 5
-        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
         bypass_mode: always
       # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+
       # by sync-org-settings when this template is rendered to org-settings.yaml.
       - actor_id: 2549081
+
         actor_type: Integration
         bypass_mode: exempt
+      # Mend Renovate cloud GitHub App (renovate[bot], app id 2740) — same
+      # trusted-automation bypass as automation-nsheaps above, so Renovate's
+      # *branch* automerge can push dependency updates straight to the default
+      # branch without a human review/PR. App id is a public constant, hardcoded
+      # like the github-actions[bot] integration_id below (not a secret, so no
+      # envsubst placeholder). Renovate is deliberately NOT a bypass actor on
+      # the required-status-checks ruleset, so green checks remain mandatory.
       - actor_id: 2740
         actor_type: Integration
         bypass_mode: exempt
@@ -212,13 +240,18 @@ rulesets:
       # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
       # Repos can add more actors (other teams, integrations).
       - actor_id: 5
-        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
         bypass_mode: always
       # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+
       # by sync-org-settings when this template is rendered to org-settings.yaml.
       - actor_id: 2549081
+
         actor_type: Integration
         bypass_mode: exempt
+      # Mend Renovate cloud GitHub App (renovate[bot], app id 2740) — see the
+      # require-pr ruleset above for rationale. Present here so Renovate stays
+      # exempt from the review requirement if a repo enables this ruleset.
       - actor_id: 2740
         actor_type: Integration
         bypass_mode: exempt
@@ -259,8 +292,10 @@ rulesets:
   #       actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
   #       bypass_mode: always
   #     # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+
   #     # by sync-org-settings when this template is rendered to org-settings.yaml.
   #     - actor_id: 2549081
+
   #       actor_type: Integration
   #       bypass_mode: always
   #   rules:
@@ -290,13 +325,19 @@ rulesets:
       # Repo admins can bypass (always = prompts at push/merge time, not silent exempt).
       # Repos can add more actors (other teams, integrations).
       - actor_id: 5
-        actor_type: RepositoryRole # 1=read 2=triage 3=write 4=maintain 5=admin
+        actor_type: RepositoryRole   # 1=read 2=triage 3=write 4=maintain 5=admin
         bypass_mode: always
       # automation-nsheaps GitHub App — actor_id is substituted from 2549081
+
       # by sync-org-settings when this template is rendered to org-settings.yaml.
       - actor_id: 2549081
+
         actor_type: Integration
         bypass_mode: exempt
+      # Mend Renovate cloud GitHub App (renovate[bot], app id 2740) — see the
+      # require-pr ruleset above for rationale. Present here so Renovate stays
+      # exempt from the codeowner-review requirement if a repo enables this
+      # ruleset.
       - actor_id: 2740
         actor_type: Integration
         bypass_mode: exempt

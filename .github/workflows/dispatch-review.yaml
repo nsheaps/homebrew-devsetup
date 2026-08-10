@@ -30,15 +30,7 @@ name: Dispatch PR Review
 
 on:
   pull_request:
-    types:
-      [
-        opened,
-        reopened,
-        synchronize,
-        ready_for_review,
-        labeled,
-        converted_to_draft,
-      ]
+    types: [opened, reopened, synchronize, ready_for_review, labeled, converted_to_draft]
 
 jobs:
   review:

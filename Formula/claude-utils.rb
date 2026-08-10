@@ -11,21 +11,21 @@ class ClaudeUtils < Formula
   # else in bin/ is platform-independent bash. No node/bun is needed at runtime.
   on_macos do
     if Hardware::CPU.arm?
-      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.249/claude-utils-darwin-arm64.tar.gz'
-      sha256 'd63f1ee13d1979beb8f3d0a70416622dc4b5408b6343082c86371106f915d3c3'
+      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.254/claude-utils-darwin-arm64.tar.gz'
+      sha256 'cea4c0943aa1b2c3118786f0a5655d80675531d78f89bcb89b48b36f5f3db420'
     else
-      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.249/claude-utils-darwin-amd64.tar.gz'
-      sha256 'd081a28449d878121c891dd62718aace1d753a807cd164b963a9d90b81212bc0'
+      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.254/claude-utils-darwin-amd64.tar.gz'
+      sha256 '240719bddc73581e390541c021a05febb5c19eb2f381c0c012a3b1628ad276b0'
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.249/claude-utils-linux-arm64.tar.gz'
-      sha256 'ff00ee703e77540340f31cabe4f7880d4d8dc0e358ad197f2ca1cdf9c80f198b'
+      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.254/claude-utils-linux-arm64.tar.gz'
+      sha256 '265e24b9dfbd5f4d05b4ca249a1799f9a6dddc4c2c672a3b7cad55eb68f5307f'
     else
-      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.249/claude-utils-linux-amd64.tar.gz'
-      sha256 'f867203abee17576404b12c0f6b8c09e5cafe28e5e39c87422e1fcdf7b0c9a5f'
+      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.254/claude-utils-linux-amd64.tar.gz'
+      sha256 '1200be05ad6330494d95090deb87eb5f8490f740bd4a38c2db72dd65bc570aa2'
     end
   end
 
@@ -33,6 +33,11 @@ class ClaudeUtils < Formula
   depends_on 'gum'
 
   def install
+    # The release tarball wraps its payload in a single top-level dist/ directory. Homebrew strips
+    # that lone leading directory and chdir's into it, so by the time this runs the working
+    # directory is dist/. Install only dist/bin/ into #{bin} (lib/ lands at #{bin}/lib, where the
+    # bash CLIs source it via $SCRIPT_DIR). Wrapping in dist/ means future non-bin payloads can be
+    # shipped under dist/ (e.g. dist/share, dist/man) without being swept into #{bin}.
     bin.install Dir['bin/*']
   end
 

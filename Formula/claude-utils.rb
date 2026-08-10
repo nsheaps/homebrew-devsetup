@@ -12,20 +12,20 @@ class ClaudeUtils < Formula
   on_macos do
     if Hardware::CPU.arm?
       url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.254/claude-utils-darwin-arm64.tar.gz'
-      sha256 'cea4c0943aa1b2c3118786f0a5655d80675531d78f89bcb89b48b36f5f3db420'
+      sha256 '1fb3c63355ec34cd2229d15c2f47aea363b27c9b072b36dcd65f493cafb11d06'
     else
       url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.254/claude-utils-darwin-amd64.tar.gz'
-      sha256 '240719bddc73581e390541c021a05febb5c19eb2f381c0c012a3b1628ad276b0'
+      sha256 '5c73e1ea914db5c204bd29bd10ccb9088bbbb208a9cda9d3009772bedc2d47f1'
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
       url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.254/claude-utils-linux-arm64.tar.gz'
-      sha256 '265e24b9dfbd5f4d05b4ca249a1799f9a6dddc4c2c672a3b7cad55eb68f5307f'
+      sha256 'ac6190cfe84eb91bd0788126985c6d043d0b683be8390f20aae33553c1d64314'
     else
       url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.254/claude-utils-linux-amd64.tar.gz'
-      sha256 '1200be05ad6330494d95090deb87eb5f8490f740bd4a38c2db72dd65bc570aa2'
+      sha256 'd1bbb24163afafd10010834af6664237ee382965121e93b1c49920e803b09bf4'
     end
   end
 

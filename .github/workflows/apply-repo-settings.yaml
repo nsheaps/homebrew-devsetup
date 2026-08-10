@@ -32,8 +32,8 @@ on:
   push:
     branches: [main]
     paths:
-      - ".github/settings.yml"
-      - ".github/workflows/apply-repo-settings.yaml"
+      - '.github/settings.yml'
+      - '.github/workflows/apply-repo-settings.yaml'
 
 permissions:
   contents: read

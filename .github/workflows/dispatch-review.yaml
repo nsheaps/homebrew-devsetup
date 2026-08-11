@@ -32,6 +32,13 @@ on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review, labeled]
 
+# Explicit top-level permissions (mirrors the job-level grant below) so
+# checkov's CKV2_GHA_1 ("top-level permissions not write-all") is satisfied.
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
 jobs:
   review:
     # Gate: review fires automatically on any OPEN, non-draft PR event

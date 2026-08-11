@@ -13,6 +13,7 @@ libexec
 livecheck
 metaformula
 postflight
+libexec
 
 # Shell/zsh terms
 EOBUNDLES
@@ -75,3 +76,6 @@ sourceparts
 
 # Config terms
 keytype
+
+# Misc terms
+customizer

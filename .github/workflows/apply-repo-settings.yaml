@@ -20,6 +20,9 @@ name: Apply Repo Settings
 #   repository_dispatch  external triggers (other workflows / curl)
 #   push to main         when .github/settings.yml changes
 
+# checkov:skip=CKV_GHA_7:dry-run is a boolean preview/apply toggle for a
+# repo-settings sync, not a build parameter -- this workflow produces no
+# build artifact for the SLSA parameterless-triggers rule to protect.
 on:
   workflow_dispatch:
     inputs:

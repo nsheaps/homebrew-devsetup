@@ -1,1 +1,79 @@
-IyBQcm9qZWN0LXNwZWNpZmljIHdvcmRzIGZvciBjc3BlbGwKIyBPbmUgd29yZCBwZXIgbGluZQoKIyBQcm9qZWN0IG5hbWVzCmRldnNldHVwCm5zaGVhcHMKCmNjcmVzdW1lCmFiaGluYXYKCiMgSG9tZWJyZXcgdGVybXMKbGl2ZWNoZWNrCm1ldGFmb3JtdWxhCnBvc3RmbGlnaHQKbGliZXhlYwoKIyBTaGVsbC96c2ggdGVybXMKRU9CVU5ETEVTCmludGVyYWN0aXZlY29tbWVudHMKcmNmaWxlCnNldG9wdApzaGVsbGVudgpzaGVsbGVudnMKCiMgVG9vbHMgYW5kIHBhY2thZ2VzCmF1dG9qdW1wCmF3c2NsaQpjb3JldXRpbHMKZGlyZW52CmdldGFudGlkb3RlCmdoZmlsZQppdGVybQppdGVybWFpCml0ZXJtYnJvd3NlcnBsdWdpbgpqc29ubmV0CmthcmFiaW5lcgpLSUNTCmxpbnV4YnJldwptZWdhbGludGVyCm94c2VjdXJpdHkKcHN0cmVlCnJvYmJ5cnVzc2VsbApydWJvY29wCnNoZWxsY2hlY2sKc2hmbXQKc29mdHdhcmV1cGRhdGUKc3lmdAp0ZmVudgp0Z2VudAp0aGVmdWNrCndvcmt0cmVlCgojIFBlb3BsZS9vcmdhbml6YXRpb25zCmNqcGFpcwpqb3JkYW5iYWlyZApzdGVmYW56d2VpZmVsCgojIEFwcCBuYW1lcwpTcG9rZW5seQpnc2V0dGluZ3MKZGNvbmYKeGRvdG9vbAp3dHlwZQpkb3Rvb2wKYXBwaW1hZ2UKCiMgMVBhc3N3b3JkIC8gQVBUIHRlcm1zCm9uZXBhc3N3b3JkCmRlYXJtb3IKZGVic2lnCmtleXJpbmdzCnNvdXJjZWxpc3QKc291cmNlcGFydHMKCiMgQ29uZmlnIHRlcm1zCmtleXR5cGUKCiMgTWlzYyB0ZXJtcwpjdXN0b21pemVyCg==
+# Project-specific words for cspell
+# One word per line
+
+# Project names
+devsetup
+nsheaps
+
+ccresume
+abhinav
+
+# Homebrew terms
+livecheck
+metaformula
+postflight
+libexec
+
+# Shell/zsh terms
+EOBUNDLES
+interactivecomments
+rcfile
+setopt
+shellenv
+shellenvs
+
+# Tools and packages
+autojump
+awscli
+coreutils
+direnv
+getantidote
+ghfile
+iterm
+itermai
+itermbrowserplugin
+jsonnet
+karabiner
+KICS
+linuxbrew
+megalinter
+oxsecurity
+pstree
+robbyrussell
+rubocop
+shellcheck
+shfmt
+softwareupdate
+syft
+tfenv
+tgenv
+thefuck
+worktree
+
+# People/organizations
+cjpais
+jordanbaird
+stefanzweifel
+
+# App names
+Spokenly
+gsettings
+dconf
+xdotool
+wtype
+dotool
+appimage
+
+# 1Password / APT terms
+onepassword
+dearmor
+debsig
+keyrings
+sourcelist
+sourceparts
+
+# Config terms
+keytype
+
+# Misc terms
+customizer

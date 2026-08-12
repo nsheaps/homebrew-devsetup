@@ -53,14 +53,14 @@ jobs:
     steps:
       - name: Checkout as GitHub App
         id: checkout
-        uses: nsheaps/github-actions/.github/actions/checkout-as-app@c1794f6f4fbb3cbc5e5a71e820581a74239f706a # main
+        uses: nsheaps/github-actions/.github/actions/checkout-as-app@1e129396b6f0b39257efac9a255010fe64a68ef8 # main
         with:
           app-id: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
           private-key: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}
 
       - name: Apply
         id: apply
-        uses: nsheaps/github-actions/.github/actions/apply-repo-settings@c1794f6f4fbb3cbc5e5a71e820581a74239f706a # main
+        uses: nsheaps/github-actions/.github/actions/apply-repo-settings@1e129396b6f0b39257efac9a255010fe64a68ef8 # main
         with:
           token: ${{ steps.checkout.outputs.token }}
           dry-run: ${{ inputs.dry-run || false }}

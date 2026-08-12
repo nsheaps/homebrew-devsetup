@@ -4,8 +4,8 @@
 class Dotfiles < Formula
   desc 'Personal dotfiles: shell config plus the `dotfiles` wiring CLI'
   homepage 'https://github.com/nsheaps/dotfiles'
-  url 'https://github.com/nsheaps/dotfiles/archive/refs/tags/v0.0.2.tar.gz'
-  sha256 '1f1bef9de9a05d5f74442b43dd47428d68e213a6468256c17d3b63b3b2a4a12c'
+  url 'https://github.com/nsheaps/dotfiles/archive/refs/tags/v0.0.3.tar.gz'
+  sha256 '85c4cd6456df5e6e1168b60842a1ca0d35f58ac0744a7d2f6cb48c8c0164e8c8'
   license 'MIT'
 
   head do
@@ -42,7 +42,7 @@ class Dotfiles < Formula
     # this same repo to ~/.dotfiles instead of just symlinking the bundled
     # libexec copy — someone wiring their OWN separate dotfiles repo instead
     # passes an explicit `--repo <their-url>`, which always wins.
-    (bin / 'dotfiles').write <<~SH
+    (bin/'dotfiles').write <<~SH
       #!/bin/bash
       export DOTFILES_DEFAULT_REPO_URL="${DOTFILES_DEFAULT_REPO_URL:-#{homepage}.git}"
       exec "#{opt_libexec}/bin/dotfiles" "$@"
@@ -54,7 +54,7 @@ class Dotfiles < Formula
     # setup after `brew install`. `ensure-wired` runs non-interactively, only
     # wires when not already wired, and never fails the install. Opt out with
     # DOTFILES_SKIP_AUTOWIRE=1 (e.g. in CI).
-    system bin / 'dotfiles', 'ensure-wired'
+    system bin/'dotfiles', 'ensure-wired'
   end
 
   def caveats

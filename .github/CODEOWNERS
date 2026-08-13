@@ -1,1 +1,19 @@
+# Org-wide default code ownership — SYNCED from nsheaps/.github.
+#
+# Source of truth: ansible/templates/.github/CODEOWNERS in nsheaps/.github.
+#
+# THIS FILE IS REPLACED IN FULL ON EVERY ORG SYNC RUN. The sync engine
+# byte-compares source against destination and overwrites; it does not merge.
+# Local edits here will be reverted on the next run of `sync-all`.
+#
+# In particular: GitHub resolves CODEOWNERS last-match-wins
+# (https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners),
+# so appending a more specific rule *below* this line would win at review-
+# assignment time — but the appended line cannot survive the next sync.
+# Appending here is NOT a supported extension point.
+#
+# To own this file locally instead, add this repo to `codeowners_self_managed`
+# in nsheaps/.github → ansible/config/sync-files.yml. That drops the repo from
+# the sync target list and hands the file back to the repo permanently.
+
 * @nsheaps

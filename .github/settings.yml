@@ -228,6 +228,7 @@ rulesets:
           # allowed_merge_methods: [merge, squash, rebase]   # optional
 
   # ---- 3. Review required — 1 reviewer (active by default) ----
+          allowed_merge_methods: ["squash", "rebase"]
   - name: require-1-review
     target: branch
     enforcement: disabled

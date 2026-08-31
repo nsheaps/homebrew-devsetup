@@ -1,8 +1,8 @@
 class FrameworkTouchpadToggle < Formula
   desc 'Toggle the Framework laptop internal touchpad on Linux (GNOME X11/Wayland)'
   homepage 'https://github.com/nsheaps/framework-touchpad-toggle'
-  url 'https://github.com/nsheaps/framework-touchpad-toggle/archive/refs/tags/v0.0.6.tar.gz'
-  sha256 '87d542c96118649fc615c343125747ef3e675c9172d04a741842c8aa6076a267'
+  url 'https://github.com/nsheaps/framework-touchpad-toggle/archive/refs/tags/v0.0.7.tar.gz'
+  sha256 '68866665895496e10073731fa6adc15512c23b3901e633533d924f53f14f4945'
   license 'MIT'
   head 'https://github.com/nsheaps/framework-touchpad-toggle.git', branch: 'main'
 

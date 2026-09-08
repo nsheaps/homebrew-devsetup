@@ -17,7 +17,7 @@ class ClaudeTeam < Formula
   def install
     bin.install 'bin/claude-team'
     bin.install 'bin/ct'
-    (bin/'lib').install 'bin/lib/stdlib.sh'
+    (bin / 'lib').install 'bin/lib/stdlib.sh'
   end
 
   test do

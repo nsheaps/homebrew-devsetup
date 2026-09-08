@@ -4,8 +4,8 @@
 class Dotfiles < Formula
   desc 'Personal dotfiles: shell config plus the `dotfiles` wiring CLI'
   homepage 'https://github.com/nsheaps/dotfiles'
-  url 'https://github.com/nsheaps/dotfiles/archive/refs/tags/v0.0.17.tar.gz'
-  sha256 '5486bca9bbd3f992af192002abc4754f8ebe32a9f8156ed111cfcfa4adbf8b09'
+  url 'https://github.com/nsheaps/dotfiles/archive/refs/tags/v0.0.18.tar.gz'
+  sha256 'e71cf3cc0d58266479fdc5c951184356e054f8340d03997d2f345e7e4c2b4fcd'
   license 'MIT'
 
   head do

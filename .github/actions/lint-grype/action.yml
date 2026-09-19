@@ -34,7 +34,7 @@ runs:
         grype db status
 
     - name: debug
-      uses: pyTooling/Actions/with-post-step@04f49c75e87a9f0573a6effb5726f73224b1817c # v8.0.0
+      uses: pyTooling/Actions/with-post-step@41364cfc6f3b879b802af27ffe979b8148aa4401 # v8.1.0
       with:
         main: |
           echo "Grype DB status after scan:"

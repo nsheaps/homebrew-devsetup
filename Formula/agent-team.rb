@@ -4,8 +4,8 @@
 class AgentTeam < Formula
   desc 'Provider-agnostic agent team orchestration for Claude Code'
   homepage 'https://github.com/nsheaps/agent-team'
-  url 'https://github.com/nsheaps/agent-team/archive/refs/tags/v0.3.157.tar.gz'
-  sha256 'd913bcb1edf268983794e5c0bf075a64df73084dd72e712cb52cf0fd7b3311d9'
+  url 'https://github.com/nsheaps/agent-team/archive/refs/tags/v0.3.158.tar.gz'
+  sha256 'def0efc4f153b2e7047f594260a78e7d54d86c5b94c9a2b91f4c8bbb4bad0e82'
   license 'MIT'
 
   head do

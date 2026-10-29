@@ -4,8 +4,8 @@
 class GsStackStatus < Formula
   desc 'Terminal dashboard for git-spice stacked branch workflows'
   homepage 'https://github.com/nsheaps/gs-stack-status'
-  url 'https://github.com/nsheaps/gs-stack-status/archive/refs/tags/v0.3.24.tar.gz'
-  sha256 'f3a63a6fde049f93f3de0643b84d3c34fc19f2858fd12e07e38bd0684db96d36'
+  url 'https://github.com/nsheaps/gs-stack-status/archive/refs/tags/v0.3.25.tar.gz'
+  sha256 '659154dd83e210abd23fdffe4f688975b4eb57da47b001a1f208f562dc48a1f7'
   license 'MIT'
 
   head do

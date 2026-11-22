@@ -11,21 +11,21 @@ class ClaudeUtils < Formula
   # else in bin/ is platform-independent bash. No node/bun is needed at runtime.
   on_macos do
     if Hardware::CPU.arm?
-      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.386/claude-utils-darwin-arm64.tar.gz'
-      sha256 'abbd7615140d8d35d4a61836a526a67b95555607ef8e14b7c7fd39e467a8e45a'
+      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.387/claude-utils-darwin-arm64.tar.gz'
+      sha256 '58dcce13fed285bfe7f8436ea713e3c270518529fa9caa0012477d642aaa20d0'
     else
-      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.386/claude-utils-darwin-amd64.tar.gz'
-      sha256 'faf9745dec154fbc0ab1c6e4d7ff2cea165b6c8c162c2e78981157d76f3ca47c'
+      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.387/claude-utils-darwin-amd64.tar.gz'
+      sha256 '57d377b04fde4485aca96bf8ca71d378e908d2c18a042e2a97fe70cd065ef4d0'
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.386/claude-utils-linux-arm64.tar.gz'
-      sha256 'c995342e2648d1710848190708d80d751c9cef7f4732c8ba2cb55cc52237fa69'
+      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.387/claude-utils-linux-arm64.tar.gz'
+      sha256 'cedc728953eab62385cb183e6a5f03f1d88c4b1422f8d2f005b90564170b8efb'
     else
-      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.386/claude-utils-linux-amd64.tar.gz'
-      sha256 '762e2bb3211ebb4371c97a55a846f295a7456986ab9036882d2c7442774b7909'
+      url 'https://github.com/nsheaps/claude-utils/releases/download/v0.12.387/claude-utils-linux-amd64.tar.gz'
+      sha256 'e327f44058df6bdd6d57c72e408db65477a59e0091d91096c0382e0f393c30b1'
     end
   end
 

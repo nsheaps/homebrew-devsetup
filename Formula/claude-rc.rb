@@ -9,8 +9,8 @@ class ClaudeRc < Formula
 
   on_macos do
     on_arm do
-      url 'https://github.com/nsheaps/agents/archive/refs/tags/v0.3.196.tar.gz'
-      sha256 'b6e36b86a04027e098c736e7569b735ac196aab651d14334e3bb812f5d18bbca'
+      url 'https://github.com/nsheaps/agents/archive/refs/tags/v0.3.198.tar.gz'
+      sha256 'af868325592bd05d9293bb418be31885a1a883ff6c3f644e83f90395624b0670'
     end
     on_intel do
       url 'https://github.com/nsheaps/agents/releases/download/claude-rc-v0.1.0/claude-rc-0.1.0-darwin-x64.tar.gz'
